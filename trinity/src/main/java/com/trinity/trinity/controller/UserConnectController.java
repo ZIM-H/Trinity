@@ -26,5 +26,6 @@ public class UserConnectController {
     @GetMapping("/match")
     public ResponseEntity<Object> matchMaking(@RequestParam String userId) {
         userConnectService.matchMakeing();
+        return ResponseEntity.ok().build();
     }
 }
