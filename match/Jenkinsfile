@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Springboot build') {
             steps {
-                dir('trinity'){
+                dir('match'){
                     sh '''
                     pwd
                     echo 'springboot build'
@@ -25,7 +25,7 @@ pipeline {
 
         stage('Dockerimage build') {
             steps {
-                dir('trinity'){
+                dir('match'){
                     sh '''
                     echo 'Dockerimage build'
                     docker build -t docker-springboot:0.0.1 .
@@ -44,12 +44,9 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                dir('trinity'){
+                dir('match'){
                     sh '''
                     echo 'Deploy'
-
-                    docker stop springboot
-                    docker rm springboot
 
                     docker run -d -p 8080:8080 --name springboot docker-springboot:0.0.1
                     '''
