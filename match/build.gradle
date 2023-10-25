@@ -31,6 +31,9 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'io.projectreactor:reactor-test'
+
+	// RedisProperties에 있는 ConfigurationProperties annotation 때문에
+	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 }
 
 tasks.named('test') {
