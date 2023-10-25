@@ -1,0 +1,68 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Springboot build') {
+            steps {
+                dir('trinity'){
+                    sh '''
+                    pwd
+                    echo 'springboot build'
+                    chmod +x gradlew
+                    ./gradlew clean build
+                    '''
+                }
+            }
+            post {
+                success {
+                    sh 'echo "Successfully built SpringBoot "'
+                }
+                failure {
+                    sh 'echo "Failed to build SpringBoot"'
+                }
+            }
+        }
+
+        stage('Dockerimage build') {
+            steps {
+                dir('trinity'){
+                    sh '''
+                    echo 'Dockerimage build'
+                    docker build -t docker-springboot:0.0.1 .
+                    '''
+                }
+            }
+            post {
+                success {
+                    sh 'echo "Successfully built Docker image "'
+                }
+                failure {
+                    sh 'echo "Failed to build Docker image "'
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                dir('trinity'){
+                    sh '''
+                    echo 'Deploy'
+
+                    docker stop springboot
+                    docker rm springboot
+
+                    docker run -d -p 8080:8080 --name springboot docker-springboot:0.0.1
+                    '''
+                }
+            }
+            post {
+                success {
+                    sh 'echo "Successfully deployed "'
+                }
+                failure {
+                    sh 'echo "Failed to deploy"'
+                }
+            }
+        }
+    }
+}
