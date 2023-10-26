@@ -24,6 +24,9 @@ public class MatchQServiceImpl implements MatchQService {
         double time = System.currentTimeMillis();
         matchRedisTemplate.opsForZSet().add("gameQueue", userId, time);
         matchRedisTemplate.opsForHash().put("userIPs", userId, userIP);
+
+        String re = (String) gameRedisTemplate.opsForHash().get("connectingMember", "3cd7ffd6-c09b-4579-9f0e-3f2421589fd6");
+        System.out.println(re);
     }
 
     @Scheduled(fixedRate = 5000)
