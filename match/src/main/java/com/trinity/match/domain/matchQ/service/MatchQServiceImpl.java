@@ -1,6 +1,7 @@
 package com.trinity.match.domain.matchQ.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -12,14 +13,17 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MatchQServiceImpl implements MatchQService {
 
-    private final RedisTemplate<String, String> redisTemplate;
+    @Qualifier("matchRedisTemplate")
+    private final RedisTemplate<String, String> matchRedisTemplate;
+    @Qualifier("gameRedisTemplate")
+    private final RedisTemplate<String, String> gameRedisTemplate;
 
     @Override
     public void joinQueue(String userId) {
-        String userIP = "user IP";
+        String userIP = "user I123";
         double time = System.currentTimeMillis();
-        redisTemplate.opsForZSet().add("gameQueue", userId, time);
-        redisTemplate.opsForHash().put("userIPs", userId, userIP);
+        matchRedisTemplate.opsForZSet().add("gameQueue", userId, time);
+        matchRedisTemplate.opsForHash().put("userIPs", userId, userIP);
     }
 
     @Scheduled(fixedRate = 5000)
@@ -33,7 +37,7 @@ public class MatchQServiceImpl implements MatchQService {
             4. 대기 큐에서 삭제
             5. 리스트에 담긴 사람들에게 webSocket 발송
          */
-        Long size = redisTemplate.opsForZSet().size("gameQueue");
+        Long size = matchRedisTemplate.opsForZSet().size("gameQueue");
 
         if (size >= 3) {
             List<String> waitingList = new ArrayList<>();
@@ -46,9 +50,9 @@ public class MatchQServiceImpl implements MatchQService {
 //            }
 
             for (int i = 0; i < 3; i++) {
-                String findUserId = redisTemplate.opsForZSet().range("gameQueue", 0, 0).iterator().next();
+                String findUserId = matchRedisTemplate.opsForZSet().range("gameQueue", 0, 0).iterator().next();
                 waitingList.add(findUserId);
-                redisTemplate.opsForZSet().remove("gameQueue", findUserId);
+                matchRedisTemplate.opsForZSet().remove("gameQueue", findUserId);
             }
 
 
