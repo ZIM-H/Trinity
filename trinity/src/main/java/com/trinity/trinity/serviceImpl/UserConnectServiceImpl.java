@@ -1,22 +1,25 @@
-package com.trinity.trinity.ServiceImpl;
+package com.trinity.trinity.serviceImpl;
 
 import com.trinity.trinity.DTO.response.UserConnectResponse;
 import com.trinity.trinity.DTO.response.UserMatchResponse;
-import com.trinity.trinity.Service.UserConnectService;
+import com.trinity.trinity.service.UserConnectService;
 import com.trinity.trinity.enums.UserStatus;
 import com.trinity.trinity.redisUtil.RedisService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Locale;
-import java.util.Optional;
 import java.util.UUID;
 
+@Service
+@RequiredArgsConstructor
 public class UserConnectServiceImpl implements UserConnectService {
 
-    private RedisService redisService;
+    private final RedisService redisService;
     @Override
     public UserConnectResponse connectToGameServer() {
         String userId = UUID.randomUUID().toString();
-        redisService.saveData(userId, UserStatus.LOBBY.getStatus());
+        redisService.saveData(userId, String.valueOf(UserStatus.LOBBY));
 
         return UserConnectResponse.builder()
                 .userId(userId)
@@ -25,7 +28,7 @@ public class UserConnectServiceImpl implements UserConnectService {
     }
 
     @Override
-    public UserMatchResponse matchMakeing() {
+    public UserMatchResponse matchMaking() {
         return null;
     }
 
