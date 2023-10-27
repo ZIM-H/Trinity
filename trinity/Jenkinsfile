@@ -51,7 +51,16 @@ pipeline {
                     docker stop springboot
                     docker rm springboot
 
+                    docker stop springboot_2
+                    docker rm springboot_2
+
+                    docker stop springboot_3
+                    docker rm springboot_3
+
+
                     docker run -d -p 8080:8080 --name springboot docker-springboot:0.0.1
+                    docker run -d -p 8081:8080 --name springboot_2 docker-springboot:0.0.1
+                    docker run -d -p 8082:8080 --name springboot_3 docker-springboot:0.0.1
                     '''
                 }
             }
