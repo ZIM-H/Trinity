@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Springboot build') {
             steps {
-                dir('match'){
+                dir('trinity'){
                     sh '''
                     pwd
                     echo 'springboot build'
@@ -23,11 +23,11 @@ pipeline {
             }
         }
 
-        stage('Dockerimage build') {
+        stage('Docker image build') {
             steps {
-                dir('match'){
+                dir('trinity'){
                     sh '''
-                    echo 'Dockerimage build'
+                    echo 'Docker image build'
                     docker build -t docker-springboot:0.0.1 .
                     '''
                 }
@@ -44,7 +44,7 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                dir('match'){
+                dir('trinity'){
                     sh '''
                     echo 'Deploy'
 
@@ -57,10 +57,10 @@ pipeline {
                     docker stop springboot_3
                     docker rm springboot_3
 
+                    docker run -d -p 8080:8080 -v /var/jenkins_home/resources/application.yml:/var/jenkins_home/workspace/Springboot/trinity/src/main/resources/application.yml --name springboot docker-springboot:0.0.1
+                    docker run -d -p 8081:8080 -v /var/jenkins_home/resources/application.yml:/var/jenkins_home/workspace/Springboot/trinity/src/main/resources/application.yml --name springboot_2 docker-springboot:0.0.1
+                    docker run -d -p 8082:8080 -v /var/jenkins_home/resources/application.yml:/var/jenkins_home/workspace/Springboot/trinity/src/main/resources/application.yml --name springboot_3 docker-springboot:0.0.1
 
-                    docker run -d -p 8080:8080 --name springboot docker-springboot:0.0.1
-                    docker run -d -p 8081:8080 --name springboot_2 docker-springboot:0.0.1
-                    docker run -d -p 8082:8080 --name springboot_3 docker-springboot:0.0.1
                     '''
                 }
             }
