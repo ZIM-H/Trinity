@@ -1,4 +1,4 @@
-package com.trinity.match.domain.redis.config;
+package com.trinity.match.global.redis.config;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
