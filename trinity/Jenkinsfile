@@ -10,7 +10,6 @@ pipeline {
                     echo 'springboot build'
                     chmod +x gradlew
                     ./gradlew clean build
-                    cp /var/jenkins_home/resources/application.yml springboot:/var/jenkins_home/workspace/Springboot/trinity/src/main/resources/application.yml
                     '''
                 }
             }
