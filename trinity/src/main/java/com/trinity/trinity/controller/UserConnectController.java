@@ -1,21 +1,19 @@
 package com.trinity.trinity.controller;
 
-import com.trinity.trinity.Service.UserConnectService;
-import com.trinity.trinity.enums.UserStatus;
-import com.trinity.trinity.redisUtil.RedisService;
+import com.trinity.trinity.service.UserConnectService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.UUID;
-
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/game")
 public class UserConnectController {
 
-    private UserConnectService userConnectService;
+    private final UserConnectService userConnectService;
 
     @GetMapping({"", "/"})
     public ResponseEntity<Object> connectToGameServer() {
@@ -25,7 +23,7 @@ public class UserConnectController {
 
     @GetMapping("/match")
     public ResponseEntity<Object> matchMaking(@RequestParam String userId) {
-        userConnectService.matchMakeing();
+        userConnectService.matchMaking();
         return ResponseEntity.ok().build();
     }
 }

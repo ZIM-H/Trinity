@@ -14,7 +14,7 @@ public class RedisService {
     }
 
     public void saveData(String key, String value) {
-        redisTemplate.opsForValue().set(key, value);
+        redisTemplate.opsForHash().put("connectingMember", key, value);
     }
 
     public String retrieveData(String key) {
