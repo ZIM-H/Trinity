@@ -1,5 +1,6 @@
 package com.trinity.trinity.serviceImpl;
 
+import com.trinity.trinity.DTO.request.GameStartPlayerListRequestDto;
 import com.trinity.trinity.DTO.response.UserConnectResponse;
 import com.trinity.trinity.DTO.response.UserMatchResponse;
 import com.trinity.trinity.service.UserConnectService;
@@ -7,8 +8,8 @@ import com.trinity.trinity.enums.UserStatus;
 import com.trinity.trinity.redisUtil.RedisService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -28,8 +29,13 @@ public class UserConnectServiceImpl implements UserConnectService {
     }
 
     @Override
-    public UserMatchResponse matchMaking() {
+    public UserMatchResponse matchMaking(String userId) {
         return null;
+    }
+
+    @Override
+    public void createGameRoom(List<GameStartPlayerListRequestDto> players) {
+
     }
 
 
