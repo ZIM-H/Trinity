@@ -1,19 +1,17 @@
 package com.trinity.trinity.redisUtil;
 
 import com.trinity.trinity.client.ClientSession;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Slf4j
+@Component
+@RequiredArgsConstructor
 public class RedisService {
+
     private final RedisTemplate<String, String> redisTemplate;
-
-    @Autowired
-    public RedisService(RedisTemplate<String, String> redisTemplate) {
-
-        this.redisTemplate = redisTemplate;
-    }
 
     public void saveData(String key, String value) {
         redisTemplate.opsForHash().put("connectingMember", key, value);
@@ -30,9 +28,6 @@ public class RedisService {
 
     public void saveClient(String key, String clientSession){
         if (clientSession != null && redisTemplate != null) {
-            System.out.println(key);
-            System.out.println(clientSession);
-            System.out.println(redisTemplate);
             redisTemplate.opsForHash().put("ClientSession", key, clientSession);
         } else if(redisTemplate == null){
             // 예외 처리 또는 오류 메시지를 로깅합니다.
