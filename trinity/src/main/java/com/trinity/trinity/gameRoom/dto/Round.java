@@ -1,4 +1,4 @@
-package com.trinity.trinity.gameRoom;
+package com.trinity.trinity.gameRoom.dto;
 
 import lombok.Builder;
 import lombok.Getter;
