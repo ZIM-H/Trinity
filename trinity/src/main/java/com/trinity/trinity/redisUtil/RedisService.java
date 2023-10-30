@@ -28,7 +28,7 @@ public class RedisService {
 
     public void saveClient(String key, String clientSession){
         if (clientSession != null && redisTemplate != null) {
-            redisTemplate.opsForHash().put("ClientSession", key, clientSession);
+            redisTemplate.opsForHash().put("ClientSession", key, "정의민");
         } else if(redisTemplate == null){
             // 예외 처리 또는 오류 메시지를 로깅합니다.
             System.err.println("redisTemplate is null");
