@@ -1,6 +1,5 @@
 package com.trinity.trinity.webSocket;
 
-import com.trinity.trinity.redisUtil.RedisService;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.EventLoopGroup;
@@ -8,8 +7,8 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
-import io.netty.handler.ssl.SslContext;
-import org.springframework.data.redis.core.RedisTemplate;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 /**
  * An HTTP server which serves Web Socket requests at:
@@ -30,13 +29,14 @@ import org.springframework.data.redis.core.RedisTemplate;
  * <li>Firefox 11+ (RFC 6455 aka draft-ietf-hybi-thewebsocketprotocol-17)
  * </ul>
  */
+@Component
+@RequiredArgsConstructor
 public final class WebSocketServer {
-    static final boolean SSL = System.getProperty("ssl") != null;
-    static final int PORT = Integer.parseInt(System.getProperty("port", SSL? "8080" : "8589"));
+    static final int PORT = Integer.parseInt(System.getProperty("port", "8589"));
 
-    public static void main(String[] args) throws Exception {
-        // Configure SSL.
-        final SslContext sslCtx = ServerUtil.buildSslContext();
+    private final WebSocketServerInitializer webSocketServerInitializer;
+
+    public void start() throws Exception {
 
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
         EventLoopGroup workerGroup = new NioEventLoopGroup();
@@ -46,12 +46,9 @@ public final class WebSocketServer {
             b.group(bossGroup, workerGroup)
                     .channel(NioServerSocketChannel.class)
                     .handler(new LoggingHandler(LogLevel.INFO))
-                    .childHandler(new WebSocketServerInitializer(sslCtx));
+                    .childHandler(webSocketServerInitializer);
 
             Channel ch = b.bind(PORT).sync().channel();
-
-            System.out.println("Open your web browser and navigate to " +
-                    (SSL? "https" : "http") + "://127.0.0.1:" + PORT + '/');
 
             ch.closeFuture().sync();
         } finally {
