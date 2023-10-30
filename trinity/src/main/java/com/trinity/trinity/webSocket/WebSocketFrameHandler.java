@@ -31,18 +31,13 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
 
             String clientId = ctx.channel().id().toString();
 
-            try{
-                // null로 넘어온다
-                ClientSession clientSession = redisService.getClientSession(clientId);
-            } catch(NullPointerException e){
-                // redisService가 null이다
-
-
-                e.printStackTrace();
-                ClientSession clientSession = new ClientSession(clientId);
+            ClientSession clientSession = redisService.getClientSession(clientId);
+            if(clientSession == null) {
+                clientSession = new ClientSession(clientId);
                 // 클라이언트 세션을 Redis에 저장
                 redisService.saveClient(clientId, clientSession.getClientId());
             }
+
         } else {
             String message = "unsupported frame type: " + frame.getClass().getName();
             throw new UnsupportedOperationException(message);
