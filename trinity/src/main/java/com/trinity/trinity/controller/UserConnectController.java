@@ -4,9 +4,9 @@ import com.trinity.trinity.service.UserConnectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -26,4 +26,10 @@ public class UserConnectController {
         userConnectService.matchMaking();
         return ResponseEntity.ok().build();
     }
+
+//    @PostMapping("/players")
+//    public ResponseEntity<Void> takePlayer(@RequestBody List<Object> players) {
+//        gameRoomService.makeGameRoom(players);
+//        return ResponseEntity.ok().build();
+//    }
 }

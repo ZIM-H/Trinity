@@ -1,6 +1,7 @@
 package com.trinity.trinity;
 
-import com.trinity.trinity.webSocket.DiscardServer;
+
+import com.trinity.trinity.webSocket.WebSocketServer;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -9,7 +10,7 @@ public class TrinityApplication {
 
 	public static void main(String[] args) throws Exception {
 		SpringApplication.run(TrinityApplication.class, args);
-		new DiscardServer(8589).run();
-	}
+		WebSocketServer.main(args);
 
+	}
 }

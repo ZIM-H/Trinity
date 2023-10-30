@@ -1,5 +1,6 @@
 package com.trinity.trinity.redisUtil;
 
+import com.trinity.trinity.client.ClientSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,7 @@ public class RedisService {
 
     @Autowired
     public RedisService(RedisTemplate<String, String> redisTemplate) {
+
         this.redisTemplate = redisTemplate;
     }
 
@@ -18,10 +20,28 @@ public class RedisService {
     }
 
     public String retrieveData(String key) {
-        return redisTemplate.opsForValue().get(key);
+        return (String) redisTemplate.opsForValue().get(key);
     }
 
     public void deleteData(String key) {
         redisTemplate.delete(key);
+    }
+
+
+    public void saveClient(String key, String clientSession){
+        if (clientSession != null && redisTemplate != null) {
+            System.out.println(key);
+            System.out.println(clientSession);
+            System.out.println(redisTemplate);
+            redisTemplate.opsForHash().put("ClientSession", key, clientSession);
+        } else if(redisTemplate == null){
+            // 예외 처리 또는 오류 메시지를 로깅합니다.
+            System.err.println("redisTemplate is null");
+        } else {
+            System.err.println("String is null");
+        }
+    }
+    public ClientSession getClientSession(String key) {
+        return (ClientSession) redisTemplate.opsForHash().get("ClientSession", key);
     }
 }
