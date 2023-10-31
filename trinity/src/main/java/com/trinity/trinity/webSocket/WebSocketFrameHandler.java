@@ -6,6 +6,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
+import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
@@ -46,6 +47,16 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
 
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+        if(evt instanceof WebSocketServerProtocolHandler.HandshakeComplete){
+            String clientId = ctx.channel().id().toString();
+
+            ClientSession clientSession = redisService.getClientSession(clientId);
+            if(clientSession == null) {
+                clientSession = new ClientSession(clientId);
+                // 클라이언트 세션을 Redis에 저장
+                redisService.saveClient(clientId, clientSession.getClientId());
+            }
+        }
         return;
     }
 }
