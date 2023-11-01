@@ -1,10 +1,15 @@
 package com.trinity.trinity.redisUtil;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.trinity.trinity.client.ClientSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @Component
@@ -26,17 +31,23 @@ public class RedisService {
     }
 
 
-    public void saveClient(String key, String clientSession){
-        if (clientSession != null && redisTemplate != null) {
-            redisTemplate.opsForHash().put("ClientSession", key, "정의민");
-        } else if(redisTemplate == null){
-            // 예외 처리 또는 오류 메시지를 로깅합니다.
-            System.err.println("redisTemplate is null");
-        } else {
-            System.err.println("String is null");
-        }
+    public void saveClient(ClientSession clientSession){
+        Map<String, String> userInfo = new HashMap<>();
+        userInfo.put("clientId", clientSession.getClientId());
+        userInfo.put("clientAddress", clientSession.getClientAddress());
+        redisTemplate.opsForHash().put("ClientSession", clientSession.getUserId(), userInfo);
     }
     public ClientSession getClientSession(String key) {
         return (ClientSession) redisTemplate.opsForHash().get("ClientSession", key);
+    }
+
+    public String getClientAddress(String userId) {
+
+        String channelInfo = redisTemplate.<String, String>opsForHash()
+                .get("ClientSession", userId);
+        JsonObject jsonObject = new JsonParser().parse(channelInfo).getAsJsonObject();
+        String channelAddress = jsonObject.get("channelAddress").getAsString();
+
+        return channelAddress;
     }
 }
