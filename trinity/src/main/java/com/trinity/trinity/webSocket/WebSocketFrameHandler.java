@@ -1,7 +1,10 @@
 package com.trinity.trinity.webSocket;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.trinity.trinity.client.ClientSession;
 import com.trinity.trinity.redisUtil.RedisService;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
@@ -21,23 +24,23 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, WebSocketFrame frame) throws Exception {
         if (frame instanceof TextWebSocketFrame) {
-            String request = ((TextWebSocketFrame) frame).text();
-            if(request.equals("fuck you")) {
-                ctx.channel().writeAndFlush(new TextWebSocketFrame("fuck you too"));
-            }else if (request.equals("허준영")) {
-                ctx.channel().writeAndFlush(new TextWebSocketFrame("사과해요 나한테!"));
-            } else{
-                ctx.channel().writeAndFlush(new TextWebSocketFrame("###" + request + "@@@"));
+            String text = ((TextWebSocketFrame) frame).text();
+
+            JsonObject jsonObject = new JsonParser().parse(text).getAsJsonObject();
+            String requestType = jsonObject.get("type").getAsString();
+            if(requestType.equals("matching")){
+                String userId = jsonObject.get("userId").getAsString();
+                String clientId = ctx.channel().id().toString();
+                String clientAddress = ctx.channel().remoteAddress().toString();
+                ClientSession clientSession = redisService.getClientSession(userId);
+                if(clientSession == null) {
+                    clientSession = new ClientSession(userId, clientId, clientAddress);
+                    // 클라이언트 세션을 Redis에 저장
+                    redisService.saveClient(clientSession);
+                }
+            } else if (requestType.equals("roundEnd")) {
             }
 
-            String clientId = ctx.channel().id().toString();
-
-            ClientSession clientSession = redisService.getClientSession(clientId);
-            if(clientSession == null) {
-                clientSession = new ClientSession(clientId);
-                // 클라이언트 세션을 Redis에 저장
-                redisService.saveClient(clientId, clientSession.getClientId());
-            }
 
         } else {
             String message = "unsupported frame type: " + frame.getClass().getName();
@@ -48,15 +51,17 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
         if(evt instanceof WebSocketServerProtocolHandler.HandshakeComplete){
-            String clientId = ctx.channel().id().toString();
 
-            ClientSession clientSession = redisService.getClientSession(clientId);
-            if(clientSession == null) {
-                clientSession = new ClientSession(clientId);
-                // 클라이언트 세션을 Redis에 저장
-                redisService.saveClient(clientId, clientSession.getClientId());
-            }
         }
         return;
     }
+
+//    public void sendDataToClient(String userId, String data) {
+//        connectedClients.get(clientId);
+//        Channel channel = redisService.getClientAddress(userId);
+//        if (channel != null) {
+//            TextWebSocketFrame textFrame = new TextWebSocketFrame(data);
+//            channel.writeAndFlush(textFrame);
+//        }
+//    }
 }

@@ -1,13 +1,16 @@
 package com.trinity.trinity.client;
 
+import lombok.Getter;
+
+@Getter
 public class ClientSession {
 
     private String clientId;
-    public ClientSession(String clientId) {
+    private String userId;
+    private String clientAddress;
+    public ClientSession(String clientId, String userId, String clientAddress) {
         this.clientId = clientId;
-    }
-
-    public String getClientId() {
-        return clientId;
+        this.userId = userId;
+        this.clientAddress = clientAddress;
     }
 }
