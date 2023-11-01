@@ -21,4 +21,8 @@ public class GameRoom {
         this.roundNo = roundNo;
         this.round = round;
     }
+
+    public void modifyGameRoomId(String gameRoomId) {
+        this.gameRoomId = gameRoomId;
+    }
 }
