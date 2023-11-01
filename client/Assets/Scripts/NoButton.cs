@@ -17,7 +17,6 @@ public class NoButton : MonoBehaviour, IPointerClickHandler
         canvas = GameObject.Find("Canvas");
         joystick = canvas.transform.Find("Analog").gameObject;
         joystickVision = canvas.transform.Find("AnalogVision").gameObject;
-        Debug.Log(joystick);
 
     }
     public void OnPointerClick(PointerEventData eventData){
