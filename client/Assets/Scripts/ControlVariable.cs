@@ -7,7 +7,7 @@ public class ControlVariable : MonoBehaviour, IPointerClickHandler
 {
     public GameObject beaker;
     public GameObject cube;
-
+    
     // Start is called before the first frame update
     void Start()
     {
