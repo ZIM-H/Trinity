@@ -14,7 +14,7 @@ public class WebClientService {
     public void get(String userId) {
         webClientConfig.webClient()
                 .get()
-                .uri("/match/join/{userId}", userId)
+                .uri("/api/match/join/{userId}", userId)
                 .retrieve()
                 .bodyToMono(String.class) // 반환되는 응답의 타입. 필요에 따라 변경
                 .subscribe(
