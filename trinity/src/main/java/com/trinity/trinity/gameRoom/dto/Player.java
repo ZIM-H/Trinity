@@ -2,8 +2,10 @@ package com.trinity.trinity.gameRoom.dto;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class Player {
     private String userId;
     private String gameRoomId;
