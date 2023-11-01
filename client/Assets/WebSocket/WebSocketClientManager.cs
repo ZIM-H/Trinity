@@ -1,11 +1,16 @@
 using UnityEngine;
 using WebSocketSharp;
+using System.Collections;
+using UnityEngine.Networking;
 
 public class WebSocketClientManager : MonoBehaviour
 {
     private WebSocket webSocket;
     private bool isConnected;
     private string serverURL = "wss://k9b308.p.ssafy.io:8589"; // 웹소켓 서버 주소로 바꾸세요
+    private string userId; // userId를 저장하는 멤버 변수
+
+    private string apiUrl = "https://k9b308.p.ssafy.io/api/game/match/"; // 대상 URL로 바꾸세요.
 
     void Start()
     {
@@ -13,7 +18,7 @@ public class WebSocketClientManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    public void ToggleWebSocketConnection(string userId)
+    public void ToggleWebSocketConnection()
     {
         if (isConnected)
         {
@@ -25,6 +30,10 @@ public class WebSocketClientManager : MonoBehaviour
         }
         else
         {
+            // userId 초기화
+            userId = PlayerPrefs.GetString("UserId"); // PlayerPrefs에서 userId를 가져옴
+            Debug.Log("매칭 큐 등록 요청 보내기");
+            StartCoroutine(SendGetRequest());
             Debug.Log("웹소켓 연결 시도");
             // 연결되어 있지 않은 경우 연결 시도
             webSocket = new WebSocket(serverURL);
@@ -33,7 +42,6 @@ public class WebSocketClientManager : MonoBehaviour
                 isConnected = true;
                 Debug.Log("WebSocket connected");
                 // 연결 후 userId를 서버로 보냅니다.
-                string userId = PlayerPrefs.GetString("UserId"); // "YourKey"는 확인하려는 PlayerPrefs 키입니다.
                 Debug.Log("저장된 userId: " + userId);
                 SendUserId(userId);
             };
@@ -52,4 +60,24 @@ public class WebSocketClientManager : MonoBehaviour
         webSocket.Send(jsonMessage);
     }
 
+    IEnumerator SendGetRequest()
+    {
+        Debug.Log("webRequest 송신");
+        using (UnityWebRequest webRequest = UnityWebRequest.Get(apiUrl+userId))
+        {
+            Debug.Log("요청 보내는 url:"+apiUrl+userId);
+            // 요청을 보냅니다.
+            yield return webRequest.SendWebRequest();
+            if (webRequest.result == UnityWebRequest.Result.Success)
+            {
+                // 요청이 성공했을 때의 처리
+                Debug.Log("HttpRequest successful");
+            }
+            else
+            {
+                // 요청이 실패했을 때의 처리
+                Debug.LogError("HttpRequest failed: " + webRequest.error);
+            }
+        }
+    }
 }
