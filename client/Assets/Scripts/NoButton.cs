@@ -11,15 +11,17 @@ public class NoButton : MonoBehaviour, IPointerClickHandler
     GameObject joystick; 
     GameObject joystickVision;
     GameObject interactiveUIPanel;
+    GameObject canvas;
     void Start()
     {   
-        joystick = GameObject.Find("Analog");
-        joystickVision = GameObject.Find("AnalogVision");
-        
+        canvas = GameObject.Find("Canvas");
+        joystick = canvas.transform.Find("Analog").gameObject;
+        joystickVision = canvas.transform.Find("AnalogVision").gameObject;
+        Debug.Log(joystick);
 
     }
     public void OnPointerClick(PointerEventData eventData){
-        Debug.Log("Yes");
+        Debug.Log("No");
         interactiveUIPanel = GameObject.Find("InteractiveUIPanel");
         interactiveUIPanel.SetActive(false);
         joystick.SetActive(true);
