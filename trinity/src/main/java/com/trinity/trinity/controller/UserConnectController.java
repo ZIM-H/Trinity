@@ -1,12 +1,14 @@
 package com.trinity.trinity.controller;
 
+import com.trinity.trinity.DTO.request.GameStartPlayerListRequestDto;
 import com.trinity.trinity.service.UserConnectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -21,9 +23,15 @@ public class UserConnectController {
                 .body(userConnectService.connectToGameServer());
     }
 
-    @GetMapping("/match")
-    public ResponseEntity<Object> matchMaking(@RequestParam String userId) {
-        userConnectService.matchMaking();
+    @GetMapping("/match/{userId}")
+    public ResponseEntity<Object> matchMaking(@Validated @PathVariable String userId) {
+        userConnectService.matchMaking(userId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/players")
+    public ResponseEntity<Void> takePlayer(@Validated @RequestBody List<GameStartPlayerListRequestDto> players) {
+        userConnectService.createGameRoom(players);
         return ResponseEntity.ok().build();
     }
 }
