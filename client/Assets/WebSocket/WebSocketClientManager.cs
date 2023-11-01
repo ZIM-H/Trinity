@@ -10,9 +10,10 @@ public class WebSocketClientManager : MonoBehaviour
     void Start()
     {
         isConnected = false;
+        DontDestroyOnLoad(gameObject);
     }
 
-    public void ToggleWebSocketConnection()
+    public void ToggleWebSocketConnection(string userId)
     {
         if (isConnected)
         {
@@ -31,9 +32,24 @@ public class WebSocketClientManager : MonoBehaviour
             {
                 isConnected = true;
                 Debug.Log("WebSocket connected");
+                // 연결 후 userId를 서버로 보냅니다.
+                string userId = PlayerPrefs.GetString("UserId"); // "YourKey"는 확인하려는 PlayerPrefs 키입니다.
+                Debug.Log("저장된 userId: " + userId);
+                SendUserId(userId);
             };
             webSocket.OnError += (sender, e) => Debug.LogError("WebSocket error: " + e.Message);
             webSocket.ConnectAsync();
         }
     }
+
+    private void SendUserId(string userId)
+    {
+        // userId를 서버로 보내는 로직을 구현하세요.
+        // 이 부분에서 웹소켓 메시지를 생성하고 서버에 전송합니다.
+        // 예를 들어, JSON 형식으로 메시지를 만들어 보낼 수 있습니다.
+        string jsonMessage = "{\"userId\": \"" + userId + "\", \"type\": \"matching\"}";
+        Debug.Log("웹소켓 전송할 jsonMessage:" + jsonMessage);
+        webSocket.Send(jsonMessage);
+    }
+
 }
