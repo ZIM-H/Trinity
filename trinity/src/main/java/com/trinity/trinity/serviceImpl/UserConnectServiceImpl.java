@@ -7,6 +7,7 @@ import com.trinity.trinity.service.UserConnectService;
 import com.trinity.trinity.enums.UserStatus;
 import com.trinity.trinity.redisUtil.RedisService;
 import com.trinity.trinity.webClient.WebClientService;
+import com.trinity.trinity.webSocket.WebSocketFrameHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,7 @@ public class UserConnectServiceImpl implements UserConnectService {
 
     private final RedisService redisService;
     private final WebClientService webClientService;
+    private  final WebSocketFrameHandler webSocketFrameHandler;
     @Override
     public UserConnectResponse connectToGameServer() {
         String userId = UUID.randomUUID().toString();
@@ -38,8 +40,8 @@ public class UserConnectServiceImpl implements UserConnectService {
 
     @Override
     public void createGameRoom(List<GameStartPlayerListRequestDto> players) {
-
+        for(GameStartPlayerListRequestDto p : players) {
+            webSocketFrameHandler.sendDataToClient(p.getUserId(), ("*hi*" + p.getUserId()));
+        }
     }
-
-
 }

@@ -1,5 +1,7 @@
 package com.trinity.trinity.redisUtil;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.trinity.trinity.client.ClientSession;
@@ -31,23 +33,23 @@ public class RedisService {
     }
 
 
-    public void saveClient(ClientSession clientSession){
+    public void saveClient(ClientSession clientSession) throws JsonProcessingException {
         Map<String, String> userInfo = new HashMap<>();
         userInfo.put("clientId", clientSession.getClientId());
         userInfo.put("clientAddress", clientSession.getClientAddress());
-        redisTemplate.opsForHash().put("ClientSession", clientSession.getUserId(), userInfo);
+        String userInfoSerialized = new ObjectMapper().writeValueAsString(userInfo); // 직렬화
+
+        redisTemplate.opsForHash().put("ClientSession", clientSession.getUserId(), userInfoSerialized);
     }
     public ClientSession getClientSession(String key) {
         return (ClientSession) redisTemplate.opsForHash().get("ClientSession", key);
     }
 
     public String getClientAddress(String userId) {
-
         String channelInfo = redisTemplate.<String, String>opsForHash()
                 .get("ClientSession", userId);
         JsonObject jsonObject = new JsonParser().parse(channelInfo).getAsJsonObject();
         String channelAddress = jsonObject.get("channelAddress").getAsString();
-
         return channelAddress;
     }
 }
