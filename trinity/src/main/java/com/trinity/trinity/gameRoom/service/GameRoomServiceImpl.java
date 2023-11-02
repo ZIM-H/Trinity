@@ -10,7 +10,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
 @RequiredArgsConstructor
@@ -193,6 +196,136 @@ public class GameRoomServiceImpl implements GameRoomService {
 
         return true;
     }
+
+    @Override
+    public void morningGameLogic(String gameRoomId){
+        GameRoom gameRoom = gameRoomRedisService.getGameRoom(gameRoomId);
+        FirstRoom firstRoom = gameRoom.getRound().getFirstRoom();
+        SecondRoom secondRoom = gameRoom.getRound().getSecondRoom();
+        ThirdRoom thirdRoom = gameRoom.getRound().getThirdRoom();
+
+
+        // 블랙홀 상태 3인지 판단
+        if(thirdRoom.getBlackholeStatus() == 3) {
+            movePlayer(0, gameRoomId);
+            thirdRoom.setBlackholeStatus(0);
+            return;
+        }
+
+        movePlayer(1, gameRoomId);
+
+        // 랜덤 이벤트 추출
+        Random random = new Random();
+
+        List<Integer> eventList = IntStream.range(0, 7)
+                .boxed()
+                .collect(Collectors.toList());
+
+        while(eventList.size() > 0){
+            int idx = random.nextInt(eventList.size());
+            int eventIdx = eventList.get(idx);
+
+            if(!vaildateEvent(eventIdx, gameRoomId)){
+                eventList.remove(eventIdx);
+            }
+            else {
+                gameRoom.setEvent(eventIdx);
+                break;
+            }
+        }
+
+        // 이산화탄소 고장 일수 2일차인지 판단
+        if(secondRoom.getCarbonCaptureStatus() == 2) gameRoom.setCarbonCaptureNotice(true);
+
+    }
+
+    private void movePlayer(int direction, String gameRoomId) {
+        GameRoom gameRoom = gameRoomRedisService.getGameRoom(gameRoomId);
+        FirstRoom firstRoom = gameRoom.getRound().getFirstRoom();
+        SecondRoom secondRoom = gameRoom.getRound().getSecondRoom();
+        ThirdRoom thirdRoom = gameRoom.getRound().getThirdRoom();
+
+
+        // 정방향
+        if(direction == 1){
+            String temp = thirdRoom.getPlayer();
+            thirdRoom.setPlayer(secondRoom.getPlayer());
+            secondRoom.setPlayer(firstRoom.getPlayer());
+            firstRoom.setPlayer(temp);
+            return;
+        }
+
+        // 역방향
+        String temp = thirdRoom.getPlayer();
+        thirdRoom.setPlayer(firstRoom.getPlayer());
+        firstRoom.setPlayer(secondRoom.getPlayer());
+        secondRoom.setPlayer(temp);
+
+    }
+
+    private boolean vaildateEvent(int eventIdx, String gameRoomId) {
+        GameRoom gameRoom = gameRoomRedisService.getGameRoom(gameRoomId);
+        FirstRoom firstRoom = gameRoom.getRound().getFirstRoom();
+        SecondRoom secondRoom = gameRoom.getRound().getSecondRoom();
+        ThirdRoom thirdRoom = gameRoom.getRound().getThirdRoom();
+
+        int flag = 0;
+        switch (eventIdx) {
+            case 0:
+                if(!asteroidEvent(thirdRoom)) flag = 1;
+                break;
+            case 1:
+                if(!blackHoleEvent(thirdRoom)) flag = 1;
+                break;
+            case 2:
+                if(!carbonCaptureEvent(secondRoom)) flag = 1;
+                break;
+            case 3:
+                if(!purifierEvent(firstRoom)) flag = 1;
+                break;
+            case 4:
+                gameRoom.setPlayerStatus(true);
+                break;
+            case 5:
+                gameRoom.setBirthday(true);
+                break;
+            case 6:
+                gameRoom.setFoodAmount(gameRoom.getFoodAmount() + 1);
+                break;
+        }
+
+        if(flag == 1) return false;
+        return true;
+    }
+
+    private boolean purifierEvent(FirstRoom firstRoom) {
+        if (firstRoom.getPurifierStatus() > 0) return false;
+
+        firstRoom.setPurifierStatus(1);
+        return true;
+    }
+
+    private boolean carbonCaptureEvent(SecondRoom secondRoom) {
+        if(secondRoom.getCarbonCaptureStatus() > 0)  return false;
+
+        secondRoom.setCarbonCaptureStatus(1);
+        return true;
+    }
+
+    private boolean blackHoleEvent(ThirdRoom thirdRoom) {
+        if (thirdRoom.getBlackholeStatus() > 0) return false;
+
+        thirdRoom.setBlackholeStatus(1);
+        return true;
+    }
+
+    private boolean asteroidEvent(ThirdRoom thirdRoom) {
+        if(thirdRoom.getBarrierStatus() == 2 || thirdRoom.isAsteroidStatus()) return false;
+
+        thirdRoom.setAsteroidStatus(true);
+        return true;
+    }
+
 
     private void makeFertilizer(FirstRoom firstRoom, SecondRoom secondRoom, ThirdRoom thirdRoom, int fertilizer) {
         if (firstRoom.isMakeFertilizerTry()) {
