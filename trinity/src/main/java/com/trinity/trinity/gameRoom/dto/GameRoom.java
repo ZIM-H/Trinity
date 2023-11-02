@@ -3,8 +3,10 @@ package com.trinity.trinity.gameRoom.dto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @NoArgsConstructor
 public class GameRoom {
     private String gameRoomId;
@@ -14,9 +16,11 @@ public class GameRoom {
     private Round round;
     private boolean playerStatus;
     private boolean birthday;
+    private int event;
+    private boolean carbonCaptureNotice;
 
     @Builder
-    public GameRoom(String gameRoomId, int foodAmount, int fertilizerAmount, int roundNo, Round round, boolean playerStatus, boolean birthday) {
+    public GameRoom(String gameRoomId, int foodAmount, int fertilizerAmount, int roundNo, Round round, boolean playerStatus, boolean birthday, int event, boolean carbonCaptureNotice) {
         this.gameRoomId = gameRoomId;
         this.foodAmount = foodAmount;
         this.fertilizerAmount = fertilizerAmount;
@@ -24,6 +28,8 @@ public class GameRoom {
         this.round = round;
         this.playerStatus = playerStatus;
         this.birthday = birthday;
+        this.event = event;
+        this.carbonCaptureNotice = carbonCaptureNotice;
     }
 
 
