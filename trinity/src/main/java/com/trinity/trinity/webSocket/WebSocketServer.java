@@ -43,7 +43,12 @@ public final class WebSocketServer {
                     .childHandler(new WebSocketServerInitializer(sslCtx, redisService));
 
             Channel ch = b.bind(PORT).sync().channel();
+            System.out.println(ch.localAddress());
+            System.out.println("isOpen?? : " + ch.isOpen());
+            System.out.println("isWritable?? : " + ch.isWritable());
+
             ch.closeFuture().sync();
+
         } finally {
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();

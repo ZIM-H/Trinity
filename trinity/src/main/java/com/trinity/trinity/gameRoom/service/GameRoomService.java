@@ -16,4 +16,8 @@ public interface GameRoomService {
 
     void updateThridRoom(ThridRoomPlayerRequestDto thirdRoomPlayerRequestDto);
 
+    boolean gameLogic(String gameRoomId);
+
+    void morningGameLogic(String gameRoomId);
+
 }
