@@ -22,7 +22,7 @@ public class TouchEvent : MonoBehaviour, IPointerClickHandler
     }
     public void OnPointerClick(PointerEventData eventData){
         Debug.Log(condition);
-
+        PlayerPrefs.SetInt("Power", PlayerPrefs.GetInt("Power")-1);
         RenderTexture texture; 
 
         string PATH = "InteractiveUI/RenderTexture/Render" + objectName;    //이미지 위치를 저장하는 변수
