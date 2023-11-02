@@ -11,16 +11,23 @@ public class FirstRoom {
     private String player;
     private String message;
     private int fertilizerUpgradeStatus;
+    private boolean fertilizerUpgradeTry;
     private int purifierStatus;
-    private int inputFertilizer;
+    private boolean purifierTry;
+    private int purifierTryCount;
+    private boolean fertilizerTry;
 
     @Builder
-    public FirstRoom(int fertilizerAmount, String player, String message, int fertilizerUpgradeStatus, int purifierStatus, int inputFertilizer) {
+
+    public FirstRoom(int fertilizerAmount, String player, String message, int fertilizerUpgradeStatus, boolean fertilizerUpgradeTry, int purifierStatus, boolean purifierTry, int purifierTryCount, boolean fertilizerTry) {
         this.fertilizerAmount = fertilizerAmount;
         this.player = player;
         this.message = message;
         this.fertilizerUpgradeStatus = fertilizerUpgradeStatus;
+        this.fertilizerUpgradeTry = fertilizerUpgradeTry;
         this.purifierStatus = purifierStatus;
-        this.inputFertilizer = inputFertilizer;
+        this.purifierTry = purifierTry;
+        this.purifierTryCount = purifierTryCount;
+        this.fertilizerTry = fertilizerTry;
     }
 }
