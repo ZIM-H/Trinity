@@ -17,9 +17,10 @@ public class GameRoom {
     private boolean playerStatus;
     private boolean birthday;
     private int event;
+    private boolean carbonCaptureNotice;
 
     @Builder
-    public GameRoom(String gameRoomId, int foodAmount, int fertilizerAmount, int roundNo, Round round, boolean playerStatus, boolean birthday, int event) {
+    public GameRoom(String gameRoomId, int foodAmount, int fertilizerAmount, int roundNo, Round round, boolean playerStatus, boolean birthday, int event, boolean carbonCaptureNotice) {
         this.gameRoomId = gameRoomId;
         this.foodAmount = foodAmount;
         this.fertilizerAmount = fertilizerAmount;
@@ -28,5 +29,6 @@ public class GameRoom {
         this.playerStatus = playerStatus;
         this.birthday = birthday;
         this.event = event;
+        this.carbonCaptureNotice = carbonCaptureNotice;
     }
 }

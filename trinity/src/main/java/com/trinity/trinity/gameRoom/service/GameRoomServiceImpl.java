@@ -101,6 +101,7 @@ public class GameRoomServiceImpl implements GameRoomService {
         ThirdRoom thirdRoom = gameRoom.getRound().getThirdRoom();
 
         gameRoom.setFoodAmount(gameRoom.getFoodAmount() - 1);
+        if (gameRoom.isCarbonCaptureNotice()) gameRoom.setCarbonCaptureNotice(false);
 
         // 공중 정원
         if (!secondRoom.isFarmStatus()) {
