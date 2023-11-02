@@ -3,8 +3,10 @@ package com.trinity.trinity.gameRoom.dto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @NoArgsConstructor
 public class SecondRoom {
     private int fertilizerAmount;
@@ -17,10 +19,11 @@ public class SecondRoom {
     private boolean farmTry;
     private boolean taurineFilterStatus;
     private boolean taurineFilterTry;
-    private boolean fertilizerTry;
+    private boolean inputFertilizerTry;
+    private boolean makeFertilizerTry;
 
     @Builder
-    public SecondRoom(int fertilizerAmount, String player, String message, int carbonCaptureStatus, int carbonCaptureTryCount, boolean carbonCaptureTry, boolean farmStatus, boolean farmTry, boolean taurineFilterStatus, boolean taurineFilterTry, boolean fertilizerTry) {
+    public SecondRoom(int fertilizerAmount, String player, String message, int carbonCaptureStatus, int carbonCaptureTryCount, boolean carbonCaptureTry, boolean farmStatus, boolean farmTry, boolean taurineFilterStatus, boolean taurineFilterTry, boolean inputFertilizerTry, boolean makeFertilizerTry) {
         this.fertilizerAmount = fertilizerAmount;
         this.player = player;
         this.message = message;
@@ -31,6 +34,7 @@ public class SecondRoom {
         this.farmTry = farmTry;
         this.taurineFilterStatus = taurineFilterStatus;
         this.taurineFilterTry = taurineFilterTry;
-        this.fertilizerTry = fertilizerTry;
+        this.inputFertilizerTry = inputFertilizerTry;
+        this.makeFertilizerTry = makeFertilizerTry;
     }
 }
