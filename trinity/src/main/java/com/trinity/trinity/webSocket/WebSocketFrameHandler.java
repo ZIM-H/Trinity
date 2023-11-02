@@ -29,7 +29,7 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
     protected void channelRead0(ChannelHandlerContext ctx, WebSocketFrame frame) throws Exception {
         if (frame instanceof TextWebSocketFrame) {
             String text = ((TextWebSocketFrame) frame).text();
-
+            
             JsonObject jsonObject = new JsonParser().parse(text).getAsJsonObject();
             String requestType = jsonObject.get("type").getAsString();
             if(requestType.equals("matching")){

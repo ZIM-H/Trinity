@@ -13,16 +13,21 @@ import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.SelfSignedCertificate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-@RequiredArgsConstructor
 public final class WebSocketServer {
     static final boolean SSL = System.getProperty("ssl") != null;
-    static final int PORT = 8589;
     private final RedisService redisService;
+    private final int PORT;
+
+    public WebSocketServer(RedisService redisService, @Value("${websocket.port}") int PORT) {
+        this.redisService = redisService;
+        this.PORT = PORT;
+    }
 
     public void start() throws Exception {
         SslContext sslCtx = null;
