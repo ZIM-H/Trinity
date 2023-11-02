@@ -197,6 +197,7 @@ public class GameRoomServiceImpl implements GameRoomService {
         return true;
     }
 
+    @Override
     public void morningGameLogic(String gameRoomId){
         GameRoom gameRoom = gameRoomRedisService.getGameRoom(gameRoomId);
         FirstRoom firstRoom = gameRoom.getRound().getFirstRoom();
@@ -204,7 +205,7 @@ public class GameRoomServiceImpl implements GameRoomService {
         ThirdRoom thirdRoom = gameRoom.getRound().getThirdRoom();
 
 
-        // 블랙홀
+        // 블랙홀 상태 3인지 판단
         if(thirdRoom.getBlackholeStatus() == 3) {
             movePlayer(0, gameRoomId);
             thirdRoom.setBlackholeStatus(0);
@@ -268,18 +269,19 @@ public class GameRoomServiceImpl implements GameRoomService {
         SecondRoom secondRoom = gameRoom.getRound().getSecondRoom();
         ThirdRoom thirdRoom = gameRoom.getRound().getThirdRoom();
 
+        int flag = 0;
         switch (eventIdx) {
             case 0:
-                if(!asteroidEvent(thirdRoom)) return false;
+                if(!asteroidEvent(thirdRoom)) flag = 1;
                 break;
             case 1:
-                if(!blackHoleEvent(thirdRoom)) return false;
+                if(!blackHoleEvent(thirdRoom)) flag = 1;
                 break;
             case 2:
-                if(!carbonCaptureEvent(secondRoom)) return false;
+                if(!carbonCaptureEvent(secondRoom)) flag = 1;
                 break;
             case 3:
-                if(!purifierEvent(firstRoom)) return false;
+                if(!purifierEvent(firstRoom)) flag = 1;
                 break;
             case 4:
                 gameRoom.setPlayerStatus(true);
@@ -292,6 +294,7 @@ public class GameRoomServiceImpl implements GameRoomService {
                 break;
         }
 
+        if(flag == 1) return false;
         return true;
     }
 

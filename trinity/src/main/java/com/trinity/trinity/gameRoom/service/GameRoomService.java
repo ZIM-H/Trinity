@@ -18,4 +18,6 @@ public interface GameRoomService {
 
     boolean gameLogic(String gameRoomId);
 
+    void morningGameLogic(String gameRoomId);
+
 }
