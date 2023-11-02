@@ -30,7 +30,6 @@ public final class WebSocketServer {
             SelfSignedCertificate ssc = new SelfSignedCertificate();
             sslCtx = SslContextBuilder.forServer(ssc.certificate(), ssc.privateKey()).build();
         } else {
-            System.out.println(SSL);
             sslCtx = null;
         }
 
@@ -47,6 +46,7 @@ public final class WebSocketServer {
             System.out.println(ch.localAddress());
             System.out.println("isOpen?? : " + ch.isOpen());
             System.out.println("isWritable?? : " + ch.isWritable());
+
             ch.closeFuture().sync();
 
         } finally {
