@@ -17,11 +17,11 @@ public class FirstRoom {
     private int purifierStatus;
     private boolean purifierTry;
     private int purifierTryCount;
-    private boolean fertilizerTry;
+    private boolean inputFertilizerTry;
+    private boolean makeFertilizerTry;
 
     @Builder
-
-    public FirstRoom(int fertilizerAmount, String player, String message, int fertilizerUpgradeStatus, boolean fertilizerUpgradeTry, int purifierStatus, boolean purifierTry, int purifierTryCount, boolean fertilizerTry) {
+    public FirstRoom(int fertilizerAmount, String player, String message, int fertilizerUpgradeStatus, boolean fertilizerUpgradeTry, int purifierStatus, boolean purifierTry, int purifierTryCount, boolean inputFertilizerTry, boolean makeFertilizerTry) {
         this.fertilizerAmount = fertilizerAmount;
         this.player = player;
         this.message = message;
@@ -30,6 +30,7 @@ public class FirstRoom {
         this.purifierStatus = purifierStatus;
         this.purifierTry = purifierTry;
         this.purifierTryCount = purifierTryCount;
-        this.fertilizerTry = fertilizerTry;
+        this.inputFertilizerTry = inputFertilizerTry;
+        this.makeFertilizerTry = makeFertilizerTry;
     }
 }

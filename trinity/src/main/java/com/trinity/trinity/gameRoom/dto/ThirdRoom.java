@@ -17,10 +17,11 @@ public class ThirdRoom {
     private int barrierStatus;
     private boolean barrierDevTry;
     private String developer;
-    private boolean fertilizerTry;
+    private boolean inputFertilizerTry;
+    private boolean makeFertilizerTry;
 
     @Builder
-    public ThirdRoom(int fertilizerAmount, String player, String message, boolean asteroidStatus, int blackholeStatus, int barrierStatus, boolean barrierDevTry, String developer, boolean fertilizerTry) {
+    public ThirdRoom(int fertilizerAmount, String player, String message, boolean asteroidStatus, int blackholeStatus, int barrierStatus, boolean barrierDevTry, String developer, boolean inputFertilizerTry, boolean makeFertilizerTry) {
         this.fertilizerAmount = fertilizerAmount;
         this.player = player;
         this.message = message;
@@ -29,6 +30,7 @@ public class ThirdRoom {
         this.barrierStatus = barrierStatus;
         this.barrierDevTry = barrierDevTry;
         this.developer = developer;
-        this.fertilizerTry = fertilizerTry;
+        this.inputFertilizerTry = inputFertilizerTry;
+        this.makeFertilizerTry = makeFertilizerTry;
     }
 }

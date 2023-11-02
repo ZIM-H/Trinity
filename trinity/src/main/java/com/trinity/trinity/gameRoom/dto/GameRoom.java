@@ -31,14 +31,4 @@ public class GameRoom {
         this.event = event;
         this.carbonCaptureNotice = carbonCaptureNotice;
     }
-
-
-
-    public void modifyGameRoomId(String gameRoomId) {
-        this.gameRoomId = gameRoomId;
-    }
-
-    public void modifyRound(Round round) {
-        this.round = round;
-    }
 }
