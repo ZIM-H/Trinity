@@ -1,6 +1,7 @@
 package com.trinity.trinity.redisUtil;
 
 import com.trinity.trinity.gameRoom.dto.GameRoom;
+import com.trinity.trinity.gameRoom.dto.Round;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,15 @@ public class GameRoomRedisService {
         GameRoom findRoom = (GameRoom) gameRoomRedisTemplate.opsForHash().get("temp", gameRoomId);
 
         if (findRoom == null) {
-            GameRoom gameRoom = new GameRoom();
+            List<GameRoom> before = (List<GameRoom>) gameRoomRedisTemplate.opsForHash().get("gameRoom", gameRoomId);
+
+            GameRoom last = before.get(before.size() - 1);
+            GameRoom gameRoom = GameRoom.builder()
+                    .fertilizerAmount(last.getFertilizerAmount())
+                    .foodAmount(last.getFoodAmount())
+                    .roundNo(last.getRoundNo() + 1)
+                    .build();
+
             gameRoom.modifyGameRoomId(gameRoomId);
             gameRoomRedisTemplate.opsForHash().put("temp", gameRoomId, gameRoom);
             return gameRoom;
@@ -34,4 +43,7 @@ public class GameRoomRedisService {
         return findRoom;
     }
 
+    public void saveGameRoom(GameRoom gameRoom) {
+        gameRoomRedisTemplate.opsForHash().put("temp", gameRoom.getGameRoomId(), gameRoom);
+    }
 }
