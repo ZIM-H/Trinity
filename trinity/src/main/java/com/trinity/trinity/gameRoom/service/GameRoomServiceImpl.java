@@ -55,13 +55,17 @@ public class GameRoomServiceImpl implements GameRoomService {
         Round round = gameRoom.getRound();
 
         if (round == null) {
+
             gameRoom.setRound(new Round());
+
             round = gameRoom.getRound();
         }
 
         round.modifyFirstRoom(firstRoomPlayerRequestDto.getFirstRoom());
 
+
         gameRoomRedisService.saveGameRoomToTemp(gameRoom);
+
     }
 
     @Override
@@ -71,13 +75,17 @@ public class GameRoomServiceImpl implements GameRoomService {
         Round round = gameRoom.getRound();
 
         if (round == null) {
+
             gameRoom.setRound(new Round());
+
             round = gameRoom.getRound();
         }
 
         round.modifySecondRoom(secondRoomPlayerRequestDto.getSecondRoom());
 
+
         gameRoomRedisService.saveGameRoomToTemp(gameRoom);
+
     }
 
     @Override
@@ -87,11 +95,14 @@ public class GameRoomServiceImpl implements GameRoomService {
         Round round = gameRoom.getRound();
 
         if (round == null) {
+
             gameRoom.setRound(new Round());
+
             round = gameRoom.getRound();
         }
 
         round.modifyThirdRoom(thirdRoomPlayerRequestDto.getThirdRoom());
+
 
         gameRoomRedisService.saveGameRoomToTemp(gameRoom);
     }
@@ -195,6 +206,7 @@ public class GameRoomServiceImpl implements GameRoomService {
         gameRoomRedisService.saveGameRoom(gameRoom);
 
         return true;
+
     }
 
     @Override

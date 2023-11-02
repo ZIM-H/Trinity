@@ -23,8 +23,10 @@ public class CreateService {
                 .barrierStatus(0)
                 .barrierDevTry(false)
                 .developer("")
+
                 .inputFertilizerTry(false)
                 .makeFertilizerTry(false)
+
                 .build();
     }
 
@@ -40,6 +42,7 @@ public class CreateService {
                 .farmTry(false)
                 .taurineFilterTry(false)
                 .taurineFilterStatus(true)
+
                 .build();
     }
 
@@ -53,6 +56,7 @@ public class CreateService {
                 .purifierStatus(0)
                 .purifierTry(false)
                 .purifierTryCount(0)
+
                 .build();
     }
 }
