@@ -35,13 +35,16 @@ public class GameRoomRedisService {
                     .roundNo(last.getRoundNo() + 1)
                     .build();
 
+
             gameRoom.setGameRoomId(gameRoomId);
+
             gameRoomRedisTemplate.opsForHash().put("temp", gameRoomId, gameRoom);
             return gameRoom;
         }
 
         return findRoom;
     }
+
 
     public void saveGameRoomToTemp(GameRoom gameRoom) {
         gameRoomRedisTemplate.opsForHash().put("temp", gameRoom.getGameRoomId(), gameRoom);
@@ -51,5 +54,6 @@ public class GameRoomRedisService {
         List<GameRoom> list = (List<GameRoom>) gameRoomRedisTemplate.opsForHash().get("gameRoom", gameRoom.getGameRoomId());
         list.add(gameRoom);
         gameRoomRedisTemplate.opsForHash().put("gameRoom", gameRoom.getGameRoomId(), list);
+
     }
 }
