@@ -13,10 +13,10 @@ pipeline {
 
                     # Source and destination directories (jenkins 내부 -> jenkins 내부로)
                     SRC_DIR="/var/jenkins_home/resources/springboot1"
-                    DEST_DIR="/var/jenkins_home/workspace/Springboot/trinity/src/main/resources"
+                    DEST_DIR="/var/jenkins_home/workspace/Springboot1/trinity/src/main/resources"
 
                     # File to copy
-                    FILE="application1.yml"
+                    FILE="application.yml"
 
                     # Check if destination directory exists, if not create it
                     if [ ! -d "$DEST_DIR" ]; then
@@ -25,7 +25,6 @@ pipeline {
 
                     # Copy the file
                     cp "$SRC_DIR/$FILE" "$DEST_DIR/$FILE"
-
 
                     chmod +x gradlew
                     ./gradlew clean build
