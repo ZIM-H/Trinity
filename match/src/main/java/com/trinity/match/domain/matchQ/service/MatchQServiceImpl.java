@@ -1,5 +1,7 @@
 package com.trinity.match.domain.matchQ.service;
 
+import com.trinity.match.domain.matchQ.dto.request.GameServerPlayerListRequestDto;
+import com.trinity.match.global.webClient.WebClientService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -25,13 +27,15 @@ public class MatchQServiceImpl implements MatchQService {
     @Qualifier("gameRedisTemplate")
     private final RedisTemplate<String, String> gameRedisTemplate;
 
+    private final WebClientService webClientService;
+
     @Override
     public void joinQueue(String userId) {
         double time = System.currentTimeMillis();
         matchRedisTemplate.opsForZSet().add("matchQueue", userId, time);
     }
 
-    @Scheduled(fixedRate = 5000)
+    @Scheduled(fixedRate = 3000)
     private void checkQueueSize() {
         // SessionCallback 내에 트랜잭션 구현
         matchRedisTemplate.execute(new SessionCallback<Object>() {
@@ -73,16 +77,24 @@ public class MatchQServiceImpl implements MatchQService {
                     operations.multi();
 
                     // 트랜잭션 실행
-                    return operations.exec();
+                    operations.exec();
+
+                    List<GameServerPlayerListRequestDto> playerList = new ArrayList<>();
+                    for (Pair<String, Double> userAndScore : waitingList)
+                        playerList.add(GameServerPlayerListRequestDto.builder()
+                                .userId(userAndScore.getFirst())
+                                .build());
+
+                    webClientService.post(playerList);
+
                 } catch (Exception e) {
                     // 에러 발생하면 에러 메시지 찍고 대기 큐에 다시 넣기
                     log.error(e.getMessage());
                     recoverList(waitingList);
-                    return null;
                 }
+                return null;
             }
 
-            // webClient로 이제 보내기
         });
     }
 

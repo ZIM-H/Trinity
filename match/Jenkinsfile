@@ -8,6 +8,25 @@ pipeline {
                     sh '''
                     pwd
                     echo 'springboot build'
+
+                    #!/bin/bash
+
+                    # Source and destination directories (jenkins 내부 -> jenkins 내부로)
+                    SRC_DIR="/var/jenkins_home/resources/springboot"
+                    DEST_DIR="/var/jenkins_home/workspace/Springboot/trinity/src/main/resources"
+
+                    # File to copy
+                    FILE="application.yml"
+
+                    # Check if destination directory exists, if not create it
+                    if [ ! -d "$DEST_DIR" ]; then
+                        mkdir -p "$DEST_DIR"
+                    fi
+
+                    # Copy the file
+                    cp "$SRC_DIR/$FILE" "$DEST_DIR/$FILE"
+
+
                     chmod +x gradlew
                     ./gradlew clean build
                     '''
@@ -57,9 +76,9 @@ pipeline {
                     docker stop springboot_3
                     docker rm springboot_3
 
-                    docker run -d -p 8080:8080 -v /var/jenkins_home/resources/application.yml:/var/jenkins_home/workspace/Springboot/trinity/src/main/resources/application.yml --name springboot docker-springboot:0.0.1
-                    docker run -d -p 8081:8080 -v /var/jenkins_home/resources/application.yml:/var/jenkins_home/workspace/Springboot/trinity/src/main/resources/application.yml --name springboot_2 docker-springboot:0.0.1
-                    docker run -d -p 8082:8080 -v /var/jenkins_home/resources/application.yml:/var/jenkins_home/workspace/Springboot/trinity/src/main/resources/application.yml --name springboot_3 docker-springboot:0.0.1
+                    docker run -d -p 8080:8080 --name springboot docker-springboot:0.0.1
+                    docker run -d -p 8081:8080 --name springboot_2 docker-springboot:0.0.1
+                    docker run -d -p 8082:8080 --name springboot_3 docker-springboot:0.0.1
 
                     '''
                 }
