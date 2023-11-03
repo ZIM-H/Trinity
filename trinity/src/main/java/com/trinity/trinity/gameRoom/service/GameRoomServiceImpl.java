@@ -184,7 +184,9 @@ public class GameRoomServiceImpl implements GameRoomService {
         }
 
         // 블랙홀
-        if (thirdRoom.getBlackholeStatus() > 0) thirdRoom.setBlackholeStatus(thirdRoom.getBlackholeStatus() + 1);
+        if (thirdRoom.isBlackholeStatus()) {
+            if (gameRoom.getRoundNo() + 2 <= 12) gameRoom.getBlackholeStatus()[gameRoom.getRoundNo() + 2] = true;
+        }
 
         // 자동 보호막
         if (thirdRoom.isBarrierDevTry()) {
@@ -212,15 +214,14 @@ public class GameRoomServiceImpl implements GameRoomService {
     @Override
     public void morningGameLogic(String gameRoomId){
         GameRoom gameRoom = gameRoomRedisService.getGameRoom(gameRoomId);
-        FirstRoom firstRoom = gameRoom.getRound().getFirstRoom();
         SecondRoom secondRoom = gameRoom.getRound().getSecondRoom();
         ThirdRoom thirdRoom = gameRoom.getRound().getThirdRoom();
 
 
-        // 블랙홀 상태 3인지 판단
-        if(thirdRoom.getBlackholeStatus() == 3) {
+        // 블랙홀 영향권인지 판단
+        if(gameRoom.getBlackholeStatus()[gameRoom.getRoundNo()]) {
             movePlayer(0, gameRoomId);
-            thirdRoom.setBlackholeStatus(0);
+            thirdRoom.setBlackholeStatus(false);
             return;
         }
 
@@ -237,10 +238,12 @@ public class GameRoomServiceImpl implements GameRoomService {
             int idx = random.nextInt(eventList.size());
             int eventIdx = eventList.get(idx);
 
-            if(!vaildateEvent(eventIdx, gameRoomId)){
+            if(!validateEvent(eventIdx, gameRoomId)){
                 eventList.remove(eventIdx);
             }
             else {
+                // 소행성 이벤트이면서 보호막이 있다면
+                if (eventIdx == 0 && thirdRoom.getBarrierStatus() == 2) eventIdx = 8;
                 gameRoom.setEvent(eventIdx);
                 break;
             }
@@ -275,7 +278,7 @@ public class GameRoomServiceImpl implements GameRoomService {
 
     }
 
-    private boolean vaildateEvent(int eventIdx, String gameRoomId) {
+    private boolean validateEvent(int eventIdx, String gameRoomId) {
         GameRoom gameRoom = gameRoomRedisService.getGameRoom(gameRoomId);
         FirstRoom firstRoom = gameRoom.getRound().getFirstRoom();
         SecondRoom secondRoom = gameRoom.getRound().getSecondRoom();
@@ -287,7 +290,7 @@ public class GameRoomServiceImpl implements GameRoomService {
                 if(!asteroidEvent(thirdRoom)) flag = 1;
                 break;
             case 1:
-                if(!blackHoleEvent(thirdRoom)) flag = 1;
+                if(blackHoleEvent(thirdRoom)) flag = 1;
                 break;
             case 2:
                 if(!carbonCaptureEvent(secondRoom)) flag = 1;
@@ -325,14 +328,12 @@ public class GameRoomServiceImpl implements GameRoomService {
     }
 
     private boolean blackHoleEvent(ThirdRoom thirdRoom) {
-        if (thirdRoom.getBlackholeStatus() > 0) return false;
-
-        thirdRoom.setBlackholeStatus(1);
+        thirdRoom.setBlackholeStatus(true);
         return true;
     }
 
     private boolean asteroidEvent(ThirdRoom thirdRoom) {
-        if(thirdRoom.getBarrierStatus() == 2 || thirdRoom.isAsteroidStatus()) return false;
+        if(thirdRoom.isAsteroidStatus()) return false;
 
         thirdRoom.setAsteroidStatus(true);
         return true;
