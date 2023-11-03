@@ -19,11 +19,10 @@ public class CreateService {
                 .player(playerId)
                 .message("")
                 .asteroidStatus(false)
-                .blackholeStatus(0)
+                .blackholeStatus(false)
                 .barrierStatus(0)
                 .barrierDevTry(false)
                 .developer("")
-
                 .inputFertilizerTry(false)
                 .makeFertilizerTry(false)
 
