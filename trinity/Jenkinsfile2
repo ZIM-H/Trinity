@@ -12,7 +12,7 @@ pipeline {
                     #!/bin/bash
 
                     # Source and destination directories (jenkins 내부 -> jenkins 내부로)
-                    SRC_DIR="/var/jenkins_home/resources/sprinboot2"
+                    SRC_DIR="/var/jenkins_home/resources/springboot2"
                     DEST_DIR="/var/jenkins_home/workspace/Springboot/trinity/src/main/resources"
 
                     # File to copy
