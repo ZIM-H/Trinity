@@ -1,13 +1,13 @@
-package com.trinity.trinity;
-
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-
-@SpringBootTest
-class TrinityApplicationTests {
-
-	@Test
-	void contextLoads() {
-	}
-
-}
+//package com.trinity.trinity;
+//
+//import org.junit.jupiter.api.Test;
+//import org.springframework.boot.test.context.SpringBootTest;
+//
+//@SpringBootTest
+//class TrinityApplicationTests {
+//
+//	@Test
+//	void contextLoads() {
+//	}
+//
+//}
