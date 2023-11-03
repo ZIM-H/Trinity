@@ -1,0 +1,88 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Springboot build') {
+            steps {
+                dir('trinity'){
+                    sh '''
+                    pwd
+                    echo 'springboot build'
+
+                    #!/bin/bash
+
+                    # Source and destination directories (jenkins 내부 -> jenkins 내부로)
+                    SRC_DIR="/var/jenkins_home/resources/springboot1"
+                    DEST_DIR="/var/jenkins_home/workspace/Springboot/trinity/src/main/resources"
+
+                    # File to copy
+                    FILE="application1.yml"
+
+                    # Check if destination directory exists, if not create it
+                    if [ ! -d "$DEST_DIR" ]; then
+                        mkdir -p "$DEST_DIR"
+                    fi
+
+                    # Copy the file
+                    cp "$SRC_DIR/$FILE" "$DEST_DIR/$FILE"
+
+
+                    chmod +x gradlew
+                    ./gradlew clean build
+                    '''
+                }
+            }
+            post {
+                success {
+                    sh 'echo "Successfully built SpringBoot "'
+                }
+                failure {
+                    sh 'echo "Failed to build SpringBoot"'
+                }
+            }
+        }
+
+        stage('Docker image build') {
+            steps {
+                dir('trinity'){
+                    sh '''
+                    echo 'Docker image build'
+                    docker build -t docker-springboot1:0.0.1 .
+                    '''
+                }
+            }
+            post {
+                success {
+                    sh 'echo "Successfully built Docker image "'
+                }
+                failure {
+                    sh 'echo "Failed to build Docker image "'
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                dir('trinity'){
+                    sh '''
+                    echo 'Deploy'
+
+                    docker stop springboot
+                    docker rm springboot
+
+                    docker run -d -p 8080:8080 -p 8587:8587 --name springboot docker-springboot1:0.0.1
+
+                    '''
+                }
+            }
+            post {
+                success {
+                    sh 'echo "Successfully deployed "'
+                }
+                failure {
+                    sh 'echo "Failed to deploy"'
+                }
+            }
+        }
+    }
+}

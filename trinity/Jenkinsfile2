@@ -8,6 +8,24 @@ pipeline {
                     sh '''
                     pwd
                     echo 'springboot build'
+
+                    #!/bin/bash
+
+                    # Source and destination directories (jenkins 내부 -> jenkins 내부로)
+                    SRC_DIR="/var/jenkins_home/resources/springboot2"
+                    DEST_DIR="/var/jenkins_home/workspace/Springboot/trinity/src/main/resources"
+
+                    # File to copy
+                    FILE="application2.yml"
+
+                    # Check if destination directory exists, if not create it
+                    if [ ! -d "$DEST_DIR" ]; then
+                        mkdir -p "$DEST_DIR"
+                    fi
+
+                    # Copy the file
+                    cp "$SRC_DIR/$FILE" "$DEST_DIR/$FILE"
+
                     chmod +x gradlew
                     ./gradlew clean build
                     '''
@@ -28,7 +46,7 @@ pipeline {
                 dir('trinity'){
                     sh '''
                     echo 'Docker image build'
-                    docker build -t docker-springboot:0.0.1 .
+                    docker build -t docker-springboot2:0.0.1 .
                     '''
                 }
             }
@@ -48,19 +66,11 @@ pipeline {
                     sh '''
                     echo 'Deploy'
 
-                    docker stop springboot
-                    docker rm springboot
-
                     docker stop springboot_2
                     docker rm springboot_2
 
-                    docker stop springboot_3
-                    docker rm springboot_3
 
-                    docker run -d -p 8080:8080 -p 8587:8587 -v /var/jenkins_home/resources/application1.yml:/var/jenkins_home/workspace/Springboot/trinity/src/main/resources/application.yml --name springboot docker-springboot:0.0.1
-                    docker run -d -p 8081:8080 -p 8588:8588 -v /var/jenkins_home/resources/application2.yml:/var/jenkins_home/workspace/Springboot/trinity/src/main/resources/application.yml --name springboot_2 docker-springboot:0.0.1
-                    docker run -d -p 8082:8080 -p 8589:8589 -v /var/jenkins_home/resources/application3.yml:/var/jenkins_home/workspace/Springboot/trinity/src/main/resources/application.yml --name springboot_3 docker-springboot:0.0.1
-
+                    docker run -d -p 8081:8080 -p 8588:8588 --name springboot_2 docker-springboot2:0.0.1
                     '''
                 }
             }
