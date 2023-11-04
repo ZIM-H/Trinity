@@ -3,6 +3,6 @@ package com.trinity.trinity.DTO.request;
 import lombok.Getter;
 
 @Getter
-public class GameStartPlayerListRequestDto {
+public class GameServerPlayerListRequestDto {
     private String userId;
 }
