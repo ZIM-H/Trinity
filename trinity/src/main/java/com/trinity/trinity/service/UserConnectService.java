@@ -1,6 +1,6 @@
 package com.trinity.trinity.service;
 
-import com.trinity.trinity.DTO.request.GameStartPlayerListRequestDto;
+import com.trinity.trinity.DTO.request.GameServerPlayerListRequestDto;
 import com.trinity.trinity.DTO.response.UserConnectResponse;
 import com.trinity.trinity.DTO.response.UserMatchResponse;
 
@@ -11,5 +11,5 @@ public interface UserConnectService {
 
     UserMatchResponse matchMaking(String userId);
 
-    void createGameRoom(List<GameStartPlayerListRequestDto> players);
+    void createGameRoom(List<GameServerPlayerListRequestDto> players);
 }

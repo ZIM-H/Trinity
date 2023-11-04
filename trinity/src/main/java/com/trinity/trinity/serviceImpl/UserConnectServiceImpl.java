@@ -1,11 +1,10 @@
 package com.trinity.trinity.serviceImpl;
 
 import com.google.gson.Gson;
-import com.trinity.trinity.DTO.request.GameStartPlayerListRequestDto;
+import com.trinity.trinity.DTO.request.GameServerPlayerListRequestDto;
 import com.trinity.trinity.DTO.response.*;
 import com.trinity.trinity.gameRoom.dto.GameRoom;
 import com.trinity.trinity.gameRoom.service.GameRoomService;
-import com.trinity.trinity.redisUtil.GameRoomRedisService;
 import com.trinity.trinity.service.UserConnectService;
 import com.trinity.trinity.enums.UserStatus;
 import com.trinity.trinity.redisUtil.RedisService;
@@ -43,7 +42,7 @@ public class UserConnectServiceImpl implements UserConnectService {
     }
 
     @Override
-    public void createGameRoom(List<GameStartPlayerListRequestDto> players) {
+    public void createGameRoom(List<GameServerPlayerListRequestDto> players) {
         GameRoom gameRoom = gameRoomService.createGameRoom(players);
 
         Gson gson = new Gson();
