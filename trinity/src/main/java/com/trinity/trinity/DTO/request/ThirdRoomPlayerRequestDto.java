@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class ThridRoomPlayerRequestDto {
+public class ThirdRoomPlayerRequestDto {
     private String userId;
     private String gameRoomId;
     private ThirdRoom thirdRoom;
