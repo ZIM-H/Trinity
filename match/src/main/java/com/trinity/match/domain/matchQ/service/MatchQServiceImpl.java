@@ -88,6 +88,8 @@ public class MatchQServiceImpl implements MatchQService {
 
                     webClientService.post(playerList);
 
+                    for (GameServerPlayerListRequestDto s : playerList) log.info(s.getUserId());
+
                 } catch (Exception e) {
                     // 에러 발생하면 에러 메시지 찍고 대기 큐에 다시 넣기
                     log.error(e.getMessage());
