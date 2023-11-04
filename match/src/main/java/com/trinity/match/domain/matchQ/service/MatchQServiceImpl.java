@@ -35,7 +35,7 @@ public class MatchQServiceImpl implements MatchQService {
         matchRedisTemplate.opsForZSet().add("matchQueue", userId, time);
     }
 
-    @Scheduled(fixedRate = 3000)
+    @Scheduled(fixedRate = 2000)
     private void checkQueueSize() {
         // SessionCallback 내에 트랜잭션 구현
         matchRedisTemplate.execute(new SessionCallback<Object>() {
@@ -73,11 +73,15 @@ public class MatchQServiceImpl implements MatchQService {
                         return null;
                     }
 
+                    System.out.println("씨발");
+
                     // 트랜잭션 시작
                     operations.multi();
 
+                    System.out.println("다른거 해야하는데");
                     // 트랜잭션 실행
                     operations.exec();
+                    System.out.println("여기서부터 막히면 씨발 뒤져라");
 
                     List<GameServerPlayerListRequestDto> playerList = new ArrayList<>();
                     for (Pair<String, Double> userAndScore : waitingList)
@@ -88,9 +92,11 @@ public class MatchQServiceImpl implements MatchQService {
                     log.info("========post전========");
                     for (GameServerPlayerListRequestDto s : playerList) log.info(s.getUserId());
 
+                    System.out.println("========post1전========");
                     webClientService.post(playerList);
+                    System.out.println("========post1후========");
 
-                    log.info("========post전========");
+                    log.info("========post후========");
                     for (GameServerPlayerListRequestDto s : playerList) log.info(s.getUserId());
 
                 } catch (Exception e) {
