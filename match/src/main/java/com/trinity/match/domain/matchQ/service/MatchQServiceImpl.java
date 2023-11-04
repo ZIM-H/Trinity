@@ -38,6 +38,7 @@ public class MatchQServiceImpl implements MatchQService {
     @Scheduled(fixedRate = 3000)
     private void checkQueueSize() {
         // SessionCallback 내에 트랜잭션 구현
+        System.out.println("이거 실행");
         matchRedisTemplate.execute(new SessionCallback<Object>() {
             @Override
             public Object execute(RedisOperations operations) {
