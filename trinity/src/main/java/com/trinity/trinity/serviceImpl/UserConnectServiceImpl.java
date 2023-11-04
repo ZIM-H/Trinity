@@ -24,7 +24,6 @@ public class UserConnectServiceImpl implements UserConnectService {
     private final RedisService redisService;
     private final WebClientService webClientService;
     private final GameRoomService gameRoomService;
-    private final GameRoomRedisService gameRoomRedisService;
     private  final WebSocketFrameHandler webSocketFrameHandler;
     @Override
     public UserConnectResponse connectToGameServer() {
