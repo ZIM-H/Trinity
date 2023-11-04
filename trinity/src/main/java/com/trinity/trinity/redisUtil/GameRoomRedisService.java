@@ -33,6 +33,9 @@ public class GameRoomRedisService {
                     .fertilizerAmount(last.getFertilizerAmount())
                     .foodAmount(last.getFoodAmount())
                     .roundNo(last.getRoundNo() + 1)
+                    .round(last.getRound())
+                    .playerStatus(last.isPlayerStatus())
+                    .birthday(last.isBirthday())
                     .build();
 
 

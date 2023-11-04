@@ -1,8 +1,11 @@
 package com.trinity.trinity.serviceImpl;
 
+import com.google.gson.Gson;
 import com.trinity.trinity.DTO.request.GameStartPlayerListRequestDto;
-import com.trinity.trinity.DTO.response.UserConnectResponse;
-import com.trinity.trinity.DTO.response.UserMatchResponse;
+import com.trinity.trinity.DTO.response.*;
+import com.trinity.trinity.gameRoom.dto.GameRoom;
+import com.trinity.trinity.gameRoom.service.GameRoomService;
+import com.trinity.trinity.redisUtil.GameRoomRedisService;
 import com.trinity.trinity.service.UserConnectService;
 import com.trinity.trinity.enums.UserStatus;
 import com.trinity.trinity.redisUtil.RedisService;
@@ -20,6 +23,8 @@ public class UserConnectServiceImpl implements UserConnectService {
 
     private final RedisService redisService;
     private final WebClientService webClientService;
+    private final GameRoomService gameRoomService;
+    private final GameRoomRedisService gameRoomRedisService;
     private  final WebSocketFrameHandler webSocketFrameHandler;
     @Override
     public UserConnectResponse connectToGameServer() {
@@ -40,8 +45,27 @@ public class UserConnectServiceImpl implements UserConnectService {
 
     @Override
     public void createGameRoom(List<GameStartPlayerListRequestDto> players) {
-        for(GameStartPlayerListRequestDto p : players) {
-            webSocketFrameHandler.sendDataToClient(p.getUserId(), ("*hi*" + p.getUserId()));
-        }
+        GameRoom gameRoom = gameRoomService.createGameRoom(players);
+
+        Gson gson = new Gson();
+
+        FirstRoomResponseDto firstRoomResponseDto = FirstRoomResponseDto.builder().build();
+        firstRoomResponseDto.modifyThirdRoomResponseDto(gameRoom);
+
+        SecondRoomResponseDto secondRoomResponseDto = SecondRoomResponseDto.builder().build();
+        secondRoomResponseDto.modifyThirdRoomResponseDto(gameRoom);
+
+        ThirdRoomResponseDto thirdRoomResponseDto = ThirdRoomResponseDto.builder().build();
+        thirdRoomResponseDto.modifyThirdRoomResponseDto(gameRoom);
+
+        String firstRoom = gson.toJson(firstRoomResponseDto);
+        String secondRoom = gson.toJson(secondRoomResponseDto);
+        String thirdRoom = gson.toJson(thirdRoomResponseDto);
+
+
+        webSocketFrameHandler.sendDataToClient(gameRoom.getRound().getFirstRoom().getPlayer(), firstRoom);
+        webSocketFrameHandler.sendDataToClient(gameRoom.getRound().getSecondRoom().getPlayer(), secondRoom);
+        webSocketFrameHandler.sendDataToClient(gameRoom.getRound().getThirdRoom().getPlayer(), thirdRoom);
+
     }
 }

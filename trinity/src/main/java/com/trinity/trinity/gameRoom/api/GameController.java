@@ -3,7 +3,7 @@ package com.trinity.trinity.gameRoom.api;
 import com.trinity.trinity.DTO.request.FirstRoomPlayerRequestDto;
 import com.trinity.trinity.DTO.request.GameStartPlayerListRequestDto;
 import com.trinity.trinity.DTO.request.SecondRoomPlayerRequestDto;
-import com.trinity.trinity.DTO.request.ThridRoomPlayerRequestDto;
+import com.trinity.trinity.DTO.request.ThirdRoomPlayerRequestDto;
 import com.trinity.trinity.gameRoom.service.GameRoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +34,7 @@ public class GameController {
     }
 
     @PostMapping("/third")
-    public ResponseEntity<?> thirdTestController(@Validated @RequestBody ThridRoomPlayerRequestDto thirdRoomPlayerRequestDto) {
+    public ResponseEntity<?> thirdTestController(@Validated @RequestBody ThirdRoomPlayerRequestDto thirdRoomPlayerRequestDto) {
         gameRoomService.updateThridRoom(thirdRoomPlayerRequestDto);
         return ResponseEntity.ok().build();
     }

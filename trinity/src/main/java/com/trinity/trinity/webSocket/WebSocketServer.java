@@ -1,5 +1,7 @@
 package com.trinity.trinity.webSocket;
 
+import com.trinity.trinity.gameRoom.service.GameRoomService;
+import com.trinity.trinity.redisUtil.GameRoomRedisService;
 import com.trinity.trinity.redisUtil.RedisService;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
@@ -22,10 +24,14 @@ import org.springframework.stereotype.Component;
 public final class WebSocketServer {
     static final boolean SSL = System.getProperty("ssl") != null;
     private final RedisService redisService;
+    private final GameRoomService gameRoomService;
+    private final GameRoomRedisService gameRoomRedisService;
     private final int PORT;
 
-    public WebSocketServer(RedisService redisService, @Value("${websocket.port}") int PORT) {
+    public WebSocketServer(RedisService redisService, GameRoomService gameRoomService, GameRoomRedisService gameRoomRedisService, @Value("${websocket.port}") int PORT) {
         this.redisService = redisService;
+        this.gameRoomService = gameRoomService;
+        this.gameRoomRedisService = gameRoomRedisService;
         this.PORT = PORT;
     }
 
@@ -45,12 +51,9 @@ public final class WebSocketServer {
             b.group(bossGroup, workerGroup)
                     .channel(NioServerSocketChannel.class)
                     .handler(new LoggingHandler(LogLevel.INFO))
-                    .childHandler(new WebSocketServerInitializer(sslCtx, redisService));
+                    .childHandler(new WebSocketServerInitializer(sslCtx, redisService, gameRoomService, gameRoomRedisService));
 
             Channel ch = b.bind(PORT).sync().channel();
-            System.out.println(ch.localAddress());
-            System.out.println("isOpen?? : " + ch.isOpen());
-            System.out.println("isWritable?? : " + ch.isWritable());
 
             ch.closeFuture().sync();
 

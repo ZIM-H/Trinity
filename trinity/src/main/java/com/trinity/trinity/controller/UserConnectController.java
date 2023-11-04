@@ -2,6 +2,7 @@ package com.trinity.trinity.controller;
 
 import com.trinity.trinity.DTO.request.GameStartPlayerListRequestDto;
 import com.trinity.trinity.service.UserConnectService;
+import com.trinity.trinity.webSocket.WebSocketFrameHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -16,6 +17,7 @@ import java.util.List;
 public class UserConnectController {
 
     private final UserConnectService userConnectService;
+    private final WebSocketFrameHandler webSocketFrameHandler;
 
     @GetMapping({"", "/"})
     public ResponseEntity<Object> connectToGameServer() {
