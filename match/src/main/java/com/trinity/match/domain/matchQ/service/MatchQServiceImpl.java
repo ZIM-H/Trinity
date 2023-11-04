@@ -38,7 +38,6 @@ public class MatchQServiceImpl implements MatchQService {
     @Scheduled(fixedRate = 3000)
     private void checkQueueSize() {
         // SessionCallback 내에 트랜잭션 구현
-        System.out.println("이거 실행");
         matchRedisTemplate.execute(new SessionCallback<Object>() {
             @Override
             public Object execute(RedisOperations operations) {
@@ -86,8 +85,12 @@ public class MatchQServiceImpl implements MatchQService {
                                 .userId(userAndScore.getFirst())
                                 .build());
 
+                    log.info("========post전========");
+                    for (GameServerPlayerListRequestDto s : playerList) log.info(s.getUserId());
+
                     webClientService.post(playerList);
 
+                    log.info("========post전========");
                     for (GameServerPlayerListRequestDto s : playerList) log.info(s.getUserId());
 
                 } catch (Exception e) {
