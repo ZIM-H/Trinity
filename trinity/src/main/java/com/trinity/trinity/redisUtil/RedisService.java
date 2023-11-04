@@ -5,12 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.trinity.trinity.client.ClientSession;
+import com.trinity.trinity.gameRoom.dto.GameRoomCheck;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -18,38 +20,46 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class RedisService {
 
-    private final RedisTemplate<String, String> redisTemplate;
+    private final RedisTemplate<String, String> redisLoginTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     public void saveData(String key, String value) {
-        redisTemplate.opsForHash().put("connectingMember", key, value);
+        redisLoginTemplate.opsForHash().put("connectingMember", key, value);
     }
 
-    public String retrieveData(String key) {
-        return (String) redisTemplate.opsForValue().get(key);
-    }
-
-    public void deleteData(String key) {
-        redisTemplate.delete(key);
-    }
 
 
     public void saveClient(ClientSession clientSession) throws JsonProcessingException {
-        Map<String, String> userInfo = new HashMap<>();
-        userInfo.put("clientId", clientSession.getClientId());
-        userInfo.put("clientAddress", clientSession.getClientAddress());
-        String userInfoSerialized = new ObjectMapper().writeValueAsString(userInfo); // 직렬화
+//        Map<String, String> userInfo = new HashMap<>();
+//        userInfo.put("clientId", clientSession.getClientId());
+//        userInfo.put("clientAddress", clientSession.getClientAddress());
+//        String userInfoSerialized = new ObjectMapper().writeValueAsString(userInfo); // 직렬화
 
-        redisTemplate.opsForHash().put("ClientSession", clientSession.getUserId(), userInfoSerialized);
+        redisTemplate.opsForHash().put("ClientSession", clientSession.getUserId(), clientSession);
     }
     public ClientSession getClientSession(String key) {
-        return (ClientSession) redisTemplate.opsForHash().get("ClientSession", key);
+        ClientSession clientSession = (ClientSession) redisTemplate.opsForHash().get("ClientSession", key);
+        return clientSession;
     }
 
-    public String getClientAddress(String userId) {
-        String channelInfo = redisTemplate.<String, String>opsForHash()
+    public String getClientId(String userId) {
+        System.out.println(userId);
+        ClientSession channelInfo = (ClientSession) redisTemplate.opsForHash()
                 .get("ClientSession", userId);
-        JsonObject jsonObject = new JsonParser().parse(channelInfo).getAsJsonObject();
-        String channelAddress = jsonObject.get("channelAddress").getAsString();
-        return channelAddress;
+        String clientId = channelInfo.getClientId();
+        return clientId;
+    }
+
+    public boolean checkGameRoomAllClear(String gameRoomId, String roomNum) {
+        GameRoomCheck checkList = (GameRoomCheck) redisTemplate.opsForHash().get("gameRoomCheck", gameRoomId);
+        boolean complete = checkList.checkRoom(roomNum);
+        if(complete){
+            checkList = new GameRoomCheck();
+            redisTemplate.opsForHash().put("connectingMember", gameRoomId, checkList);
+            return true;
+        } else {
+            redisTemplate.opsForHash().put("connectingMember", gameRoomId, checkList);
+            return false;
+        }
     }
 }

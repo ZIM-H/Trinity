@@ -1,5 +1,7 @@
 package com.trinity.trinity.webSocket;
 
+import com.trinity.trinity.gameRoom.service.GameRoomService;
+import com.trinity.trinity.redisUtil.GameRoomRedisService;
 import com.trinity.trinity.redisUtil.RedisService;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
@@ -18,6 +20,8 @@ public class WebSocketServerInitializer extends ChannelInitializer<SocketChannel
     private static final String WEBSOCKET_PATH = "/websocket";
     private final SslContext sslCtx;
     private final RedisService redisService;
+    private final GameRoomService gameRoomService;
+    private final GameRoomRedisService gameRoomRedisService;
 
     @Override
     public void initChannel(SocketChannel ch){
@@ -29,6 +33,6 @@ public class WebSocketServerInitializer extends ChannelInitializer<SocketChannel
         pipeline.addLast(new HttpObjectAggregator(65536));
         pipeline.addLast(new WebSocketServerCompressionHandler());
         pipeline.addLast(new WebSocketServerProtocolHandler(WEBSOCKET_PATH, null, true));
-        pipeline.addLast(new WebSocketFrameHandler(redisService));
+        pipeline.addLast(new WebSocketFrameHandler(redisService, gameRoomRedisService, gameRoomService));
     }
 }

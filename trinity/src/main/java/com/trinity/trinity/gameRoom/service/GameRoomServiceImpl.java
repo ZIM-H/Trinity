@@ -3,7 +3,7 @@ package com.trinity.trinity.gameRoom.service;
 import com.trinity.trinity.DTO.request.FirstRoomPlayerRequestDto;
 import com.trinity.trinity.DTO.request.GameStartPlayerListRequestDto;
 import com.trinity.trinity.DTO.request.SecondRoomPlayerRequestDto;
-import com.trinity.trinity.DTO.request.ThridRoomPlayerRequestDto;
+import com.trinity.trinity.DTO.request.ThirdRoomPlayerRequestDto;
 import com.trinity.trinity.gameRoom.dto.*;
 import com.trinity.trinity.redisUtil.GameRoomRedisService;
 import lombok.RequiredArgsConstructor;
@@ -23,12 +23,12 @@ public class GameRoomServiceImpl implements GameRoomService {
     private final CreateService createService;
 
     @Override
-    public String createGameRoom(List<GameStartPlayerListRequestDto> players) {
+    public GameRoom createGameRoom(List<GameStartPlayerListRequestDto> players) {
         String gameRoomId = UUID.randomUUID().toString();
 
         FirstRoom firstRoom = createService.createFirstRoom(players.get(0).getUserId());
         SecondRoom secondRoom = createService.createSecondRoom(players.get(1).getUserId());
-        ThirdRoom thirdRoom = createService.createThirdRoom(players.get(1).getUserId());
+        ThirdRoom thirdRoom = createService.createThirdRoom(players.get(2).getUserId());
 
         Round round = createService.createRound(firstRoom, secondRoom, thirdRoom);
 
@@ -44,7 +44,7 @@ public class GameRoomServiceImpl implements GameRoomService {
 
         gameRoomRedisService.createGameRoom(gameRoom);
 
-        return gameRoomId;
+        return gameRoom;
     }
 
     @Override
@@ -89,7 +89,7 @@ public class GameRoomServiceImpl implements GameRoomService {
     }
 
     @Override
-    public void updateThridRoom(ThridRoomPlayerRequestDto thirdRoomPlayerRequestDto) {
+    public void updateThridRoom(ThirdRoomPlayerRequestDto thirdRoomPlayerRequestDto) {
         GameRoom gameRoom = gameRoomRedisService.getGameRoom(thirdRoomPlayerRequestDto.getGameRoomId());
 
         Round round = gameRoom.getRound();
@@ -252,6 +252,9 @@ public class GameRoomServiceImpl implements GameRoomService {
         // 이산화탄소 고장 일수 2일차인지 판단
         if(secondRoom.getCarbonCaptureStatus() == 2) gameRoom.setCarbonCaptureNotice(true);
 
+        // 로직이 끝?
+        gameRoomRedisService.saveGameRoomToTemp(gameRoom);
+        gameRoomRedisService.saveGameRoom(gameRoom);
     }
 
     private void movePlayer(int direction, String gameRoomId) {
