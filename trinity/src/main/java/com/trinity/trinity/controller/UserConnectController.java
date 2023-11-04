@@ -17,7 +17,6 @@ import java.util.List;
 public class UserConnectController {
 
     private final UserConnectService userConnectService;
-    private final WebSocketFrameHandler webSocketFrameHandler;
 
     @GetMapping({"", "/"})
     public ResponseEntity<Object> connectToGameServer() {
@@ -33,6 +32,9 @@ public class UserConnectController {
 
     @PostMapping("/players")
     public ResponseEntity<Void> takePlayer(@Validated @RequestBody List<GameStartPlayerListRequestDto> players) {
+        for(int i=0; i<3; i++) {
+            System.out.print("user" + (i+1) + " " + players.get(i).getUserId() + " ");
+        }
         userConnectService.createGameRoom(players);
         return ResponseEntity.ok().build();
     }

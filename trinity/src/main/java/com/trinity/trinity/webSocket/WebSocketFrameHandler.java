@@ -1,13 +1,11 @@
 package com.trinity.trinity.webSocket;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.trinity.trinity.DTO.request.FirstRoomPlayerRequestDto;
 import com.trinity.trinity.DTO.request.SecondRoomPlayerRequestDto;
 import com.trinity.trinity.DTO.request.ThirdRoomPlayerRequestDto;
-import com.trinity.trinity.DTO.response.FirstRoomPlayerResponseDto;
 import com.trinity.trinity.DTO.response.FirstRoomResponseDto;
 import com.trinity.trinity.DTO.response.SecondRoomResponseDto;
 import com.trinity.trinity.DTO.response.ThirdRoomResponseDto;
@@ -48,11 +46,8 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
             String requestType = jsonObject.get("type").getAsString();
             if(requestType.equals("matching")){
                 String userId = jsonObject.get("userId").getAsString();
-                System.out.println("useRId : " + userId);
                 String clientId = ctx.channel().id().toString();
-                System.out.println(clientId);
                 String clientAddress = ctx.channel().remoteAddress().toString();
-                System.out.println(clientAddress);
                 ClientSession clientSession = redisService.getClientSession(userId);
                 if(clientSession == null) {
                     clientSession = new ClientSession(userId, clientId, clientAddress);
