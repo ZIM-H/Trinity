@@ -7,7 +7,7 @@ public class WebSocketClientManager : MonoBehaviour
 {
     private WebSocket webSocket;
     private bool isConnected;
-    private string serverURL = "wss://k9b308.p.ssafy.io:8589"; // 웹소켓 서버 주소로 바꾸세요
+    private string serverURL = "wss://k9b308.p.ssafy.io/websocket"; // 웹소켓 서버 주소로 바꾸세요
     private string userId; // userId를 저장하는 멤버 변수
 
     private string apiUrl = "https://k9b308.p.ssafy.io/api/game/match/"; // 대상 URL로 바꾸세요.
@@ -47,6 +47,16 @@ public class WebSocketClientManager : MonoBehaviour
             };
             webSocket.OnError += (sender, e) => Debug.LogError("WebSocket error: " + e.Message);
             webSocket.ConnectAsync();
+            webSocket.OnMessage += (sender, e) =>
+            {
+                // 이 부분에서 웹소켓 서버로부터 수신한 메시지를 처리합니다.
+                // e.Data에 수신된 메시지가 포함되어 있습니다.
+                string receivedMessage = e.Data;
+                Debug.Log("Received message: " + receivedMessage);
+
+                // 메시지 처리 로직을 여기에 추가합니다.
+            };
+
         }
     }
 
