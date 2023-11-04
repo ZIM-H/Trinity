@@ -1,7 +1,7 @@
 package com.trinity.trinity.gameRoom.api;
 
 import com.trinity.trinity.DTO.request.FirstRoomPlayerRequestDto;
-import com.trinity.trinity.DTO.request.GameStartPlayerListRequestDto;
+import com.trinity.trinity.DTO.request.GameServerPlayerListRequestDto;
 import com.trinity.trinity.DTO.request.SecondRoomPlayerRequestDto;
 import com.trinity.trinity.DTO.request.ThirdRoomPlayerRequestDto;
 import com.trinity.trinity.gameRoom.service.GameRoomService;
@@ -40,7 +40,7 @@ public class GameController {
     }
 
     @PostMapping("/start")
-    public ResponseEntity<?> gameMatch(@Validated @RequestBody List<GameStartPlayerListRequestDto> players) {
+    public ResponseEntity<?> gameMatch(@Validated @RequestBody List<GameServerPlayerListRequestDto> players) {
         gameRoomService.createGameRoom(players);
         return ResponseEntity.ok().build();
     }

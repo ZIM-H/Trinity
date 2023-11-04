@@ -1,7 +1,7 @@
 package com.trinity.trinity.gameRoom.service;
 
 import com.trinity.trinity.DTO.request.FirstRoomPlayerRequestDto;
-import com.trinity.trinity.DTO.request.GameStartPlayerListRequestDto;
+import com.trinity.trinity.DTO.request.GameServerPlayerListRequestDto;
 import com.trinity.trinity.DTO.request.SecondRoomPlayerRequestDto;
 import com.trinity.trinity.DTO.request.ThirdRoomPlayerRequestDto;
 import com.trinity.trinity.gameRoom.dto.*;
@@ -23,7 +23,7 @@ public class GameRoomServiceImpl implements GameRoomService {
     private final CreateService createService;
 
     @Override
-    public GameRoom createGameRoom(List<GameStartPlayerListRequestDto> players) {
+    public GameRoom createGameRoom(List<GameServerPlayerListRequestDto> players) {
         String gameRoomId = UUID.randomUUID().toString();
 
         FirstRoom firstRoom = createService.createFirstRoom(players.get(0).getUserId());
