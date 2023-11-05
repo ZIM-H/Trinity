@@ -1,15 +1,17 @@
 package com.trinity.trinity.webClient;
 
 import io.netty.channel.Channel;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 @Component
+@RequiredArgsConstructor
 public class ChannelManager {
-    private static final ChannelManager INSTANCE = new ChannelManager();
-    private ConcurrentMap<String, Channel> channels = new ConcurrentHashMap<>();
+//    private final ChannelManager INSTANCE = new ChannelManager();
+    private final ConcurrentMap<String, Channel> channels = new ConcurrentHashMap<>();
 
     public void addChannel(String id, Channel channel) {
         System.out.println("Channel Manager 안 : " + channel);
