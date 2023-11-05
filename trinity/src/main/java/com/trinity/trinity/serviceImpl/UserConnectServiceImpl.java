@@ -37,6 +37,7 @@ public class UserConnectServiceImpl implements UserConnectService {
 
     @Override
     public UserMatchResponse matchMaking(String userId) {
+        redisService.saveData(userId, String.valueOf(UserStatus.WAITING));
         webClientService.get(userId);
         return null;
     }
