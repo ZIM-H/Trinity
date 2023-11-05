@@ -60,7 +60,35 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
                     // 클라이언트 세션을 Redis에 저장
                     redisService.saveClient(clientSession);
                 }
-                sendDataToClient(clientId, "Connecting SUCCESS!!");
+                //1 로그인 : clientId, channel 저장 --> channelManager를 통해(이건 webclient패키지안에 보면 있음)
+                //2 "metching" 타입의 websocket을 보낸다
+                //3 요청에 담긴 userId를 통해 redisService에서 clientId를 찾아오고
+                //4 그 clientId와 보낼 데이터(connecting success!!)를 함께 sendDataToClient메소드에 넣어주면 잘간다.
+                //5 sendDataToClient 메소드 안에서는 받아온 clientId를 channelManager.getChannel 메소드에 넣어서 channel을 찾아온다
+                //6 찾아온 채널로 connecting success!!를 보내면 잘간다.
+
+                //7 webclient를 이용해 매칭 서버에서 3명의 사람 리스트를 받아온다.
+                //8 받아온 3명을 기반으로 방을 만든다.
+                //9 방에 대한 정보 중 userId를 뽑아온다.
+                //10 뽑아온 userId를 이용해 redisService의 getClientId를 써서 clientId를 각각 구한다.
+                //11 clientId를 websocketFrameHandler.sendDataToClient(clientId, firstRoom) 이렇게 보낸다.
+                //12 sendDataToClient에서는 받아온 clientId를 이용해 channel을 찾는다
+                //13 아까와는 다르게 channel을 못찾는다. "channel is null!"
+
+                //14 다시 "metching"을 타입으로 하는 websocket 메세지를 보낸다.
+                //15 같이 보낸 userId를 이용해 clientId를 찾는다.
+                //16 sendDataToClient를 사용해 clientId, 와 "connecting success!!"를 보낸다.
+                //17 성공했고 아까 보냈을 때 출력된 clientId와 비교해 본다. 똑같다
+                //18 같이 출력된 channel 정보도 출력해 본다 똑같다.
+
+                try {
+                    // 2초 동안 일시 중지
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+
+                sendDataToClient(redisService.getClientId(userId), "Connecting SUCCESS!!");
                 System.out.println("clientId는 ??????????????? : " + redisService.getClientId(userId));
                 System.out.println("처음 보냈을 때 확인용 ChannelRead 안 : "+ channelManager.getChannel(clientId));
             } else if (requestType.equals("roundEnd")) {
