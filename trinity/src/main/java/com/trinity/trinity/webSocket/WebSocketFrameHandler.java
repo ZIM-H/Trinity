@@ -61,6 +61,7 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
                     redisService.saveClient(clientSession);
                 }
                 sendDataToClient(clientId, "Connecting SUCCESS!!");
+                System.out.println("clientId는 ??????????????? : " + redisService.getClientId(userId));
                 System.out.println("처음 보냈을 때 확인용 ChannelRead 안 : "+ channelManager.getChannel(clientId));
             } else if (requestType.equals("roundEnd")) {
                 String gameRoomId = jsonObject.get("gameRoomId").getAsString();
@@ -105,9 +106,14 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
                         sendDataToClient(gameRoom.getRound().getSecondRoom().getPlayer(), secondRoom);
                         sendDataToClient(gameRoom.getRound().getThirdRoom().getPlayer(), thirdRoom);
                     }
-                    else {
-                        System.out.println("첫 연결");
-                    }
+                }
+            }else if(requestType.equals("test")){
+                if(ctx.channel() == channelManager.getChannel(ctx.channel().id().toString())) {
+
+                    sendDataToClient(ctx.channel().id().toString(), "같은데요");
+                } else {
+                    sendDataToClient(ctx.channel().id().toString(), "다른데요");
+                    System.out.println("달라요");
                 }
             }
         } else {
