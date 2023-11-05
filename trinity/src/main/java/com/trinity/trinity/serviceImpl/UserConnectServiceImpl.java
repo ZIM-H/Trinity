@@ -23,7 +23,7 @@ public class UserConnectServiceImpl implements UserConnectService {
     private final RedisService redisService;
     private final WebClientService webClientService;
     private final GameRoomService gameRoomService;
-    private  final WebSocketFrameHandler webSocketFrameHandler;
+    private final WebSocketFrameHandler webSocketFrameHandler;
     @Override
     public UserConnectResponse connectToGameServer() {
         String userId = UUID.randomUUID().toString();

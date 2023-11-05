@@ -3,6 +3,7 @@ package com.trinity.trinity.webSocket;
 import com.trinity.trinity.gameRoom.service.GameRoomService;
 import com.trinity.trinity.redisUtil.GameRoomRedisService;
 import com.trinity.trinity.redisUtil.RedisService;
+import com.trinity.trinity.webClient.ChannelManager;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.EventLoopGroup;
@@ -24,12 +25,15 @@ public final class WebSocketServer {
     private final RedisService redisService;
     private final GameRoomService gameRoomService;
     private final GameRoomRedisService gameRoomRedisService;
+
+    private final ChannelManager channelManager;
     private final int PORT;
 
     public WebSocketServer(RedisService redisService, GameRoomService gameRoomService, GameRoomRedisService gameRoomRedisService, @Value("${websocket.port}") int PORT) {
         this.redisService = redisService;
         this.gameRoomService = gameRoomService;
         this.gameRoomRedisService = gameRoomRedisService;
+        this.channelManager = new ChannelManager();
         this.PORT = PORT;
     }
 
@@ -49,7 +53,7 @@ public final class WebSocketServer {
             b.group(bossGroup, workerGroup)
                     .channel(NioServerSocketChannel.class)
                     .handler(new LoggingHandler(LogLevel.INFO))
-                    .childHandler(new WebSocketServerInitializer(sslCtx, redisService, gameRoomService, gameRoomRedisService));
+                    .childHandler(new WebSocketServerInitializer(sslCtx, redisService, gameRoomService, gameRoomRedisService, channelManager));
 
             Channel ch = b.bind(PORT).sync().channel();
 

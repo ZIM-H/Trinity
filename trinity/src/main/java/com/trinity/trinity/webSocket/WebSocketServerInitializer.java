@@ -3,6 +3,7 @@ package com.trinity.trinity.webSocket;
 import com.trinity.trinity.gameRoom.service.GameRoomService;
 import com.trinity.trinity.redisUtil.GameRoomRedisService;
 import com.trinity.trinity.redisUtil.RedisService;
+import com.trinity.trinity.webClient.ChannelManager;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
@@ -22,6 +23,7 @@ public class WebSocketServerInitializer extends ChannelInitializer<SocketChannel
     private final RedisService redisService;
     private final GameRoomService gameRoomService;
     private final GameRoomRedisService gameRoomRedisService;
+    private final ChannelManager channelManager;
 
     @Override
     public void initChannel(SocketChannel ch){
@@ -33,6 +35,6 @@ public class WebSocketServerInitializer extends ChannelInitializer<SocketChannel
         pipeline.addLast(new HttpObjectAggregator(65536));
         pipeline.addLast(new WebSocketServerCompressionHandler());
         pipeline.addLast(new WebSocketServerProtocolHandler(WEBSOCKET_PATH, null, true));
-        pipeline.addLast(new WebSocketFrameHandler(redisService, gameRoomRedisService, gameRoomService));
+        pipeline.addLast(new WebSocketFrameHandler(redisService, gameRoomRedisService, gameRoomService, channelManager));
     }
 }
