@@ -58,6 +58,7 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
                     redisService.saveClient(clientSession);
                 }
                 sendDataToClient(userId, "Connecting SUCCESS!!");
+                System.out.println("처음 보냈을 때 확인용 : "+activeChannels.get(clientId));
             } else if (requestType.equals("roundEnd")) {
                 String gameRoomId = jsonObject.get("gameRoomId").getAsString();
                 String roomNum = jsonObject.get("roomNum").getAsString();
@@ -99,7 +100,7 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
                         thirdRoomResponseDto.modifyThirdRoomResponseDto(gameRoom);
                         String thirdRoom = gson.toJson(thirdRoomResponseDto);
                         System.out.println("채널 읽기 안에서 유저 Id : "  + gameRoom.getRound().getThirdRoom().getPlayer());
-
+                        
                         sendDataToClient(gameRoom.getRound().getFirstRoom().getPlayer(), firstRoom);
                         sendDataToClient(gameRoom.getRound().getSecondRoom().getPlayer(), secondRoom);
                         sendDataToClient(gameRoom.getRound().getThirdRoom().getPlayer(), thirdRoom);
@@ -133,7 +134,6 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
     }
 
     public void sendDataToClient(String userId, String data) {
-        System.out.println("유저 아이디 : " + userId);
         String clientId = redisService.getClientId(userId);
         System.out.println("클라이언트 아이디 : " + clientId);
         Channel channel = activeChannels.get(clientId);
@@ -141,6 +141,7 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
         if (channel != null) {
             TextWebSocketFrame textFrame = new TextWebSocketFrame(data);
             channel.writeAndFlush(textFrame);
+            System.out.println("첫 메세지 전송 후 유지가 되는가 : " + channel);
         } else {
             System.out.println("channel is null!");
         }
