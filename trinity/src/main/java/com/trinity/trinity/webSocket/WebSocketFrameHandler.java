@@ -14,6 +14,7 @@ import com.trinity.trinity.gameRoom.dto.GameRoom;
 import com.trinity.trinity.gameRoom.service.GameRoomService;
 import com.trinity.trinity.redisUtil.GameRoomRedisService;
 import com.trinity.trinity.redisUtil.RedisService;
+import com.trinity.trinity.webClient.ChannelManager;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -38,7 +39,8 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
     private final RedisService redisService;
     private final GameRoomRedisService gameRoomRedisService;
     private final GameRoomService gameRoomService;
-    private ConcurrentMap<String, Channel> activeChannels = new ConcurrentHashMap<>();
+    private final ChannelManager channelManager;
+
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, WebSocketFrame frame) throws Exception {
@@ -57,8 +59,8 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
                     // 클라이언트 세션을 Redis에 저장
                     redisService.saveClient(clientSession);
                 }
-                sendDataToClient(userId, "Connecting SUCCESS!!");
-                System.out.println("처음 보냈을 때 확인용 ChannelRead 안 : "+activeChannels.get(clientId));
+                sendDataToClient(clientId, "Connecting SUCCESS!!");
+                System.out.println("처음 보냈을 때 확인용 ChannelRead 안 : "+ channelManager.getChannel(clientId));
             } else if (requestType.equals("roundEnd")) {
                 String gameRoomId = jsonObject.get("gameRoomId").getAsString();
                 String roomNum = jsonObject.get("roomNum").getAsString();
@@ -103,7 +105,7 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
                         sendDataToClient(gameRoom.getRound().getThirdRoom().getPlayer(), thirdRoom);
                     }
                     else {
-
+                        System.out.println("첫 연결");
                     }
                 }
             }
@@ -116,7 +118,7 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) {
         if(evt instanceof WebSocketServerProtocolHandler.HandshakeComplete){
-            activeChannels.put(ctx.channel().id().toString(), ctx.channel());
+            channelManager.addChannel(ctx.channel().id().toString(), ctx.channel());
         }
         if (evt instanceof IdleStateEvent) {
             IdleStateEvent e = (IdleStateEvent) evt;
@@ -129,14 +131,11 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
         }
     }
 
-    public void sendDataToClient(String userId, String data) {
-        String clientId = redisService.getClientId(userId);
+    public void sendDataToClient(String clientId, String data) {
         System.out.println("클라이언트 아이디 : " + clientId);
-        if(activeChannels.containsKey(clientId)) System.out.println("key 존재 --> 초기화 안됐음");
-        Channel channel = activeChannels.get(clientId);
-        System.out.println("sendDataToClient의 activeChannels : " + activeChannels.get(clientId));
-        if(channel.isActive()) System.out.println("채널 살아있네");
-        System.out.println("채널이 있나...? : " + channel);
+//        if(activeChannels.containsKey(clientId)) System.out.println("key 존재 --> 초기화 안됐음");
+        Channel channel = channelManager.getChannel(clientId);
+        System.out.println("sendDataToClient의 activeChannels : " + channelManager.getChannel(clientId));
         if (channel != null) {
             TextWebSocketFrame textFrame = new TextWebSocketFrame(data);
             channel.writeAndFlush(textFrame);
