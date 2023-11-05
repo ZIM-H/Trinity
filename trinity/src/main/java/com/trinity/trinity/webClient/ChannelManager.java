@@ -27,8 +27,15 @@ public class ChannelManager {
 
     public Channel getChannel(String clientId) {
         Channel channel = channels.get(clientId);
-        System.out.println("@@@@@@@@@@@getClient안 : " + channel);
         return channel;
+    }
+
+    public ConcurrentMap<String, Channel> getChannels() {
+        return channels;
+    }
+
+    public boolean CheckContainKey(String clientId) {
+        return channels.containsKey(clientId);
     }
 
     // other methods to manipulate channels...

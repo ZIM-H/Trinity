@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentMap;
 
 @Service
 @RequiredArgsConstructor
@@ -48,6 +49,9 @@ public class UserConnectServiceImpl implements UserConnectService {
 
     @Override
     public void createGameRoom(List<GameServerPlayerListRequestDto> players) {
+
+        System.out.println(testMethod());
+
         GameRoom gameRoom = gameRoomService.createGameRoom(players);
 
         Gson gson = new Gson();
@@ -69,9 +73,23 @@ public class UserConnectServiceImpl implements UserConnectService {
         String secondUserClientId = redisService.getClientId(gameRoom.getRound().getSecondRoom().getPlayer());
         String thirdUserClientId = redisService.getClientId(gameRoom.getRound().getSecondRoom().getPlayer());
 
+        Channel channel = channelManager.getChannel(firstUserClientId);
+        TextWebSocketFrame textFrame = new TextWebSocketFrame(firstRoom);
+        channel.writeAndFlush(textFrame);
+
         webSocketFrameHandler.sendDataToClient(firstUserClientId, firstRoom);
         webSocketFrameHandler.sendDataToClient(secondUserClientId, secondRoom);
         webSocketFrameHandler.sendDataToClient(thirdUserClientId, thirdRoom);
 
+    }
+
+    public String testMethod() {
+        String ans = "";
+        ConcurrentMap<String, Channel> channels = channelManager.getChannels();
+        for (String clientId : channels.keySet()) {
+            Channel eachChannel = channels.get(clientId);
+            ans += eachChannel;
+        }
+        return ans;
     }
 }

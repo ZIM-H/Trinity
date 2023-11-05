@@ -52,6 +52,7 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
             if(requestType.equals("matching")){
                 String userId = jsonObject.get("userId").getAsString();
                 String clientId = ctx.channel().id().toString();
+                System.out.println(clientId);
                 String clientAddress = ctx.channel().remoteAddress().toString();
                 ClientSession clientSession = redisService.getClientSession(userId);
                 if(clientSession == null) {
@@ -118,6 +119,7 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) {
         if(evt instanceof WebSocketServerProtocolHandler.HandshakeComplete){
+            System.out.println("저장될때!!!!!!!!!!!!!!!!!!!!!!!!! : " + ctx.channel().id().toString());
             channelManager.addChannel(ctx.channel().id().toString(), ctx.channel());
         }
         if (evt instanceof IdleStateEvent) {
@@ -132,10 +134,13 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
     }
 
     public void sendDataToClient(String clientId, String data) {
-        System.out.println("클라이언트 아이디 : " + clientId);
 //        if(activeChannels.containsKey(clientId)) System.out.println("key 존재 --> 초기화 안됐음");
+        if(channelManager.CheckContainKey(clientId)){
+            System.out.println("있습니다.");
+        } else {
+            System.out.println("없습니다.");
+        }
         Channel channel = channelManager.getChannel(clientId);
-        System.out.println("sendDataToClient의 activeChannels : " + channelManager.getChannel(clientId));
         if (channel != null) {
             TextWebSocketFrame textFrame = new TextWebSocketFrame(data);
             channel.writeAndFlush(textFrame);
