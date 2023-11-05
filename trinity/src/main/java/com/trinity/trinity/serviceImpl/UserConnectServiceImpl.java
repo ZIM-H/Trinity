@@ -12,7 +12,6 @@ import com.trinity.trinity.webClient.ChannelManager;
 import com.trinity.trinity.webClient.WebClientService;
 import com.trinity.trinity.webSocket.WebSocketFrameHandler;
 import io.netty.channel.Channel;
-import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -71,11 +70,7 @@ public class UserConnectServiceImpl implements UserConnectService {
 
         String firstUserClientId = redisService.getClientId(gameRoom.getRound().getFirstRoom().getPlayer());
         String secondUserClientId = redisService.getClientId(gameRoom.getRound().getSecondRoom().getPlayer());
-        String thirdUserClientId = redisService.getClientId(gameRoom.getRound().getSecondRoom().getPlayer());
-
-        Channel channel = channelManager.getChannel(firstUserClientId);
-        TextWebSocketFrame textFrame = new TextWebSocketFrame(firstRoom);
-        channel.writeAndFlush(textFrame);
+        String thirdUserClientId = redisService.getClientId(gameRoom.getRound().getThirdRoom().getPlayer());
 
         webSocketFrameHandler.sendDataToClient(firstUserClientId, firstRoom);
         webSocketFrameHandler.sendDataToClient(secondUserClientId, secondRoom);

@@ -15,7 +15,7 @@ public class ChannelManager {
         System.out.println("Channel Manager 안 : " + channel);
         channels.put(id, channel);
         for (String clientId : channels.keySet()) {
-            Channel eachChannel = channels.get(id);
+            Channel eachChannel = channels.get(clientId);
             System.out.println("for문의 안쪽이다!!!!!!!!!!!!!!!!! :" + eachChannel);
             // do something with id and channel...
         }
