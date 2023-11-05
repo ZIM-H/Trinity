@@ -20,9 +20,12 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
+import io.netty.handler.timeout.IdleState;
+import io.netty.handler.timeout.IdleStateEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
+import org.springframework.web.socket.PingMessage;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -87,12 +90,15 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
                         FirstRoomResponseDto firstRoomResponseDto = FirstRoomResponseDto.builder().build();
                         firstRoomResponseDto.modifyThirdRoomResponseDto(gameRoom);
                         String firstRoom = gson.toJson(firstRoomResponseDto);
+                        System.out.println("채널 읽기 안에서 유저 Id : "  + gameRoom.getRound().getFirstRoom().getPlayer());
                         SecondRoomResponseDto secondRoomResponseDto = SecondRoomResponseDto.builder().build();
                         secondRoomResponseDto.modifyThirdRoomResponseDto(gameRoom);
                         String secondRoom = gson.toJson(secondRoomResponseDto);
+                        System.out.println("채널 읽기 안에서 유저 Id : "  + gameRoom.getRound().getSecondRoom().getPlayer());
                         ThirdRoomResponseDto thirdRoomResponseDto = ThirdRoomResponseDto.builder().build();
                         thirdRoomResponseDto.modifyThirdRoomResponseDto(gameRoom);
                         String thirdRoom = gson.toJson(thirdRoomResponseDto);
+                        System.out.println("채널 읽기 안에서 유저 Id : "  + gameRoom.getRound().getThirdRoom().getPlayer());
 
                         sendDataToClient(gameRoom.getRound().getFirstRoom().getPlayer(), firstRoom);
                         sendDataToClient(gameRoom.getRound().getSecondRoom().getPlayer(), secondRoom);
@@ -115,10 +121,21 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
             activeChannels.put(ctx.channel().id().toString(), ctx.channel());
             System.out.println("핸들러 이후 :" + ctx.channel());
         }
+        if (evt instanceof IdleStateEvent) {
+            IdleStateEvent e = (IdleStateEvent) evt;
+            System.out.println("끊어질 수 있다.");
+            if (e.state() == IdleState.READER_IDLE) {
+                ctx.close();
+            } else if (e.state() == IdleState.WRITER_IDLE) {
+                ctx.writeAndFlush(new PingMessage());
+            }
+        }
     }
 
     public void sendDataToClient(String userId, String data) {
+        System.out.println("유저 아이디 : " + userId);
         String clientId = redisService.getClientId(userId);
+        System.out.println("클라이언트 아이디 : " + clientId);
         Channel channel = activeChannels.get(clientId);
         System.out.println("채널이 있나...? : " + channel);
         if (channel != null) {
