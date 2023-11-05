@@ -8,8 +8,11 @@ import com.trinity.trinity.gameRoom.service.GameRoomService;
 import com.trinity.trinity.service.UserConnectService;
 import com.trinity.trinity.enums.UserStatus;
 import com.trinity.trinity.redisUtil.RedisService;
+import com.trinity.trinity.webClient.ChannelManager;
 import com.trinity.trinity.webClient.WebClientService;
 import com.trinity.trinity.webSocket.WebSocketFrameHandler;
+import io.netty.channel.Channel;
+import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +27,7 @@ public class UserConnectServiceImpl implements UserConnectService {
     private final WebClientService webClientService;
     private final GameRoomService gameRoomService;
     private final WebSocketFrameHandler webSocketFrameHandler;
+    private final ChannelManager channelManager;
     @Override
     public UserConnectResponse connectToGameServer() {
         String userId = UUID.randomUUID().toString();
@@ -61,10 +65,13 @@ public class UserConnectServiceImpl implements UserConnectService {
         String secondRoom = gson.toJson(secondRoomResponseDto);
         String thirdRoom = gson.toJson(thirdRoomResponseDto);
 
+        String firstUserClientId = redisService.getClientId(gameRoom.getRound().getFirstRoom().getPlayer());
+        String secondUserClientId = redisService.getClientId(gameRoom.getRound().getSecondRoom().getPlayer());
+        String thirdUserClientId = redisService.getClientId(gameRoom.getRound().getSecondRoom().getPlayer());
 
-        webSocketFrameHandler.sendDataToClient(gameRoom.getRound().getFirstRoom().getPlayer(), firstRoom);
-        webSocketFrameHandler.sendDataToClient(gameRoom.getRound().getSecondRoom().getPlayer(), secondRoom);
-        webSocketFrameHandler.sendDataToClient(gameRoom.getRound().getThirdRoom().getPlayer(), thirdRoom);
+        webSocketFrameHandler.sendDataToClient(firstUserClientId, firstRoom);
+        webSocketFrameHandler.sendDataToClient(secondUserClientId, secondRoom);
+        webSocketFrameHandler.sendDataToClient(thirdUserClientId, thirdRoom);
 
     }
 }
