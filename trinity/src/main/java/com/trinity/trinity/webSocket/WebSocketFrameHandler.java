@@ -112,14 +112,15 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) {
         if(evt instanceof WebSocketServerProtocolHandler.HandshakeComplete){
-            System.out.println(ctx.channel().id());
             activeChannels.put(ctx.channel().id().toString(), ctx.channel());
+            System.out.println("핸들러 이후 :" + ctx.channel());
         }
     }
 
     public void sendDataToClient(String userId, String data) {
         String clientId = redisService.getClientId(userId);
         Channel channel = activeChannels.get(clientId);
+        System.out.println("채널이 있나...? : " + channel);
         if (channel != null) {
             TextWebSocketFrame textFrame = new TextWebSocketFrame(data);
             channel.writeAndFlush(textFrame);
