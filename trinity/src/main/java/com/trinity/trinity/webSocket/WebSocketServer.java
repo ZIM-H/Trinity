@@ -29,11 +29,11 @@ public final class WebSocketServer {
     private final ChannelManager channelManager;
     private final int PORT;
 
-    public WebSocketServer(RedisService redisService, GameRoomService gameRoomService, GameRoomRedisService gameRoomRedisService, @Value("${websocket.port}") int PORT) {
+    public WebSocketServer(RedisService redisService, GameRoomService gameRoomService, GameRoomRedisService gameRoomRedisService, ChannelManager channelManager, @Value("${websocket.port}") int PORT) {
         this.redisService = redisService;
         this.gameRoomService = gameRoomService;
         this.gameRoomRedisService = gameRoomRedisService;
-        this.channelManager = new ChannelManager();
+        this.channelManager = channelManager;
         this.PORT = PORT;
     }
 
