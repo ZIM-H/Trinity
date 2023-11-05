@@ -110,12 +110,11 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
     }
 
     @Override
-    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) {
         if(evt instanceof WebSocketServerProtocolHandler.HandshakeComplete){
             System.out.println(ctx.channel().id());
             activeChannels.put(ctx.channel().id().toString(), ctx.channel());
         }
-        return;
     }
 
     public void sendDataToClient(String userId, String data) {
