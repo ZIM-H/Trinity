@@ -58,7 +58,7 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
                     redisService.saveClient(clientSession);
                 }
                 sendDataToClient(userId, "Connecting SUCCESS!!");
-                System.out.println("처음 보냈을 때 확인용 : "+activeChannels.get(clientId));
+                System.out.println("처음 보냈을 때 확인용 ChannelRead 안 : "+activeChannels.get(clientId));
             } else if (requestType.equals("roundEnd")) {
                 String gameRoomId = jsonObject.get("gameRoomId").getAsString();
                 String roomNum = jsonObject.get("roomNum").getAsString();
@@ -91,15 +91,12 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
                         FirstRoomResponseDto firstRoomResponseDto = FirstRoomResponseDto.builder().build();
                         firstRoomResponseDto.modifyThirdRoomResponseDto(gameRoom);
                         String firstRoom = gson.toJson(firstRoomResponseDto);
-                        System.out.println("채널 읽기 안에서 유저 Id : "  + gameRoom.getRound().getFirstRoom().getPlayer());
                         SecondRoomResponseDto secondRoomResponseDto = SecondRoomResponseDto.builder().build();
                         secondRoomResponseDto.modifyThirdRoomResponseDto(gameRoom);
                         String secondRoom = gson.toJson(secondRoomResponseDto);
-                        System.out.println("채널 읽기 안에서 유저 Id : "  + gameRoom.getRound().getSecondRoom().getPlayer());
                         ThirdRoomResponseDto thirdRoomResponseDto = ThirdRoomResponseDto.builder().build();
                         thirdRoomResponseDto.modifyThirdRoomResponseDto(gameRoom);
                         String thirdRoom = gson.toJson(thirdRoomResponseDto);
-                        System.out.println("채널 읽기 안에서 유저 Id : "  + gameRoom.getRound().getThirdRoom().getPlayer());
                         
                         sendDataToClient(gameRoom.getRound().getFirstRoom().getPlayer(), firstRoom);
                         sendDataToClient(gameRoom.getRound().getSecondRoom().getPlayer(), secondRoom);
@@ -120,7 +117,6 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) {
         if(evt instanceof WebSocketServerProtocolHandler.HandshakeComplete){
             activeChannels.put(ctx.channel().id().toString(), ctx.channel());
-            System.out.println("핸들러 이후 :" + ctx.channel());
         }
         if (evt instanceof IdleStateEvent) {
             IdleStateEvent e = (IdleStateEvent) evt;
@@ -136,7 +132,10 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
     public void sendDataToClient(String userId, String data) {
         String clientId = redisService.getClientId(userId);
         System.out.println("클라이언트 아이디 : " + clientId);
+        if(activeChannels.containsKey(clientId)) System.out.println("key 존재 --> 초기화 안됐음");
         Channel channel = activeChannels.get(clientId);
+        System.out.println("sendDataToClient의 activeChannels : " + activeChannels.get(clientId));
+        if(channel.isActive()) System.out.println("채널 살아있네");
         System.out.println("채널이 있나...? : " + channel);
         if (channel != null) {
             TextWebSocketFrame textFrame = new TextWebSocketFrame(data);
