@@ -9,9 +9,7 @@ import com.trinity.trinity.redisUtil.GameRoomRedisService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -220,27 +218,33 @@ public class GameRoomServiceImpl implements GameRoomService {
 
         movePlayer(1, gameRoomId);
 
-        // 랜덤 이벤트 추출
-        Random random = new Random();
+        int[] events = {2, 3, 1, 32, 1, 2, 20, 3, 0, 8, 1, 1};
 
-        List<Integer> eventList = IntStream.range(0, 7)
-                .boxed()
-                .collect(Collectors.toList());
+        gameRoom.setEvent(events[gameRoom.getRoundNo()-1]);
 
-        while(eventList.size() > 0){
-            int idx = random.nextInt(eventList.size());
-            int eventIdx = eventList.get(idx);
+        playEvent(gameRoom.getEvent(), gameRoomId);
 
-            if(!validateEvent(eventIdx, gameRoomId)){
-                eventList.remove(eventIdx);
-            }
-            else {
-                // 소행성 이벤트이면서 보호막이 있다면
-                if (eventIdx == 0 && thirdRoom.getBarrierStatus() == 2) eventIdx = 8;
-                gameRoom.setEvent(eventIdx);
-                break;
-            }
-        }
+//        // 랜덤 이벤트 추출
+//        Random random = new Random();
+//
+//        List<Integer> eventList = IntStream.range(0, 7)
+//                .boxed()
+//                .collect(Collectors.toList());
+//
+//        while(eventList.size() > 0){
+//            int idx = random.nextInt(eventList.size());
+//            int eventIdx = eventList.get(idx);
+//
+//            if(!validateEvent(eventIdx, gameRoomId)){
+//                eventList.remove(eventIdx);
+//            }
+//            else {
+//                // 소행성 이벤트이면서 보호막이 있다면
+//                if (eventIdx == 0 && thirdRoom.getBarrierStatus() == 2) eventIdx = 8;
+//                gameRoom.setEvent(eventIdx);
+//                break;
+//            }
+//        }
 
         // 이산화탄소 고장 일수 2일차인지 판단
         if(secondRoom.getCarbonCaptureStatus() == 2) gameRoom.setCarbonCaptureNotice(true);
@@ -248,6 +252,38 @@ public class GameRoomServiceImpl implements GameRoomService {
         // 로직이 끝?
         gameRoomRedisService.saveGameRoomToTemp(gameRoom);
         gameRoomRedisService.saveGameRoom(gameRoom);
+    }
+
+    private void playEvent(int eventNo, String gameRoomId) {
+        GameRoom gameRoom = gameRoomRedisService.getGameRoom(gameRoomId);
+        FirstRoom firstRoom = gameRoom.getRound().getFirstRoom();
+        SecondRoom secondRoom = gameRoom.getRound().getSecondRoom();
+        ThirdRoom thirdRoom = gameRoom.getRound().getThirdRoom();
+
+
+        switch (eventNo) {
+            case 2:
+                blackHoleEvent(thirdRoom);
+                break;
+            case 3:
+                blackHoleEvent(thirdRoom);
+                asteroidEvent(thirdRoom);
+                break;
+            case 1:
+                asteroidEvent(thirdRoom);
+                break;
+            case 32:
+                carbonCaptureEvent(secondRoom);
+                break;
+            case 20:
+                gameRoom.setBirthday(true);
+                break;
+            case 0:
+                break;
+            case 8:
+                gameRoom.setPlayerStatus(true);
+                break;
+        }
     }
 
     @Override
