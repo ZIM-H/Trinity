@@ -40,7 +40,7 @@ public class SecondRoomResponseDto {
     }
 
     @Builder
-    private class SecondResponseDto {
+    private static class SecondResponseDto {
         String message;
         int fertilizerAmount;
         int carbonCaptureTryCount;
