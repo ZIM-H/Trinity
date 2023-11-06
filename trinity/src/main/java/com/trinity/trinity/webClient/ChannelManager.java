@@ -35,5 +35,4 @@ public class ChannelManager {
     public boolean CheckContainKey(String clientId) {
         return channels.containsKey(clientId);
     }
-
 }

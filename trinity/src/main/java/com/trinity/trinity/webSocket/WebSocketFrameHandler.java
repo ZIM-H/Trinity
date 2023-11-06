@@ -6,10 +6,9 @@ import com.google.gson.JsonParser;
 import com.trinity.trinity.DTO.request.FirstRoomPlayerRequestDto;
 import com.trinity.trinity.DTO.request.SecondRoomPlayerRequestDto;
 import com.trinity.trinity.DTO.request.ThirdRoomPlayerRequestDto;
-import com.trinity.trinity.DTO.response.FirstRoomResponseDto;
-import com.trinity.trinity.DTO.response.SecondRoomResponseDto;
-import com.trinity.trinity.DTO.response.ThirdRoomResponseDto;
+import com.trinity.trinity.DTO.response.*;
 import com.trinity.trinity.client.ClientSession;
+import com.trinity.trinity.enums.UserStatus;
 import com.trinity.trinity.gameRoom.dto.GameRoom;
 import com.trinity.trinity.gameRoom.service.GameRoomService;
 import com.trinity.trinity.redisUtil.GameRoomRedisService;
@@ -49,7 +48,7 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
             if(requestType.equals("matching")){
                 String userId = jsonObject.get("userId").getAsString();
                 String clientId = ctx.channel().id().toString();
-                System.out.println(clientId);
+
                 String clientAddress = ctx.channel().remoteAddress().toString();
                 ClientSession clientSession = redisService.getClientSession(userId);
                 if(clientSession == null) {
@@ -61,47 +60,108 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
                 sendDataToClient(redisService.getClientId(userId), "Connecting SUCCESS!!");
 
             } else if (requestType.equals("roundEnd")) {
+
+                Gson gson;
+
                 String gameRoomId = jsonObject.get("gameRoomId").getAsString();
                 String roomNum = jsonObject.get("roomNum").getAsString();
 
 
+                // 채널 연결확인
+                if(userLeaveProcess(gameRoomId)) return;
+
+
+                // 방번호 확인하는 로직
                 if(roomNum.equals("first")) {
-                    Gson gson = new Gson();
+                    gson = new Gson();
                     FirstRoomPlayerRequestDto dto = gson.fromJson(jsonObject.get("FirstRoomPlayerRequestDto").getAsString(), FirstRoomPlayerRequestDto.class);
                     gameRoomService.updateFirstRoom(dto);
                 } else if(roomNum.equals("second")) {
-                    Gson gson = new Gson();
+                    gson = new Gson();
                     SecondRoomPlayerRequestDto dto = gson.fromJson(jsonObject.get("SecondRoomPlayerRequestDto").getAsString(), SecondRoomPlayerRequestDto.class);
                     gameRoomService.updateSecondRoom(dto);
                 } else {
-                    Gson gson = new Gson();
+                    gson = new Gson();
                     ThirdRoomPlayerRequestDto dto = gson.fromJson(jsonObject.get("ThirdRoomPlayerRequestDto").getAsString(), ThirdRoomPlayerRequestDto.class);
                     gameRoomService.updateThridRoom(dto);
                 }
 
+                //3 사람의 모든 데이터가 들어온 경우 true를 반환
                 boolean complete = redisService.checkGameRoomAllClear(gameRoomId, roomNum);
+                // 모든 데이터를 받았을 경우
                 if(complete) {
+                    if(gameRoomService.checkEndGame(gameRoomId)) {
+                        gameVictoryProcess(gameRoomId);
+                    }
+
+                    GameRoom beforeGameRoom = gameRoomRedisService.getGameRoom(gameRoomId);
+
+                    // 소행성 충돌 여부 데이터 뽑기
+                    boolean asteroidConflict = false;
+                    int barrierStatus = beforeGameRoom.getRound().getThirdRoom().getBarrierStatus();
+                    boolean asteroidStatus = beforeGameRoom.getRound().getThirdRoom().isAsteroidStatus();
+                    boolean asteroidDestroy = beforeGameRoom.getRound().getThirdRoom().isAsteroidDestroyTry();
+
+                    if(asteroidStatus && barrierStatus < 2 && !asteroidDestroy) asteroidConflict = true;
+
+
+                    // 1. 13일차 - 위에서 checkEndGame으로 체크
+                    // 2. 중간에 게임에서 실패
+                    // 3. 누군가 게임에서 나간 경우
+                    // --> gameOver = true
                     boolean gameOver = gameRoomService.gameLogic(gameRoomId);
+
+                    // gameOver가 아닌 경우
                     if (!gameOver) {
+
                         gameRoomService.morningGameLogic(gameRoomId);
 
                         GameRoom gameRoom = gameRoomRedisService.getGameRoom(gameRoomId);
 
+                        //채널 연결 확인
+                        if(userLeaveProcess(gameRoomId)) return;
+
+                        String firstId = gameRoom.getRound().getFirstRoom().getPlayer();
+                        String secondId = gameRoom.getRound().getSecondRoom().getPlayer();
+                        String thirdId = gameRoom.getRound().getThirdRoom().getPlayer();
+
+                        String firstClientId = redisService.getClientId(firstId);
+                        String secondClientId = redisService.getClientId(secondId);
+                        String thirdClientId = redisService.getClientId(thirdId);
+
+                        CommonDataDto commonDataDto = CommonDataDto.builder()
+                                .conflictAsteroid(asteroidConflict)
+                                .build();
+
+                        commonDataDto.setCommonDto(gameRoom);
+
                         //각 방정보를 뽑아와서 각 플레이어에게 보내기
-                        Gson gson = new Gson();
-                        FirstRoomResponseDto firstRoomResponseDto = FirstRoomResponseDto.builder().build();
-                        firstRoomResponseDto.modifyThirdRoomResponseDto(gameRoom);
+                        FirstRoomResponseDto firstRoomResponseDto = FirstRoomResponseDto.builder()
+                                .type("nextRound")
+                                .build();
+                        firstRoomResponseDto.modifyFirstRoomResponseDto(commonDataDto, gameRoom);
                         String firstRoom = gson.toJson(firstRoomResponseDto);
-                        SecondRoomResponseDto secondRoomResponseDto = SecondRoomResponseDto.builder().build();
-                        secondRoomResponseDto.modifyThirdRoomResponseDto(gameRoom);
+
+
+                        SecondRoomResponseDto secondRoomResponseDto = SecondRoomResponseDto.builder()
+                                .type("nextRound")
+                                .build();
+                        secondRoomResponseDto.modifySecondRoomResponseDto(commonDataDto, gameRoom);
                         String secondRoom = gson.toJson(secondRoomResponseDto);
-                        ThirdRoomResponseDto thirdRoomResponseDto = ThirdRoomResponseDto.builder().build();
-                        thirdRoomResponseDto.modifyThirdRoomResponseDto(gameRoom);
+
+
+                        ThirdRoomResponseDto thirdRoomResponseDto = ThirdRoomResponseDto.builder()
+                                .type("nextRound")
+                                .build();
+                        thirdRoomResponseDto.modifyThirdRoomResponseDto(commonDataDto, gameRoom);
                         String thirdRoom = gson.toJson(thirdRoomResponseDto);
-                        
-                        sendDataToClient(gameRoom.getRound().getFirstRoom().getPlayer(), firstRoom);
-                        sendDataToClient(gameRoom.getRound().getSecondRoom().getPlayer(), secondRoom);
-                        sendDataToClient(gameRoom.getRound().getThirdRoom().getPlayer(), thirdRoom);
+
+                        sendDataToClient(firstClientId, firstRoom);
+                        sendDataToClient(secondClientId, secondRoom);
+                        sendDataToClient(thirdClientId, thirdRoom);
+                    } else {
+                        // 게임 오버 true인 경우
+                        gameDefeatedProcess(gameRoomId);
                     }
                 }
             }
@@ -134,5 +194,143 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
         } else {
             System.out.println("channel is null!");
         }
+    }
+
+    public boolean ChannelAlive(String userId) {
+        String clientId = redisService.getClientId(userId);
+        Channel channel = channelManager.getChannel(clientId);
+        if(channel.isActive()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+
+    public boolean userLeaveProcess(String gameRoomId) {
+        Gson gson = new Gson();
+
+        GameRoom gameRoom = gameRoomRedisService.getGameRoom(gameRoomId);
+
+        boolean checkActiveAll = true;
+        String firstId = gameRoom.getRound().getFirstRoom().getPlayer();
+        String secondId = gameRoom.getRound().getSecondRoom().getPlayer();
+        String thirdId = gameRoom.getRound().getThirdRoom().getPlayer();
+
+        String firstClientId = redisService.getClientId(firstId);
+        String secondClientId = redisService.getClientId(secondId);
+        String thirdClientId = redisService.getClientId(thirdId);
+
+        if(!ChannelAlive(firstId) || !ChannelAlive(secondId) || !ChannelAlive(thirdId)) {
+            checkActiveAll = false;
+        }
+
+        if(!checkActiveAll) {
+
+            GameOverDto userLeaveGameOverDto = GameOverDto.builder()
+                    .status("userLeave")
+                    .build();
+
+            String userLeaveMessage = gson.toJson(userLeaveGameOverDto);
+            String data = gson.toJson(userLeaveMessage);
+
+            sendDataToClient(firstClientId, data);
+            sendDataToClient(secondClientId, data);
+            sendDataToClient(thirdClientId, data);
+
+            gameRoomService.endGame(gameRoomId);
+
+            redisService.saveData(firstId, String.valueOf(UserStatus.LOBBY));
+            redisService.saveData(secondId, String.valueOf(UserStatus.LOBBY));
+            redisService.saveData(thirdId, String.valueOf(UserStatus.LOBBY));
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void gameVictoryProcess(String gameRoomId) {
+
+        Gson gson = new Gson();
+
+        GameRoom gameRoom = gameRoomRedisService.getGameRoom(gameRoomId);
+
+        String firstId = gameRoom.getRound().getFirstRoom().getPlayer();
+        String secondId = gameRoom.getRound().getSecondRoom().getPlayer();
+        String thirdId = gameRoom.getRound().getThirdRoom().getPlayer();
+
+        String firstClientId = redisService.getClientId(firstId);
+        String secondClientId = redisService.getClientId(secondId);
+        String thirdClientId = redisService.getClientId(thirdId);
+
+        GameOverDto userLeaveGameOverDto = GameOverDto.builder()
+                .status("VICTORY")
+                .build();
+
+        String userLeaveMessage = gson.toJson(userLeaveGameOverDto);
+        String data = gson.toJson(userLeaveMessage);
+
+        sendDataToClient(firstClientId, data);
+        sendDataToClient(secondClientId, data);
+        sendDataToClient(thirdClientId, data);
+
+        //clientSession 삭제
+        redisService.removeClientSession(firstId);
+        redisService.removeClientSession(secondId);
+        redisService.removeClientSession(thirdId);
+
+        //channel 삭제
+        channelManager.removeChannel(firstClientId);
+        channelManager.removeChannel(secondClientId);
+        channelManager.removeChannel(thirdClientId);
+
+        gameRoomService.endGame(gameRoomId);
+
+        redisService.saveData(firstId, String.valueOf(UserStatus.LOBBY));
+        redisService.saveData(secondId, String.valueOf(UserStatus.LOBBY));
+        redisService.saveData(thirdId, String.valueOf(UserStatus.LOBBY));
+    }
+
+    public void gameDefeatedProcess(String gameRoomId) {
+        Gson gson = new Gson();
+
+        GameRoom gameRoom = gameRoomRedisService.getGameRoom(gameRoomId);
+
+        String firstId = gameRoom.getRound().getFirstRoom().getPlayer();
+        String secondId = gameRoom.getRound().getSecondRoom().getPlayer();
+        String thirdId = gameRoom.getRound().getThirdRoom().getPlayer();
+
+        String firstClientId = redisService.getClientId(firstId);
+        String secondClientId = redisService.getClientId(secondId);
+        String thirdClientId = redisService.getClientId(thirdId);
+
+        GameOverDto userLeaveGameOverDto = GameOverDto.builder()
+                .status("DEFEATED")
+                .build();
+
+        String userLeaveMessage = gson.toJson(userLeaveGameOverDto);
+        String data = gson.toJson(userLeaveMessage);
+
+        sendDataToClient(firstClientId, data);
+        sendDataToClient(secondClientId, data);
+        sendDataToClient(thirdClientId, data);
+
+        //clientSession 삭제
+        redisService.removeClientSession(firstId);
+        redisService.removeClientSession(secondId);
+        redisService.removeClientSession(thirdId);
+
+        //channel 삭제
+        channelManager.removeChannel(firstClientId);
+        channelManager.removeChannel(secondClientId);
+        channelManager.removeChannel(thirdClientId);
+
+        gameRoomService.endGame(gameRoomId);
+
+        redisService.saveData(firstId, String.valueOf(UserStatus.LOBBY));
+        redisService.saveData(secondId, String.valueOf(UserStatus.LOBBY));
+        redisService.saveData(thirdId, String.valueOf(UserStatus.LOBBY));
     }
 }

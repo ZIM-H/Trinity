@@ -1,5 +1,6 @@
 package com.trinity.trinity.gameRoom.dto;
 
+import com.trinity.trinity.DTO.request.ThirdRoomPlayerRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,7 +24,7 @@ public class ThirdRoom {
     private boolean asteroidDestroyTry;
 
     @Builder
-    public ThirdRoom(int fertilizerAmount, String player, String message, boolean asteroidStatus, boolean blackholeStatus, int barrierStatus, boolean barrierDevTry, String developer, boolean inputFertilizerTry, boolean makeFertilizerTry) {
+    public ThirdRoom(int fertilizerAmount, String player, String message, boolean asteroidStatus, boolean blackholeStatus, int barrierStatus, boolean barrierDevTry, String developer, boolean inputFertilizerTry, boolean makeFertilizerTry, boolean asteroidDestroyTry) {
         this.fertilizerAmount = fertilizerAmount;
         this.player = player;
         this.message = message;
@@ -34,5 +35,25 @@ public class ThirdRoom {
         this.developer = developer;
         this.inputFertilizerTry = inputFertilizerTry;
         this.makeFertilizerTry = makeFertilizerTry;
+        this.asteroidDestroyTry = asteroidDestroyTry;
+    }
+
+    public static ThirdRoom toDto(ThirdRoomPlayerRequestDto dto) {
+        return ThirdRoom.builder()
+                .player(dto.getUserId())
+                .message(dto.getMessage())
+                .inputFertilizerTry(dto.isInputFertilizerTry())
+                .makeFertilizerTry(dto.isMakeFertilizerTry())
+                .asteroidStatus(dto.isAsteroidStatus())
+                .asteroidDestroyTry(dto.isAsteroidDestroyTry())
+                .barrierDevTry(dto.isBarrierDevTry())
+                .build();
+    }
+
+    public void modifyDto(ThirdRoom oldRoom) {
+        this.fertilizerAmount = oldRoom.getFertilizerAmount();
+        this.barrierStatus = oldRoom.getBarrierStatus();
+        this.developer = oldRoom.getDeveloper();
+        this.blackholeStatus = oldRoom.isBlackholeStatus();
     }
 }
