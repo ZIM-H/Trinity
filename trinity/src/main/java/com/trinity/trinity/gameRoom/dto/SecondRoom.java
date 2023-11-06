@@ -1,5 +1,6 @@
 package com.trinity.trinity.gameRoom.dto;
 
+import com.trinity.trinity.DTO.request.SecondRoomPlayerRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,6 +40,25 @@ public class SecondRoom {
 
         this.inputFertilizerTry = inputFertilizerTry;
         this.makeFertilizerTry = makeFertilizerTry;
+    }
 
+    public static SecondRoom toDto(SecondRoomPlayerRequestDto dto) {
+        return SecondRoom.builder()
+                .player(dto.getUserId())
+                .message(dto.getMessage())
+                .inputFertilizerTry(dto.isInputFertilizerTry())
+                .makeFertilizerTry(dto.isMakeFertilizerTry())
+                .carbonCaptureTry(dto.isCarbonCaptureTry())
+                .farmTry(dto.isFarmTry())
+                .taurineFilterTry(dto.isTaurineFilterTry())
+                .build();
+    }
+
+    public void modifyDto(SecondRoom oldRoom) {
+        this.fertilizerAmount = oldRoom.getFertilizerAmount();
+        this.carbonCaptureStatus = oldRoom.getCarbonCaptureStatus();
+        this.carbonCaptureTryCount = oldRoom.getCarbonCaptureTryCount();
+        this.taurineFilterStatus = oldRoom.isTaurineFilterStatus();
+        this.farmStatus = oldRoom.isFarmStatus();
     }
 }

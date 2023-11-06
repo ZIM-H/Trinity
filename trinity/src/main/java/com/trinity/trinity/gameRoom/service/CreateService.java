@@ -25,6 +25,7 @@ public class CreateService {
                 .developer("")
                 .inputFertilizerTry(false)
                 .makeFertilizerTry(false)
+                .asteroidDestroyTry(false)
                 .build();
     }
 

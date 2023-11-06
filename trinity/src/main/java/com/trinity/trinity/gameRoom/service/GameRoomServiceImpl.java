@@ -10,8 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Service
 @RequiredArgsConstructor
@@ -57,8 +55,11 @@ public class GameRoomServiceImpl implements GameRoomService {
             round = gameRoom.getRound();
         }
 
-        round.modifyFirstRoom(firstRoomPlayerRequestDto.getFirstRoom());
+        FirstRoom firstRoom = FirstRoom.toDto(firstRoomPlayerRequestDto);
+        FirstRoom oldRoom = round.getFirstRoom();
 
+        firstRoom.modifyDto(oldRoom);
+        round.modifyFirstRoom(firstRoom);
 
         gameRoomRedisService.saveGameRoomToTemp(gameRoom);
 
@@ -75,7 +76,11 @@ public class GameRoomServiceImpl implements GameRoomService {
             round = gameRoom.getRound();
         }
 
-        round.modifySecondRoom(secondRoomPlayerRequestDto.getSecondRoom());
+        SecondRoom secondRoom = SecondRoom.toDto(secondRoomPlayerRequestDto);
+        SecondRoom oldRoom = round.getSecondRoom();
+
+        secondRoom.modifyDto(oldRoom);
+        round.modifySecondRoom(secondRoom);
 
 
         gameRoomRedisService.saveGameRoomToTemp(gameRoom);
@@ -92,9 +97,11 @@ public class GameRoomServiceImpl implements GameRoomService {
             gameRoom.setRound(new Round());
             round = gameRoom.getRound();
         }
+        ThirdRoom thirdRoom = ThirdRoom.toDto(thirdRoomPlayerRequestDto);
+        ThirdRoom oldRoom = round.getThirdRoom();
 
-        round.modifyThirdRoom(thirdRoomPlayerRequestDto.getThirdRoom());
-
+        thirdRoom.modifyDto(oldRoom);
+        round.modifyThirdRoom(thirdRoom);
 
         gameRoomRedisService.saveGameRoomToTemp(gameRoom);
     }
