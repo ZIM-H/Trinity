@@ -109,6 +109,26 @@ public class GameRoomServiceImpl implements GameRoomService {
         gameRoom.setFoodAmount(gameRoom.getFoodAmount() - 1);
         if (gameRoom.isCarbonCaptureNotice()) gameRoom.setCarbonCaptureNotice(false);
 
+        // 자동 보호막
+        if (thirdRoom.isBarrierDevTry()) {
+            thirdRoom.setBarrierDevTry(false);
+            if (thirdRoom.getPlayer().equals(thirdRoom.getDeveloper())) {
+                thirdRoom.setBarrierStatus(thirdRoom.getBarrierStatus() + 1);
+            } else {
+                thirdRoom.setBarrierStatus(1);
+                thirdRoom.setDeveloper(thirdRoom.getPlayer());
+            }
+        }
+
+        // 소행성
+        if (thirdRoom.isAsteroidStatus()) {
+            if (thirdRoom.getBarrierStatus() < 2) {
+                secondRoom.setFarmStatus(false);
+                gameRoom.setFertilizerAmount(0);
+            }
+            thirdRoom.setAsteroidStatus(false);
+        }
+
         // 공중 정원
         if (!secondRoom.isFarmStatus()) {
             if (secondRoom.isFarmTry()) {
@@ -178,23 +198,6 @@ public class GameRoomServiceImpl implements GameRoomService {
         // 블랙홀
         if (thirdRoom.isBlackholeStatus()) {
             if (gameRoom.getRoundNo() + 2 <= 12) gameRoom.getBlackholeStatus()[gameRoom.getRoundNo() + 2] = true;
-        }
-
-        // 자동 보호막
-        if (thirdRoom.isBarrierDevTry()) {
-            thirdRoom.setBarrierDevTry(false);
-            if (thirdRoom.getPlayer().equals(thirdRoom.getDeveloper())) {
-                thirdRoom.setBarrierStatus(thirdRoom.getBarrierStatus() + 1);
-            } else {
-                thirdRoom.setBarrierStatus(1);
-                thirdRoom.setDeveloper(thirdRoom.getPlayer());
-            }
-        }
-
-        // 소행성
-        if (thirdRoom.isAsteroidStatus()) {
-            if (thirdRoom.getBarrierStatus() < 2) secondRoom.setFarmStatus(false);
-            thirdRoom.setAsteroidStatus(false);
         }
 
         gameRoomRedisService.saveGameRoom(gameRoom);
