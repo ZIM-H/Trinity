@@ -30,11 +30,6 @@ public class RedisService {
 
 
     public void saveClient(ClientSession clientSession) throws JsonProcessingException {
-//        Map<String, String> userInfo = new HashMap<>();
-//        userInfo.put("clientId", clientSession.getClientId());
-//        userInfo.put("clientAddress", clientSession.getClientAddress());
-//        String userInfoSerialized = new ObjectMapper().writeValueAsString(userInfo); // 직렬화
-
         redisTemplate.opsForHash().put("ClientSession", clientSession.getUserId(), clientSession);
     }
     public ClientSession getClientSession(String key) {
