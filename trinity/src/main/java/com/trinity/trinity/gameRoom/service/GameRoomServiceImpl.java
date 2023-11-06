@@ -122,25 +122,22 @@ public class GameRoomServiceImpl implements GameRoomService {
 
         // 소행성
         if (thirdRoom.isAsteroidStatus()) {
-            if (thirdRoom.getBarrierStatus() < 2) {
-                secondRoom.setFarmStatus(false);
-                gameRoom.setFertilizerAmount(0);
-            }
-            thirdRoom.setAsteroidStatus(false);
-        }
+            if (thirdRoom.isAsteroidDestroyTry()) {
+                thirdRoom.setAsteroidDestroyTry(false);
 
-        // 공중 정원
-        if (!secondRoom.isFarmStatus()) {
-            if (secondRoom.isFarmTry()) {
-                secondRoom.setFarmTry(false);
-                secondRoom.setFarmStatus(true);
-                // 식량 생산
-                makeFood(gameRoom, firstRoom, secondRoom, thirdRoom);
+                checkFarm(gameRoom, firstRoom, secondRoom, thirdRoom);
+            } else {
+                if (thirdRoom.getBarrierStatus() < 2) {
+                    if (secondRoom.isFarmTry()) checkFarm(gameRoom, firstRoom, secondRoom, thirdRoom);
+                    secondRoom.setFarmStatus(false);
+                    gameRoom.setFertilizerAmount(0);
+                } else {
+                    checkFarm(gameRoom, firstRoom, secondRoom, thirdRoom);
+                }
             }
-        } else {
-            // 식량 생산
-            makeFood(gameRoom, firstRoom, secondRoom, thirdRoom);
-        }
+
+            thirdRoom.setAsteroidStatus(false);
+        } else checkFarm(gameRoom, firstRoom, secondRoom, thirdRoom);
 
         if (gameRoom.getFoodAmount() == 0) return false;
 
@@ -406,6 +403,20 @@ public class GameRoomServiceImpl implements GameRoomService {
 
     }
 
+    private void checkFarm(GameRoom gameRoom, FirstRoom firstRoom, SecondRoom secondRoom, ThirdRoom thirdRoom) {
+        if (!secondRoom.isFarmStatus()) {
+            if (secondRoom.isFarmTry()) {
+                secondRoom.setFarmTry(false);
+                secondRoom.setFarmStatus(true);
+                // 식량 생산
+                makeFood(gameRoom, firstRoom, secondRoom, thirdRoom);
+            }
+        } else {
+            // 식량 생산
+            makeFood(gameRoom, firstRoom, secondRoom, thirdRoom);
+        }
+    }
+
     private void makeFood(GameRoom gameRoom, FirstRoom firstRoom, SecondRoom secondRoom, ThirdRoom thirdRoom) {
         int count = 0;
         if (firstRoom.isInputFertilizerTry()) {
@@ -432,6 +443,7 @@ public class GameRoomServiceImpl implements GameRoomService {
             gameRoom.setFertilizerAmount(fertilizer);
         }
     }
+
 
 
 }

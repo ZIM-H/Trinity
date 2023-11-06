@@ -20,6 +20,7 @@ public class ThirdRoom {
 
     private boolean inputFertilizerTry;
     private boolean makeFertilizerTry;
+    private boolean asteroidDestroyTry;
 
     @Builder
     public ThirdRoom(int fertilizerAmount, String player, String message, boolean asteroidStatus, boolean blackholeStatus, int barrierStatus, boolean barrierDevTry, String developer, boolean inputFertilizerTry, boolean makeFertilizerTry) {
