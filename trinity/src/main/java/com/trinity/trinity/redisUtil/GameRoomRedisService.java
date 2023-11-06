@@ -1,7 +1,6 @@
 package com.trinity.trinity.redisUtil;
 
 import com.trinity.trinity.gameRoom.dto.GameRoom;
-import com.trinity.trinity.gameRoom.dto.Round;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -38,7 +37,6 @@ public class GameRoomRedisService {
                     .birthday(last.isBirthday())
                     .build();
 
-
             gameRoom.setGameRoomId(gameRoomId);
 
             gameRoomRedisTemplate.opsForHash().put("temp", gameRoomId, gameRoom);
@@ -58,5 +56,10 @@ public class GameRoomRedisService {
         list.add(gameRoom);
         gameRoomRedisTemplate.opsForHash().put("gameRoom", gameRoom.getGameRoomId(), list);
 
+    }
+
+
+    public void deleteGameRoom(String gameRoomId) {
+        gameRoomRedisTemplate.opsForHash().delete("gameRoom", gameRoomId);
     }
 }
