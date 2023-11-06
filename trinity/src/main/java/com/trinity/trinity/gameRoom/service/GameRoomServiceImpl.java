@@ -55,9 +55,7 @@ public class GameRoomServiceImpl implements GameRoomService {
         Round round = gameRoom.getRound();
 
         if (round == null) {
-
             gameRoom.setRound(new Round());
-
             round = gameRoom.getRound();
         }
 
@@ -75,9 +73,7 @@ public class GameRoomServiceImpl implements GameRoomService {
         Round round = gameRoom.getRound();
 
         if (round == null) {
-
             gameRoom.setRound(new Round());
-
             round = gameRoom.getRound();
         }
 
@@ -95,9 +91,7 @@ public class GameRoomServiceImpl implements GameRoomService {
         Round round = gameRoom.getRound();
 
         if (round == null) {
-
             gameRoom.setRound(new Round());
-
             round = gameRoom.getRound();
         }
 
@@ -222,7 +216,6 @@ public class GameRoomServiceImpl implements GameRoomService {
         if(gameRoom.getBlackholeStatus()[gameRoom.getRoundNo()]) {
             movePlayer(0, gameRoomId);
             thirdRoom.setBlackholeStatus(false);
-            return;
         }
 
         movePlayer(1, gameRoomId);
@@ -255,6 +248,21 @@ public class GameRoomServiceImpl implements GameRoomService {
         // 로직이 끝?
         gameRoomRedisService.saveGameRoomToTemp(gameRoom);
         gameRoomRedisService.saveGameRoom(gameRoom);
+    }
+
+    @Override
+    public boolean checkEndGame(String gameRoomId) {
+        GameRoom gameRoom = (GameRoom) gameRoomRedisService.getGameRoom(gameRoomId);
+        if (gameRoom.getRoundNo() == 13) {
+            gameRoomRedisService.deleteGameRoom(gameRoomId);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void endGame(String gameRoomId) {
+        gameRoomRedisService.deleteGameRoom(gameRoomId);
     }
 
     private void movePlayer(int direction, String gameRoomId) {

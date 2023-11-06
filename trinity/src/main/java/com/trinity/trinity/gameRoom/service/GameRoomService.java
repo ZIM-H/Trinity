@@ -21,4 +21,8 @@ public interface GameRoomService {
 
     void morningGameLogic(String gameRoomId);
 
+    boolean checkEndGame(String gameRoomId);
+
+    void endGame(String gameRoomId);
+
 }
