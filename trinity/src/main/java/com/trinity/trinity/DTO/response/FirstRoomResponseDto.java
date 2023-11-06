@@ -47,7 +47,7 @@ public class FirstRoomResponseDto {
     }
 
     @Builder
-    private class FirstResponseDto{
+    private static class FirstResponseDto{
         String message;
         int fertilizerAmount;
         boolean purifierStatus;
