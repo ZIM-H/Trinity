@@ -1,5 +1,6 @@
 using UnityEngine;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 public class VariableManager : MonoBehaviour
 {
@@ -10,15 +11,24 @@ public class VariableManager : MonoBehaviour
     public string playerId;
     public string message;
     public string gameRoomId;
+    public int fertilizerAmount;
+    public int eventCode;
+    public bool conflictAsteroid;
+    public int roomNo;
+    public int date;
+    public int fertilizerAmountInRoom;
+    public bool purifierStatus;
+    public bool farmStatus;
+    public int carbonCaptureTryCount;
     public bool fertilizerInput;
     public bool fertilizerProduce;
-    public bool fertilizerResearch;
+    public bool fertilizerUpgrade;
     public bool purifierFix;
     public bool co2CollectorFix;
     public bool centralGardenFix;
     public bool taurineProduce;
     public bool asteroidShotDown;
-    public bool barrierSystemResearch;
+    public bool barrierUpgrade;
 
 
     private void Awake()
@@ -35,36 +45,55 @@ public class VariableManager : MonoBehaviour
         }
     }
 
-    public void SetFirstDay(string receivedMessage)
+    public void SetFirstDayData(string receivedMessage)
     {
-        JObject jsonObject = JObject.Parse(receivedMessage);
-        string type = (string)jsonObject["type"];
-        if (type == "firstDay") {
-            // 'specific_type'에 따른 처리
-            var firstDayData = jsonObject.ToObject<FirstDay>();
+        FirstDay firstDayData = JsonConvert.DeserializeObject<FirstDay>(receivedMessage);
+
+        // 여기서 필요한 변수에 데이터 할당
+        fertilizerAmount = firstDayData.fertilizerAmount;
+        eventCode = firstDayData.eventCode;
+        fertilizerUpgrade = firstDayData.fertilizerUpgrade;
+        barrierUpgrade = firstDayData.barrierUpgrade;
+        conflictAsteroid = firstDayData.conflictAsteroid;
+        gameRoomId = firstDayData.gameRoomId;
+        if (firstDayData.firstResponseDto != null) {
+            roomNo = 1;
+            purifierStatus = firstDayData.firstResponseDto.purifierStatus;
+            fertilizerAmountInRoom = firstDayData.firstResponseDto.fertilizerAmount;
+            message = firstDayData.firstResponseDto.message;
+        } else if (firstDayData.secondResponseDto != null) {
+            roomNo = 2;
+            farmStatus = firstDayData.secondResponseDto.farmStatus;
+            carbonCaptureTryCount = firstDayData.secondResponseDto.carbonCaptureTryCount;
+            fertilizerAmountInRoom = firstDayData.secondResponseDto.fertilizerAmount;
+            message = firstDayData.secondResponseDto.message;
+        } else {
+            roomNo = 3;
+            fertilizerAmountInRoom = firstDayData.thirdResponseDto.fertilizerAmount;
+            message = firstDayData.thirdResponseDto.message;
         }
-        else if (type == "nextDay"){
-            ;
-        }
+        Debug.Log(Instance);
     }
+
 
     public class FirstDay
     {
         // JSON 데이터 구조에 맞게 필드 정의
-        public FirstRoom firstRoom { get; set; }
-        public SecondRoom secondRoom { get; set; }
-        public ThirdRoom thirdRoom { get; set; }
+        public FirstRoom firstResponseDto { get; set; }
+        public SecondRoom secondResponseDto { get; set; }
+        public ThirdRoom thirdResponseDto { get; set; }
         public int fertilizerAmount { get; set; }
         public int eventCode { get; set; }
         public bool fertilizerUpgrade { get; set; }
         public bool barrierUpgrade { get; set; }
         public bool conflictAsteroid { get; set; }
+        public string gameRoomId { get; set; }
     }
     public class FirstRoom
     {
         public int fertilizerAmount { get; set; }
         public string message { get; set; }
-        public bool fertilizerStatus { get; set; }
+        public bool purifierStatus { get; set; }
     }
 
     public class SecondRoom
@@ -79,7 +108,7 @@ public class VariableManager : MonoBehaviour
     {
         public int fertilizerAmount { get; set; }
         public string message { get; set; }
-        public bool asteroidStatus { get; set; }
+        // public bool asteroidStatus { get; set; }
     }
 
 }
