@@ -1,36 +1,47 @@
 package com.trinity.trinity.DTO.response;
 
 import com.trinity.trinity.gameRoom.dto.GameRoom;
-import com.trinity.trinity.gameRoom.dto.ThirdRoom;
 import lombok.Builder;
 
 public class ThirdRoomResponseDto {
-    private ThirdRoom thirdRoom;
-    private String gameRoomId;
+
+    private String type;
     private int fertilizerAmount;
-    private boolean playerStatus;
-    private boolean birthday;
-    private int event;
-    private boolean carbonCaptureNotice;
+    private int eventCode;
+    private boolean fertilizerUpgrade;
+    private boolean barrierUpgrade;
+    private boolean conflictAsteroid;
+    private String gameRoomId;
+    private ThirdResponseDto thirdResponseDto;
 
     @Builder
-    public ThirdRoomResponseDto(ThirdRoom thirdRoom, String gameRoomId, int fertilizerAmount, boolean playerStatus, boolean birthday, int event, boolean carbonCaptureNotice) {
-        this.thirdRoom = thirdRoom;
-        this.gameRoomId = gameRoomId;
+    public ThirdRoomResponseDto(String type, int fertilizerAmount, int eventCode, boolean fertilizerUpgrade, boolean barrierUpgrade, boolean conflictAsteroid, String gameRoomId, ThirdResponseDto thirdResponseDto) {
+        this.type = type;
         this.fertilizerAmount = fertilizerAmount;
-        this.playerStatus = playerStatus;
-        this.birthday = birthday;
-        this.event = event;
-        this.carbonCaptureNotice = carbonCaptureNotice;
+        this.eventCode = eventCode;
+        this.fertilizerUpgrade = fertilizerUpgrade;
+        this.barrierUpgrade = barrierUpgrade;
+        this.conflictAsteroid = conflictAsteroid;
+        this.gameRoomId = gameRoomId;
+        this.thirdResponseDto = thirdResponseDto;
     }
 
-    public void modifyThirdRoomResponseDto(GameRoom gameRoom) {
-        this.thirdRoom = gameRoom.getRound().getThirdRoom();
-        this.gameRoomId = gameRoom.getGameRoomId();
+    public void modifyThirdRoomResponseDto(CommonDataDto commonDataDto, GameRoom gameRoom) {
         this.fertilizerAmount = gameRoom.getFertilizerAmount();
-        this.playerStatus = gameRoom.isPlayerStatus();
-        this.birthday = gameRoom.isBirthday();
-        this.event = gameRoom.getEvent();;
-        this.carbonCaptureNotice = gameRoom.isCarbonCaptureNotice();
+        this.eventCode = gameRoom.getEvent();
+        this.fertilizerUpgrade = commonDataDto.isFertilizerUpgrade();
+        this.barrierUpgrade = commonDataDto.isBarrierUpgrade();
+        this.conflictAsteroid = commonDataDto.isConflictAsteroid();
+        this.gameRoomId = gameRoom.getGameRoomId();
+        this.thirdResponseDto = ThirdResponseDto.builder()
+                .message(gameRoom.getRound().getThirdRoom().getMessage())
+                .fertilizerAmount(gameRoom.getRound().getThirdRoom().getFertilizerAmount())
+                .build();
+    }
+
+    @Builder
+    private static class ThirdResponseDto{
+        String message;
+        int fertilizerAmount;
     }
 }

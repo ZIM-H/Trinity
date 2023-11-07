@@ -1,9 +1,6 @@
 package com.trinity.trinity.redisUtil;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.trinity.trinity.client.ClientSession;
 import com.trinity.trinity.gameRoom.dto.GameRoomCheck;
 import lombok.RequiredArgsConstructor;
@@ -11,9 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @Component
@@ -30,16 +24,15 @@ public class RedisService {
 
 
     public void saveClient(ClientSession clientSession) throws JsonProcessingException {
-//        Map<String, String> userInfo = new HashMap<>();
-//        userInfo.put("clientId", clientSession.getClientId());
-//        userInfo.put("clientAddress", clientSession.getClientAddress());
-//        String userInfoSerialized = new ObjectMapper().writeValueAsString(userInfo); // 직렬화
-
         redisTemplate.opsForHash().put("ClientSession", clientSession.getUserId(), clientSession);
     }
     public ClientSession getClientSession(String key) {
         ClientSession clientSession = (ClientSession) redisTemplate.opsForHash().get("ClientSession", key);
         return clientSession;
+    }
+
+    public void removeClientSession(String userId) {
+        redisTemplate.opsForHash().delete(userId);
     }
 
     public String getClientId(String userId) {

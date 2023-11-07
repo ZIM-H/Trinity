@@ -11,13 +11,11 @@ import com.trinity.trinity.redisUtil.RedisService;
 import com.trinity.trinity.webClient.ChannelManager;
 import com.trinity.trinity.webClient.WebClientService;
 import com.trinity.trinity.webSocket.WebSocketFrameHandler;
-import io.netty.channel.Channel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentMap;
 
 @Service
 @RequiredArgsConstructor
@@ -49,20 +47,24 @@ public class UserConnectServiceImpl implements UserConnectService {
     @Override
     public void createGameRoom(List<GameServerPlayerListRequestDto> players) {
 
-        System.out.println(testMethod());
-
         GameRoom gameRoom = gameRoomService.createGameRoom(players);
 
         Gson gson = new Gson();
 
+        CommonDataDto commonDataDto = CommonDataDto.builder()
+                .conflictAsteroid(false)
+                .barrierUpgrade(false)
+                .fertilizerUpgrade(false)
+                .build();
+
         FirstRoomResponseDto firstRoomResponseDto = FirstRoomResponseDto.builder().build();
-        firstRoomResponseDto.modifyThirdRoomResponseDto(gameRoom);
+        firstRoomResponseDto.modifyFirstRoomResponseDto(commonDataDto, gameRoom);
 
         SecondRoomResponseDto secondRoomResponseDto = SecondRoomResponseDto.builder().build();
-        secondRoomResponseDto.modifyThirdRoomResponseDto(gameRoom);
+        secondRoomResponseDto.modifySecondRoomResponseDto(commonDataDto, gameRoom);
 
         ThirdRoomResponseDto thirdRoomResponseDto = ThirdRoomResponseDto.builder().build();
-        thirdRoomResponseDto.modifyThirdRoomResponseDto(gameRoom);
+        thirdRoomResponseDto.modifyThirdRoomResponseDto(commonDataDto, gameRoom);
 
         String firstRoom = gson.toJson(firstRoomResponseDto);
         String secondRoom = gson.toJson(secondRoomResponseDto);
@@ -76,15 +78,9 @@ public class UserConnectServiceImpl implements UserConnectService {
         webSocketFrameHandler.sendDataToClient(secondUserClientId, secondRoom);
         webSocketFrameHandler.sendDataToClient(thirdUserClientId, thirdRoom);
 
-    }
+        redisService.saveData(gameRoom.getRound().getFirstRoom().getPlayer(), String.valueOf(UserStatus.PLAYING));
+        redisService.saveData(gameRoom.getRound().getSecondRoom().getPlayer(), String.valueOf(UserStatus.PLAYING));
+        redisService.saveData(gameRoom.getRound().getThirdRoom().getPlayer(), String.valueOf(UserStatus.PLAYING));
 
-    public String testMethod() {
-        String ans = "";
-        ConcurrentMap<String, Channel> channels = channelManager.getChannels();
-        for (String clientId : channels.keySet()) {
-            Channel eachChannel = channels.get(clientId);
-            ans += eachChannel;
-        }
-        return ans;
     }
 }

@@ -9,11 +9,7 @@ import com.trinity.trinity.redisUtil.GameRoomRedisService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -55,14 +51,15 @@ public class GameRoomServiceImpl implements GameRoomService {
         Round round = gameRoom.getRound();
 
         if (round == null) {
-
             gameRoom.setRound(new Round());
-
             round = gameRoom.getRound();
         }
 
-        round.modifyFirstRoom(firstRoomPlayerRequestDto.getFirstRoom());
+        FirstRoom firstRoom = FirstRoom.toDto(firstRoomPlayerRequestDto);
+        FirstRoom oldRoom = round.getFirstRoom();
 
+        firstRoom.modifyDto(oldRoom);
+        round.modifyFirstRoom(firstRoom);
 
         gameRoomRedisService.saveGameRoomToTemp(gameRoom);
 
@@ -75,13 +72,15 @@ public class GameRoomServiceImpl implements GameRoomService {
         Round round = gameRoom.getRound();
 
         if (round == null) {
-
             gameRoom.setRound(new Round());
-
             round = gameRoom.getRound();
         }
 
-        round.modifySecondRoom(secondRoomPlayerRequestDto.getSecondRoom());
+        SecondRoom secondRoom = SecondRoom.toDto(secondRoomPlayerRequestDto);
+        SecondRoom oldRoom = round.getSecondRoom();
+
+        secondRoom.modifyDto(oldRoom);
+        round.modifySecondRoom(secondRoom);
 
 
         gameRoomRedisService.saveGameRoomToTemp(gameRoom);
@@ -95,14 +94,14 @@ public class GameRoomServiceImpl implements GameRoomService {
         Round round = gameRoom.getRound();
 
         if (round == null) {
-
             gameRoom.setRound(new Round());
-
             round = gameRoom.getRound();
         }
+        ThirdRoom thirdRoom = ThirdRoom.toDto(thirdRoomPlayerRequestDto);
+        ThirdRoom oldRoom = round.getThirdRoom();
 
-        round.modifyThirdRoom(thirdRoomPlayerRequestDto.getThirdRoom());
-
+        thirdRoom.modifyDto(oldRoom);
+        round.modifyThirdRoom(thirdRoom);
 
         gameRoomRedisService.saveGameRoomToTemp(gameRoom);
     }
@@ -117,18 +116,35 @@ public class GameRoomServiceImpl implements GameRoomService {
         gameRoom.setFoodAmount(gameRoom.getFoodAmount() - 1);
         if (gameRoom.isCarbonCaptureNotice()) gameRoom.setCarbonCaptureNotice(false);
 
-        // 공중 정원
-        if (!secondRoom.isFarmStatus()) {
-            if (secondRoom.isFarmTry()) {
-                secondRoom.setFarmTry(false);
-                secondRoom.setFarmStatus(true);
-                // 식량 생산
-                makeFood(gameRoom, firstRoom, secondRoom, thirdRoom);
+        // 자동 보호막
+        if (thirdRoom.isBarrierDevTry()) {
+            thirdRoom.setBarrierDevTry(false);
+            if (thirdRoom.getPlayer().equals(thirdRoom.getDeveloper())) {
+                thirdRoom.setBarrierStatus(thirdRoom.getBarrierStatus() + 1);
+            } else {
+                thirdRoom.setBarrierStatus(1);
+                thirdRoom.setDeveloper(thirdRoom.getPlayer());
             }
-        } else {
-            // 식량 생산
-            makeFood(gameRoom, firstRoom, secondRoom, thirdRoom);
         }
+
+        // 소행성
+        if (thirdRoom.isAsteroidStatus()) {
+            if (thirdRoom.isAsteroidDestroyTry()) {
+                thirdRoom.setAsteroidDestroyTry(false);
+
+                checkFarm(gameRoom, firstRoom, secondRoom, thirdRoom);
+            } else {
+                if (thirdRoom.getBarrierStatus() < 2) {
+                    if (secondRoom.isFarmTry()) checkFarm(gameRoom, firstRoom, secondRoom, thirdRoom);
+                    secondRoom.setFarmStatus(false);
+                    gameRoom.setFertilizerAmount(0);
+                } else {
+                    checkFarm(gameRoom, firstRoom, secondRoom, thirdRoom);
+                }
+            }
+
+            thirdRoom.setAsteroidStatus(false);
+        } else checkFarm(gameRoom, firstRoom, secondRoom, thirdRoom);
 
         if (gameRoom.getFoodAmount() == 0) return false;
 
@@ -188,23 +204,6 @@ public class GameRoomServiceImpl implements GameRoomService {
             if (gameRoom.getRoundNo() + 2 <= 12) gameRoom.getBlackholeStatus()[gameRoom.getRoundNo() + 2] = true;
         }
 
-        // 자동 보호막
-        if (thirdRoom.isBarrierDevTry()) {
-            thirdRoom.setBarrierDevTry(false);
-            if (thirdRoom.getPlayer().equals(thirdRoom.getDeveloper())) {
-                thirdRoom.setBarrierStatus(thirdRoom.getBarrierStatus() + 1);
-            } else {
-                thirdRoom.setBarrierStatus(1);
-                thirdRoom.setDeveloper(thirdRoom.getPlayer());
-            }
-        }
-
-        // 소행성
-        if (thirdRoom.isAsteroidStatus()) {
-            if (thirdRoom.getBarrierStatus() < 2) secondRoom.setFarmStatus(false);
-            thirdRoom.setAsteroidStatus(false);
-        }
-
         gameRoomRedisService.saveGameRoom(gameRoom);
 
         return true;
@@ -222,32 +221,37 @@ public class GameRoomServiceImpl implements GameRoomService {
         if(gameRoom.getBlackholeStatus()[gameRoom.getRoundNo()]) {
             movePlayer(0, gameRoomId);
             thirdRoom.setBlackholeStatus(false);
-            return;
         }
 
         movePlayer(1, gameRoomId);
 
-        // 랜덤 이벤트 추출
-        Random random = new Random();
+        int[] events = {2, 3, 1, 32, 1, 2, 20, 3, 0, 8, 1, 1};
 
-        List<Integer> eventList = IntStream.range(0, 7)
-                .boxed()
-                .collect(Collectors.toList());
+        gameRoom.setEvent(events[gameRoom.getRoundNo()-1]);
 
-        while(eventList.size() > 0){
-            int idx = random.nextInt(eventList.size());
-            int eventIdx = eventList.get(idx);
+        playEvent(gameRoom.getEvent(), gameRoomId);
 
-            if(!validateEvent(eventIdx, gameRoomId)){
-                eventList.remove(eventIdx);
-            }
-            else {
-                // 소행성 이벤트이면서 보호막이 있다면
-                if (eventIdx == 0 && thirdRoom.getBarrierStatus() == 2) eventIdx = 8;
-                gameRoom.setEvent(eventIdx);
-                break;
-            }
-        }
+//        // 랜덤 이벤트 추출
+//        Random random = new Random();
+//
+//        List<Integer> eventList = IntStream.range(0, 7)
+//                .boxed()
+//                .collect(Collectors.toList());
+//
+//        while(eventList.size() > 0){
+//            int idx = random.nextInt(eventList.size());
+//            int eventIdx = eventList.get(idx);
+//
+//            if(!validateEvent(eventIdx, gameRoomId)){
+//                eventList.remove(eventIdx);
+//            }
+//            else {
+//                // 소행성 이벤트이면서 보호막이 있다면
+//                if (eventIdx == 0 && thirdRoom.getBarrierStatus() == 2) eventIdx = 8;
+//                gameRoom.setEvent(eventIdx);
+//                break;
+//            }
+//        }
 
         // 이산화탄소 고장 일수 2일차인지 판단
         if(secondRoom.getCarbonCaptureStatus() == 2) gameRoom.setCarbonCaptureNotice(true);
@@ -255,6 +259,53 @@ public class GameRoomServiceImpl implements GameRoomService {
         // 로직이 끝?
         gameRoomRedisService.saveGameRoomToTemp(gameRoom);
         gameRoomRedisService.saveGameRoom(gameRoom);
+    }
+
+    private void playEvent(int eventNo, String gameRoomId) {
+        GameRoom gameRoom = gameRoomRedisService.getGameRoom(gameRoomId);
+        FirstRoom firstRoom = gameRoom.getRound().getFirstRoom();
+        SecondRoom secondRoom = gameRoom.getRound().getSecondRoom();
+        ThirdRoom thirdRoom = gameRoom.getRound().getThirdRoom();
+
+
+        switch (eventNo) {
+            case 2:
+                blackHoleEvent(thirdRoom);
+                break;
+            case 3:
+                blackHoleEvent(thirdRoom);
+                asteroidEvent(thirdRoom);
+                break;
+            case 1:
+                asteroidEvent(thirdRoom);
+                break;
+            case 32:
+                carbonCaptureEvent(secondRoom);
+                break;
+            case 20:
+                gameRoom.setBirthday(true);
+                break;
+            case 0:
+                break;
+            case 8:
+                gameRoom.setPlayerStatus(true);
+                break;
+        }
+    }
+
+    @Override
+    public boolean checkEndGame(String gameRoomId) {
+        GameRoom gameRoom = (GameRoom) gameRoomRedisService.getGameRoom(gameRoomId);
+        if (gameRoom.getRoundNo() == 13) {
+            gameRoomRedisService.deleteGameRoom(gameRoomId);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void endGame(String gameRoomId) {
+        gameRoomRedisService.deleteGameRoom(gameRoomId);
     }
 
     private void movePlayer(int direction, String gameRoomId) {
@@ -359,6 +410,20 @@ public class GameRoomServiceImpl implements GameRoomService {
 
     }
 
+    private void checkFarm(GameRoom gameRoom, FirstRoom firstRoom, SecondRoom secondRoom, ThirdRoom thirdRoom) {
+        if (!secondRoom.isFarmStatus()) {
+            if (secondRoom.isFarmTry()) {
+                secondRoom.setFarmTry(false);
+                secondRoom.setFarmStatus(true);
+                // 식량 생산
+                makeFood(gameRoom, firstRoom, secondRoom, thirdRoom);
+            }
+        } else {
+            // 식량 생산
+            makeFood(gameRoom, firstRoom, secondRoom, thirdRoom);
+        }
+    }
+
     private void makeFood(GameRoom gameRoom, FirstRoom firstRoom, SecondRoom secondRoom, ThirdRoom thirdRoom) {
         int count = 0;
         if (firstRoom.isInputFertilizerTry()) {
@@ -385,6 +450,7 @@ public class GameRoomServiceImpl implements GameRoomService {
             gameRoom.setFertilizerAmount(fertilizer);
         }
     }
+
 
 
 }

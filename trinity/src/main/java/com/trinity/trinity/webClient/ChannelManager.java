@@ -10,16 +10,12 @@ import java.util.concurrent.ConcurrentMap;
 @Component
 @RequiredArgsConstructor
 public class ChannelManager {
-//    private final ChannelManager INSTANCE = new ChannelManager();
     private final ConcurrentMap<String, Channel> channels = new ConcurrentHashMap<>();
 
     public void addChannel(String id, Channel channel) {
-        System.out.println("Channel Manager 안 : " + channel);
         channels.put(id, channel);
         for (String clientId : channels.keySet()) {
             Channel eachChannel = channels.get(clientId);
-            System.out.println("for문의 안쪽이다!!!!!!!!!!!!!!!!! :" + eachChannel);
-            // do something with id and channel...
         }
     }
 
@@ -39,6 +35,4 @@ public class ChannelManager {
     public boolean CheckContainKey(String clientId) {
         return channels.containsKey(clientId);
     }
-
-    // other methods to manipulate channels...
 }

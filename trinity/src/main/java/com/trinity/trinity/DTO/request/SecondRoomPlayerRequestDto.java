@@ -1,6 +1,5 @@
 package com.trinity.trinity.DTO.request;
 
-import com.trinity.trinity.gameRoom.dto.SecondRoom;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -8,6 +7,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SecondRoomPlayerRequestDto {
     private String userId;
+    private String message;
     private String gameRoomId;
-    private SecondRoom secondRoom;
+    private String roomNo;
+    private boolean InputFertilizerTry;
+    private boolean makeFertilizerTry;
+    private boolean carbonCaptureTry;
+    private boolean farmTry;
+    private boolean taurineFilterTry;
 }

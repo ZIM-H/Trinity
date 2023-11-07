@@ -25,7 +25,7 @@ public class CreateService {
                 .developer("")
                 .inputFertilizerTry(false)
                 .makeFertilizerTry(false)
-
+                .asteroidDestroyTry(false)
                 .build();
     }
 
@@ -41,7 +41,6 @@ public class CreateService {
                 .farmTry(false)
                 .taurineFilterTry(false)
                 .taurineFilterStatus(true)
-
                 .build();
     }
 
@@ -54,8 +53,6 @@ public class CreateService {
                 .fertilizerUpgradeTry(false)
                 .purifierStatus(0)
                 .purifierTry(false)
-                .purifierTryCount(0)
-
                 .build();
     }
 }

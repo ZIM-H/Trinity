@@ -1,9 +1,11 @@
 package com.trinity.trinity.gameRoom.dto;
 
+import com.trinity.trinity.DTO.request.FirstRoomPlayerRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 
 @Getter
 @Setter
@@ -16,14 +18,13 @@ public class FirstRoom {
     private boolean fertilizerUpgradeTry;
     private int purifierStatus;
     private boolean purifierTry;
-    private int purifierTryCount;
 
     private boolean inputFertilizerTry;
     private boolean makeFertilizerTry;
 
     @Builder
-    public FirstRoom(int fertilizerAmount, String player, String message, int fertilizerUpgradeStatus, boolean fertilizerUpgradeTry, int purifierStatus, boolean purifierTry, int purifierTryCount, boolean inputFertilizerTry, boolean makeFertilizerTry) {
-     
+    public FirstRoom(int fertilizerAmount, String player, String message, int fertilizerUpgradeStatus, boolean fertilizerUpgradeTry, int purifierStatus, boolean purifierTry, boolean inputFertilizerTry, boolean makeFertilizerTry) {
+
         this.fertilizerAmount = fertilizerAmount;
         this.player = player;
         this.message = message;
@@ -31,10 +32,26 @@ public class FirstRoom {
         this.fertilizerUpgradeTry = fertilizerUpgradeTry;
         this.purifierStatus = purifierStatus;
         this.purifierTry = purifierTry;
-        this.purifierTryCount = purifierTryCount;
 
         this.inputFertilizerTry = inputFertilizerTry;
         this.makeFertilizerTry = makeFertilizerTry;
 
+    }
+
+    public static FirstRoom toDto(FirstRoomPlayerRequestDto dto) {
+        return FirstRoom.builder()
+                .player(dto.getUserId())
+                .message(dto.getMessage())
+                .inputFertilizerTry(dto.isInputFertilizerTry())
+                .makeFertilizerTry(dto.isMakeFertilizerTry())
+                .fertilizerUpgradeTry(dto.isFertilizerUpgradeTry())
+                .purifierTry(dto.isPurifierTry())
+                .build();
+    }
+
+    public void modifyDto(FirstRoom oldRoom) {
+        this.fertilizerAmount = oldRoom.getFertilizerAmount();
+        this.fertilizerUpgradeStatus = oldRoom.getFertilizerUpgradeStatus();
+        this.purifierStatus = oldRoom.getPurifierStatus();
     }
 }
