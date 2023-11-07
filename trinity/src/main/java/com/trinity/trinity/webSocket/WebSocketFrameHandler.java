@@ -241,6 +241,18 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
 
             gameRoomService.endGame(gameRoomId);
 
+            Channel first = channelManager.getChannel(firstClientId);
+            Channel second = channelManager.getChannel(secondClientId);
+            Channel third = channelManager.getChannel(thirdClientId);
+            first.close();
+            second.close();
+            third.close();
+
+            //clientSession 삭제
+            redisService.removeClientSession(firstId);
+            redisService.removeClientSession(secondId);
+            redisService.removeClientSession(thirdId);
+
             redisService.saveData(firstId, String.valueOf(UserStatus.LOBBY));
             redisService.saveData(secondId, String.valueOf(UserStatus.LOBBY));
             redisService.saveData(thirdId, String.valueOf(UserStatus.LOBBY));
@@ -281,6 +293,13 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
         redisService.removeClientSession(secondId);
         redisService.removeClientSession(thirdId);
 
+        Channel first = channelManager.getChannel(firstClientId);
+        Channel second = channelManager.getChannel(secondClientId);
+        Channel third = channelManager.getChannel(thirdClientId);
+        first.close();
+        second.close();
+        third.close();
+
         //channel 삭제
         channelManager.removeChannel(firstClientId);
         channelManager.removeChannel(secondClientId);
@@ -317,15 +336,17 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
         sendDataToClient(secondClientId, data);
         sendDataToClient(thirdClientId, data);
 
+        Channel first = channelManager.getChannel(firstClientId);
+        Channel second = channelManager.getChannel(secondClientId);
+        Channel third = channelManager.getChannel(thirdClientId);
+        first.close();
+        second.close();
+        third.close();
+
         //clientSession 삭제
         redisService.removeClientSession(firstId);
         redisService.removeClientSession(secondId);
         redisService.removeClientSession(thirdId);
-
-        //channel 삭제
-        channelManager.removeChannel(firstClientId);
-        channelManager.removeChannel(secondClientId);
-        channelManager.removeChannel(thirdClientId);
 
         gameRoomService.endGame(gameRoomId);
 
