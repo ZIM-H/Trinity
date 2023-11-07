@@ -7,6 +7,7 @@ public class SecondRoomResponseDto {
     private String type;
     private int fertilizerAmount;
     private int eventCode;
+    private int foodAmount;
     private boolean fertilizerUpgrade;
     private boolean barrierUpgrade;
     private boolean conflictAsteroid;
@@ -14,10 +15,11 @@ public class SecondRoomResponseDto {
     private SecondResponseDto secondResponseDto;
 
     @Builder
-    public SecondRoomResponseDto(String type, int fertilizerAmount, int eventCode, boolean fertilizerUpgrade, boolean barrierUpgrade, boolean conflictAsteroid, String gameRoomId) {
+    public SecondRoomResponseDto(String type, int fertilizerAmount, int eventCode, int foodAmount, boolean fertilizerUpgrade, boolean barrierUpgrade, boolean conflictAsteroid, String gameRoomId) {
         this.type = type;
         this.fertilizerAmount = fertilizerAmount;
         this.eventCode = eventCode;
+        this.foodAmount = foodAmount;
         this.fertilizerUpgrade = fertilizerUpgrade;
         this.barrierUpgrade = barrierUpgrade;
         this.conflictAsteroid = conflictAsteroid;
@@ -27,6 +29,7 @@ public class SecondRoomResponseDto {
     public void modifySecondRoomResponseDto(CommonDataDto commonDataDto, GameRoom gameRoom) {
         this.fertilizerAmount = gameRoom.getFertilizerAmount();
         this.eventCode = gameRoom.getEvent();
+        this.foodAmount = gameRoom.getFoodAmount();
         this.fertilizerUpgrade = commonDataDto.isFertilizerUpgrade();
         this.barrierUpgrade = commonDataDto.isBarrierUpgrade();
         this.conflictAsteroid = commonDataDto.isConflictAsteroid();
