@@ -11,12 +11,14 @@ public class TouchToStartGame : MonoBehaviour
     public Button button2; // 버튼 2
     private bool hasStarted = false;
     
+    GameObject ship;
     private string apiUrl = "https://k9b308.p.ssafy.io/api/game"; // 대상 URL로 바꾸세요.
 
     void Awake()
     {
         // 게임 시작 시 버튼2를 비활성화
         button2.gameObject.SetActive(false);
+        ship = GameObject.Find("spaceship_revert");
     }
 
     void Update()
@@ -68,6 +70,7 @@ public class TouchToStartGame : MonoBehaviour
 
                 string loadedValue = PlayerPrefs.GetString("UserId"); // "YourKey"는 확인하려는 PlayerPrefs 키입니다.
                 Debug.Log("저장된 userId: " + loadedValue);
+                ship.GetComponent<ShipMove>().StartMove();
             }
         }
     }

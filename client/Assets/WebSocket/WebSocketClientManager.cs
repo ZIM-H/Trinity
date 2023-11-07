@@ -2,16 +2,22 @@ using UnityEngine;
 using WebSocketSharp;
 using System.Collections;
 using UnityEngine.Networking;
-
+using UnityEngine.SceneManagement;
 public class WebSocketClientManager : MonoBehaviour
 {
     private WebSocket webSocket;
     private bool isConnected;
     private string serverURL = "wss://k9b308.p.ssafy.io/websocket"; // 웹소켓 서버 주소로 바꾸세요
     private string userId; // userId를 저장하는 멤버 변수
-
+    public GameObject ship;
     private string apiUrl = "https://k9b308.p.ssafy.io/api/game/match/"; // 대상 URL로 바꾸세요.
 
+
+    void Awake(){
+        ship = GameObject.Find("spaceship_revert");
+        Debug.Log("ship : " + ship);
+        
+    }
     void Start()
     {
         isConnected = false;
@@ -27,6 +33,7 @@ public class WebSocketClientManager : MonoBehaviour
             webSocket.Close();
             isConnected = false;
             Debug.Log("WebSocket disconnected");
+        
         }
         else
         {
@@ -53,7 +60,8 @@ public class WebSocketClientManager : MonoBehaviour
                 // e.Data에 수신된 메시지가 포함되어 있습니다.
                 string receivedMessage = e.Data;
                 Debug.Log("Received message: " + receivedMessage);
-
+                // SceneManager.LoadScene("GameInitializer");
+                PlayerPrefs.SetInt("please",1);
                 // 메시지 처리 로직을 여기에 추가합니다.
             };
 
@@ -68,6 +76,11 @@ public class WebSocketClientManager : MonoBehaviour
         string jsonMessage = "{\"userId\": \"" + userId + "\", \"type\": \"matching\"}";
         Debug.Log("웹소켓 전송할 jsonMessage:" + jsonMessage);
         webSocket.Send(jsonMessage);
+    }
+
+    private void shipLog()
+    {
+        Debug.Log(ship);
     }
 
     IEnumerator SendGetRequest()
