@@ -214,6 +214,7 @@ public class GameRoomServiceImpl implements GameRoomService {
         GameRoom gameRoom = gameRoomRedisService.getGameRoom(gameRoomId);
         SecondRoom secondRoom = gameRoom.getRound().getSecondRoom();
         ThirdRoom thirdRoom = gameRoom.getRound().getThirdRoom();
+        Events events = gameRoom.getEvents();
 
 
         // 블랙홀 영향권인지 판단
@@ -224,94 +225,94 @@ public class GameRoomServiceImpl implements GameRoomService {
 
         movePlayer(1, gameRoomId);
 
-        int[] events = {2, 3, 1, 32, 1, 2, 20, 3, 0, 8, 1, 1};
+        // 1일차에만 랜덤 이벤트 추출
+        if (gameRoom.getRoundNo() == 1){
+            shuffleEvent(events);
+        }
 
-        gameRoom.setEvent(events[gameRoom.getRoundNo() - 1]);
-
-        playEvent(gameRoom.getEvent(), gameRoomId);
-
-        ///////////////////////////////////랜덤//////////////////////////////////
-
-        // 랜덤 이벤트 추출
-        Random random = new Random();
-
-        int randomCnt = random.nextInt(7);
-        boolean[] used = new boolean[7];
-
+        // 라운드 수와 이벤트 종류에 따라 계산한 event 종류 저장
         int eventIdx = 0;
 
-        for (int i = 0; i < randomCnt; i++) {
-            int randomEvent;
-            do {
-                randomEvent = random.nextInt(7);
-            } while (used[randomEvent]);
+        int[][] eventArrays = {
+                events.getAsteroid(),
+                events.getBlackhole(),
+                events.getBirthday(),
+                events.getSickness(),
+                events.getPurifier(),
+                events.getCarbonCapture()
+        };
 
-            used[randomEvent] = true;
-            validateEvent(randomEvent, gameRoomId);
-            eventIdx += 1 << randomEvent;
+        int[] eventWeights = {1, 2, 4, 8, 16, 32};
+
+        for(int i=0; i<6; i++){
+            int[] arr = eventArrays[i];
+            int value = eventWeights[i];
+
+            for(int j = 0; j<arr.length; j++){
+                if(arr[j] == gameRoom.getRoundNo()){
+                    eventIdx += value;
+                    // 선택된 이벤트에 따라 데이터 변경
+                    validateEvent(i, gameRoomId);
+                    break;
+                }
+            }
+        }
+
+        // 식사는 10일에 고정
+        if(gameRoom.getRoundNo() == 10) {
+            eventIdx += 64;
+
         }
 
         gameRoom.setEvent(eventIdx);
 
-        ///////////////////////////////////랜덤//////////////////////////////////
-
-//        List<Integer> eventList = IntStream.range(0, 7)
-//                .boxed()
-//                .collect(Collectors.toList());
-//
-//        while(eventList.size() > 0){
-//            int idx = random.nextInt(eventList.size());
-//            int eventIdx = eventList.get(idx);
-//
-//            if(!validateEvent(eventIdx, gameRoomId)){
-//                eventList.remove(eventIdx);
-//            }
-//            else {
-//                // 소행성 이벤트이면서 보호막이 있다면
-//                if (eventIdx == 0 && thirdRoom.getBarrierStatus() == 2) eventIdx = 8;
-//                gameRoom.setEvent(eventIdx);
-//                break;
-//            }
-//        }
-
         // 이산화탄소 고장 일수 2일차인지 판단
         if (secondRoom.getCarbonCaptureStatus() == 2) gameRoom.setCarbonCaptureNotice(true);
 
-        // 로직이 끝?
+        // 로직 끝
         gameRoomRedisService.saveGameRoomToTemp(gameRoom);
         gameRoomRedisService.saveGameRoom(gameRoom);
     }
 
-    private void playEvent(int eventNo, String gameRoomId) {
-        GameRoom gameRoom = gameRoomRedisService.getGameRoom(gameRoomId);
-        FirstRoom firstRoom = gameRoom.getRound().getFirstRoom();
-        SecondRoom secondRoom = gameRoom.getRound().getSecondRoom();
-        ThirdRoom thirdRoom = gameRoom.getRound().getThirdRoom();
+    private void shuffleEvent(Events events){
 
+        // 이벤트 등장 일수 랜덤 추출
+        int[] randomEvent = shuffleArray(events.getAsteroid(), 12);
+        events.setAsteroid(randomEvent);
 
-        switch (eventNo) {
-            case 2:
-                thirdRoom.setBlackholeStatus(true);
-                break;
-            case 3:
-                thirdRoom.setBlackholeStatus(true);
-                thirdRoom.setAsteroidStatus(true);
-                break;
-            case 1:
-                thirdRoom.setAsteroidStatus(true);
-                break;
-            case 32:
-                if(secondRoom.getCarbonCaptureStatus() == 0) secondRoom.setCarbonCaptureStatus(1);
-                break;
-            case 20:
-                gameRoom.setBirthday(true);
-                break;
-            case 0:
-                break;
-            case 8:
-                gameRoom.setPlayerStatus(true);
-                break;
+        randomEvent = shuffleArray(events.getBlackhole(), 9);
+        events.setBlackhole(randomEvent);
+
+        randomEvent = shuffleArray(events.getBirthday(), 12);
+        events.setBirthday(randomEvent);
+
+        randomEvent = shuffleArray(events.getSickness(), 12);
+        events.setSickness(randomEvent);
+
+        randomEvent = shuffleArray(events.getPurifier(), 9);
+        events.setPurifier(randomEvent);
+
+        randomEvent = shuffleArray(events.getCarbonCapture(), 9);
+        events.setCarbonCapture(randomEvent);
+
+    }
+
+    // 랜덤 이벤트 추출
+    private int[] shuffleArray(int[] array, int size) {
+        Integer[] days = new Integer[size];
+
+        for (int i = 0; i < size; i++) {
+            days[i] = i + 1;
         }
+
+        List<Integer> list = Arrays.asList(days);
+        Collections.shuffle(list);
+
+        for (int i = 0; i < size; i++) {
+            array[i] = list.get(i);
+        }
+
+        return  array;
     }
 
     @Override
@@ -382,23 +383,6 @@ public class GameRoomServiceImpl implements GameRoomService {
                 gameRoom.setFoodAmount(gameRoom.getFoodAmount() + 1);
                 break;
         }
-    }
-
-    private void purifierEvent(FirstRoom firstRoom) {
-        firstRoom.setPurifierStatus(1);
-    }
-
-    private void carbonCaptureEvent(SecondRoom secondRoom) {
-        if(secondRoom.getCarbonCaptureStatus() == 0) secondRoom.setCarbonCaptureStatus(1);
-
-    }
-
-    private void blackHoleEvent(ThirdRoom thirdRoom) {
-        thirdRoom.setBlackholeStatus(true);
-    }
-
-    private void asteroidEvent(ThirdRoom thirdRoom) {
-        thirdRoom.setAsteroidStatus(true);
     }
 
 
