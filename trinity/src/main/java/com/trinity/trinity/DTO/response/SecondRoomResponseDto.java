@@ -35,6 +35,7 @@ public class SecondRoomResponseDto {
                 .message(gameRoom.getRound().getSecondRoom().getMessage())
                 .fertilizerAmount(gameRoom.getRound().getSecondRoom().getFertilizerAmount())
                 .carbonCaptureTryCount(gameRoom.getRound().getSecondRoom().getCarbonCaptureTryCount())
+                .carbonCaptureStatus(gameRoom.getRound().getSecondRoom().getCarbonCaptureStatus())
                 .farmStatus(gameRoom.getRound().getSecondRoom().isFarmStatus())
                 .build();
     }
@@ -44,6 +45,7 @@ public class SecondRoomResponseDto {
         String message;
         int fertilizerAmount;
         int carbonCaptureTryCount;
+        int carbonCaptureStatus;
         boolean farmStatus;
     }
 }
