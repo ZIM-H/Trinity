@@ -6,7 +6,7 @@ public class UVMover : MonoBehaviour
     RawImage rawImage;
     Rect uvRect;
 
-    float speed = 0.3f;
+    public float speed = 0.08f;
 
     void Start()
     {
@@ -17,7 +17,7 @@ public class UVMover : MonoBehaviour
     {
         uvRect = rawImage.uvRect;
         uvRect.x += Time.deltaTime * speed;
-        uvRect.y += Time.deltaTime * speed;
+        uvRect.y += Time.deltaTime * 0.5f * speed;
         rawImage.uvRect = uvRect;
     }
 }

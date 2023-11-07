@@ -136,9 +136,7 @@ PlayerSettings:
   vulkanEnableCommandBufferRecycling: 1
   loadStoreDebugModeEnabled: 0
   bundleVersion: 1.0.2
-  preloadedAssets:
-  - {fileID: -6336124559347318268, guid: 1bfa0233d7fd44e4198c82d615c3d5c7, type: 2}
-  - {fileID: 11400000, guid: 2af962fb18c388545ac4502ebd620d39, type: 2}
+  preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -944,11 +942,11 @@ PlayerSettings:
   apiCompatibilityLevel: 6
   activeInputHandler: 0
   windowsGamepadBackendHint: 0
-  cloudProjectId: 825d667d-2b71-4fa9-93db-e6c4d25d99af
+  cloudProjectId: 21230801-a3e8-43e1-aa31-5b3b3bec98bb
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
   projectName: Trinity
-  organizationId: onionfarmer
+  organizationId: ssafy_7th
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}
