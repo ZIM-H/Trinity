@@ -57,13 +57,19 @@ public class UserConnectServiceImpl implements UserConnectService {
                 .fertilizerUpgrade(false)
                 .build();
 
-        FirstRoomResponseDto firstRoomResponseDto = FirstRoomResponseDto.builder().build();
+        FirstRoomResponseDto firstRoomResponseDto = FirstRoomResponseDto.builder()
+                .type("firstDay")
+                .build();
         firstRoomResponseDto.modifyFirstRoomResponseDto(commonDataDto, gameRoom);
 
-        SecondRoomResponseDto secondRoomResponseDto = SecondRoomResponseDto.builder().build();
+        SecondRoomResponseDto secondRoomResponseDto = SecondRoomResponseDto.builder()
+                .type("firstDay")
+                .build();
         secondRoomResponseDto.modifySecondRoomResponseDto(commonDataDto, gameRoom);
 
-        ThirdRoomResponseDto thirdRoomResponseDto = ThirdRoomResponseDto.builder().build();
+        ThirdRoomResponseDto thirdRoomResponseDto = ThirdRoomResponseDto.builder()
+                .type("firstDay")
+                .build();
         thirdRoomResponseDto.modifyThirdRoomResponseDto(commonDataDto, gameRoom);
 
         String firstRoom = gson.toJson(firstRoomResponseDto);
