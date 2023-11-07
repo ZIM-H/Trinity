@@ -3,6 +3,9 @@ using WebSocketSharp;
 using System.Collections;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+using System;
 public class WebSocketClientManager : MonoBehaviour
 {
     private WebSocket webSocket;
@@ -60,9 +63,31 @@ public class WebSocketClientManager : MonoBehaviour
                 // e.Data에 수신된 메시지가 포함되어 있습니다.
                 string receivedMessage = e.Data;
                 Debug.Log("Received message: " + receivedMessage);
-                // SceneManager.LoadScene("GameInitializer");
-                PlayerPrefs.SetInt("please",1);
-                // 메시지 처리 로직을 여기에 추가합니다.
+                try
+                {
+                    JObject jsonObject = JObject.Parse(receivedMessage);
+                    string type = (string)jsonObject["type"];
+                    // 나머지 처리 로직
+                    if (type == "firstDay") {
+                        // 'specific_type'에 따른 처리
+                        Debug.Log("firstDay 메시지 수신");
+                        UnityMainThreadDispatcher.Enqueue(() =>
+                        {
+                            Debug.Log(111);
+                            // 이 부분에서 메인 스레드에서 실행하고자 하는 작업을 수행
+                            Debug.Log("Debug Log message on the main thread : "+ship);
+                            // if (VariableManager.Instance != null)
+                            // {
+                            VariableManager.Instance.SetFirstDayData(receivedMessage);
+                            // }
+                        });
+                        Debug.Log(222);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogError("Json Message가 아닙니다 : " + ex.Message);
+                }
             };
 
         }
