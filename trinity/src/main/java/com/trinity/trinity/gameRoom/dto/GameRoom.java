@@ -20,9 +20,10 @@ public class GameRoom {
     private int event;
     private boolean carbonCaptureNotice;
     private boolean[] blackholeStatus;
+    private Events events;
 
     @Builder
-    public GameRoom(String gameRoomId, int foodAmount, int fertilizerAmount, int roundNo, Round round, boolean playerStatus, boolean birthday, int event, boolean carbonCaptureNotice) {
+    public GameRoom(String gameRoomId, int foodAmount, int fertilizerAmount, int roundNo, Round round, boolean playerStatus, boolean birthday, int event, boolean carbonCaptureNotice, boolean[] blackholeStatus) {
         this.gameRoomId = gameRoomId;
         this.foodAmount = foodAmount;
         this.fertilizerAmount = fertilizerAmount;
@@ -32,6 +33,7 @@ public class GameRoom {
         this.birthday = birthday;
         this.event = event;
         this.carbonCaptureNotice = carbonCaptureNotice;
-        this.blackholeStatus = new boolean[13];
+        this.blackholeStatus = blackholeStatus;
+        this.events = Events.builder().build();
     }
 }
