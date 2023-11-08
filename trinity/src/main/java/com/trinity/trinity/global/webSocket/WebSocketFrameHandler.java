@@ -69,18 +69,10 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
                 // 채널 연결확인
                 if (userLeaveProcess(gameRoomId)) return;
 
+
                 Gson gson = new Gson();
-                // 방번호 확인하는 로직
-                if (roomNum.equals("first")) {
-                    FirstRoomPlayerRequestDto dto = gson.fromJson(jsonObject.get("FirstRoomPlayerRequestDto").getAsJsonObject(), FirstRoomPlayerRequestDto.class);
-                    gameRoomService.updateFirstRoom(dto);
-                } else if (roomNum.equals("second")) {
-                    SecondRoomPlayerRequestDto dto = gson.fromJson(jsonObject.get("SecondRoomPlayerRequestDto").getAsJsonObject(), SecondRoomPlayerRequestDto.class);
-                    gameRoomService.updateSecondRoom(dto);
-                } else {
-                    ThirdRoomPlayerRequestDto dto = gson.fromJson(jsonObject.get("ThirdRoomPlayerRequestDto").getAsJsonObject(), ThirdRoomPlayerRequestDto.class);
-                    gameRoomService.updateThridRoom(dto);
-                }
+                
+                gameRoomRedisService.updateRoom(gson, jsonObject, roomNum);
 
                 System.out.println("보내 온 데이터 requestDto화 완료");
 

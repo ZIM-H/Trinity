@@ -46,45 +46,45 @@ public class GameRoomServiceImpl implements GameRoomService {
         return gameRoom;
     }
 
-    @Override
-    public void updateFirstRoom(FirstRoomPlayerRequestDto firstRoomPlayerRequestDto) {
-        // 게임방 가져오고
-        GameRoom gameRoom = gameRoomRedisService.getGameRoom(firstRoomPlayerRequestDto.getGameRoomId());
-        // 게임방 1번방 정보 넣기
-        FirstRoom firstRoom = FirstRoom.toDto(firstRoomPlayerRequestDto);
-        FirstRoom oldRoom = gameRoom.getFirstRoom();
-
-        firstRoom.modifyDto(oldRoom);
-        gameRoom.modifyFirstRoom(firstRoom);
-
-        gameRoomRedisService.saveGameRoomToTemp(gameRoom);
-    }
-
-    @Override
-    public void updateSecondRoom(SecondRoomPlayerRequestDto secondRoomPlayerRequestDto) {
-        GameRoom gameRoom = gameRoomRedisService.getGameRoom(secondRoomPlayerRequestDto.getGameRoomId());
-
-        SecondRoom secondRoom = SecondRoom.toDto(secondRoomPlayerRequestDto);
-        SecondRoom oldRoom = gameRoom.getSecondRoom();
-
-        secondRoom.modifyDto(oldRoom);
-        gameRoom.modifySecondRoom(secondRoom);
-
-        gameRoomRedisService.saveGameRoomToTemp(gameRoom);
-    }
-
-    @Override
-    public void updateThridRoom(ThirdRoomPlayerRequestDto thirdRoomPlayerRequestDto) {
-        GameRoom gameRoom = gameRoomRedisService.getGameRoom(thirdRoomPlayerRequestDto.getGameRoomId());
-
-        ThirdRoom thirdRoom = ThirdRoom.toDto(thirdRoomPlayerRequestDto);
-        ThirdRoom oldRoom = gameRoom.getThirdRoom();
-
-        thirdRoom.modifyDto(oldRoom);
-        gameRoom.modifyThirdRoom(thirdRoom);
-
-        gameRoomRedisService.saveGameRoomToTemp(gameRoom);
-    }
+//    @Override
+//    public void updateFirstRoom(FirstRoomPlayerRequestDto firstRoomPlayerRequestDto) {
+//        // 게임방 가져오고
+//        GameRoom gameRoom = gameRoomRedisService.getGameRoom(firstRoomPlayerRequestDto.getGameRoomId());
+//        // 게임방 1번방 정보 넣기
+//        FirstRoom firstRoom = FirstRoom.toDto(firstRoomPlayerRequestDto);
+//        FirstRoom oldRoom = gameRoom.getFirstRoom();
+//
+//        firstRoom.modifyDto(oldRoom);
+//        gameRoom.modifyFirstRoom(firstRoom);
+//
+//        gameRoomRedisService.saveGameRoomToTemp(gameRoom);
+//    }
+//
+//    @Override
+//    public void updateSecondRoom(SecondRoomPlayerRequestDto secondRoomPlayerRequestDto) {
+//        GameRoom gameRoom = gameRoomRedisService.getGameRoom(secondRoomPlayerRequestDto.getGameRoomId());
+//
+//        SecondRoom secondRoom = SecondRoom.toDto(secondRoomPlayerRequestDto);
+//        SecondRoom oldRoom = gameRoom.getSecondRoom();
+//
+//        secondRoom.modifyDto(oldRoom);
+//        gameRoom.modifySecondRoom(secondRoom);
+//
+//        gameRoomRedisService.saveGameRoomToTemp(gameRoom);
+//    }
+//
+//    @Override
+//    public void updateThridRoom(ThirdRoomPlayerRequestDto thirdRoomPlayerRequestDto) {
+//        GameRoom gameRoom = gameRoomRedisService.getGameRoom(thirdRoomPlayerRequestDto.getGameRoomId());
+//
+//        ThirdRoom thirdRoom = ThirdRoom.toDto(thirdRoomPlayerRequestDto);
+//        ThirdRoom oldRoom = gameRoom.getThirdRoom();
+//
+//        thirdRoom.modifyDto(oldRoom);
+//        gameRoom.modifyThirdRoom(thirdRoom);
+//
+//        gameRoomRedisService.saveGameRoomToTemp(gameRoom);
+//    }
 
     @Override
     public boolean gameLogic(String gameRoomId) {
