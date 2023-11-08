@@ -29,14 +29,18 @@ public class GameRoomRedisService {
 
             GameRoom last = before.get(before.size() - 1);
             GameRoom gameRoom = GameRoom.builder()
-                    .fertilizerAmount(last.getFertilizerAmount())
                     .foodAmount(last.getFoodAmount())
+                    .fertilizerAmount(last.getFertilizerAmount())
+                    .playerStatus(last.isPlayerStatus())
+                    .birthday(last.isBirthday())
+                    .event(last.getEvent())
+                    .carbonCaptureNotice(last.isCarbonCaptureNotice())
+                    .blackholeStatus(last.getBlackholeStatus())
+                    .events(last.getEvents())
                     .roundNo(last.getRoundNo() + 1)
                     .firstRoom(last.getFirstRoom())
                     .secondRoom(last.getSecondRoom())
                     .thirdRoom(last.getThirdRoom())
-                    .playerStatus(last.isPlayerStatus())
-                    .birthday(last.isBirthday())
                     .build();
 
             gameRoom.setGameRoomId(gameRoomId);
