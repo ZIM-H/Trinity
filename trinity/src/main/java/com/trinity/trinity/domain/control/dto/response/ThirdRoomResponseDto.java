@@ -37,8 +37,8 @@ public class ThirdRoomResponseDto {
         this.conflictAsteroid = commonDataDto.isConflictAsteroid();
         this.gameRoomId = gameRoom.getGameRoomId();
         this.thirdResponseDto = ThirdResponseDto.builder()
-                .message(gameRoom.getRound().getThirdRoom().getMessage())
-                .fertilizerAmount(gameRoom.getRound().getThirdRoom().getFertilizerAmount())
+                .message(gameRoom.getThirdRoom().getMessage())
+                .fertilizerAmount(gameRoom.getThirdRoom().getFertilizerAmount())
                 .build();
     }
 

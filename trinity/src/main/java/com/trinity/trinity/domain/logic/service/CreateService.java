@@ -1,21 +1,12 @@
 package com.trinity.trinity.domain.logic.service;
 
 import com.trinity.trinity.domain.logic.dto.FirstRoom;
-import com.trinity.trinity.domain.logic.dto.Round;
 import com.trinity.trinity.domain.logic.dto.SecondRoom;
 import com.trinity.trinity.domain.logic.dto.ThirdRoom;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CreateService {
-    public Round createRound(FirstRoom firstRoom, SecondRoom secondRoom, ThirdRoom thirdRoom) {
-        return Round.builder()
-                .firstRoom(firstRoom)
-                .secondRoom(secondRoom)
-                .thirdRoom(thirdRoom)
-                .build();
-    }
-
     public ThirdRoom createThirdRoom(String playerId) {
         return ThirdRoom.builder()
                 .fertilizerAmount(3)
