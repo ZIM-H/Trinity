@@ -36,7 +36,6 @@ public class GameConnectServiceImpl implements GameConnectService {
 
     @Override
     public void matchMaking(String userId) {
-        redisService.saveData(userId, String.valueOf(UserStatus.WAITING));
         webClientService.get(userId);
     }
 
