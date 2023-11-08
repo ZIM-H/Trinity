@@ -42,15 +42,24 @@ public class RedisService {
         return clientId;
     }
 
+    public void saveGameRoomUserStatus(String gameRoomId) {
+        GameRoomCheck gameRoomCheck = GameRoomCheck.builder().build();
+        redisTemplate.opsForHash().put("gameRoomCheck", gameRoomId, gameRoomCheck);
+    }
+
     public boolean checkGameRoomAllClear(String gameRoomId, String roomNum) {
+        System.out.println("checkGameRoomAllClear의 안쪽입니다!!!!!!!!!!");
+
         GameRoomCheck checkList = (GameRoomCheck) redisTemplate.opsForHash().get("gameRoomCheck", gameRoomId);
         boolean complete = checkList.checkRoom(roomNum);
         if (complete) {
+            System.out.println("3명다 데이터가 들어왔습니다!!!!!!!!!!!!!!!!");
             checkList = new GameRoomCheck();
-            redisTemplate.opsForHash().put("connectingMember", gameRoomId, checkList);
+            redisTemplate.opsForHash().put("gameRoomCheck", gameRoomId, checkList);
             return true;
         } else {
-            redisTemplate.opsForHash().put("connectingMember", gameRoomId, checkList);
+            System.out.println("아직 안들어왔습니다 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+            redisTemplate.opsForHash().put("gameRoomCheck", gameRoomId, checkList);
             return false;
         }
     }
