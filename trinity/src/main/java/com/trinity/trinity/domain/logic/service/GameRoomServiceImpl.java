@@ -123,7 +123,10 @@ public class GameRoomServiceImpl implements GameRoomService {
             thirdRoom.setAsteroidStatus(false);
         } else checkFarm(gameRoom, firstRoom, secondRoom, thirdRoom);
 
-        if (gameRoom.getFoodAmount() == 0) return false;
+        if (gameRoom.getFoodAmount() == 0) {
+            System.out.println("식량 없어서 뒤짐");
+            return false;
+        }
 
         // 정수 시스템부터 ㄱㄱ
         if (firstRoom.getPurifierStatus() > 0) {
@@ -134,7 +137,10 @@ public class GameRoomServiceImpl implements GameRoomService {
                 secondRoom.setTaurineFilterStatus(true);
             }
 
-            if (firstRoom.getPurifierStatus() == 3) return false;
+            if (firstRoom.getPurifierStatus() == 3) {
+                System.out.println("정수 시스템 고장나서 뒤짐");
+                return false;
+            }
 
         } else {
             if (firstRoom.isPurifierTry()) {
@@ -156,6 +162,7 @@ public class GameRoomServiceImpl implements GameRoomService {
                 secondRoom.setCarbonCaptureTryCount(0);
             }
             if (secondRoom.getCarbonCaptureStatus() == 3) {
+                System.out.println("이산화탄소 포집기 고장나서 뒤짐");
                 return false;
             }
         }
