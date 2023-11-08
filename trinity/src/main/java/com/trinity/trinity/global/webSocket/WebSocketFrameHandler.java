@@ -43,6 +43,9 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
 
             JsonObject jsonObject = new JsonParser().parse(text).getAsJsonObject();
             String requestType = jsonObject.get("type").getAsString();
+
+            System.out.println("type : " + requestType + "@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+
             if (requestType.equals("matching")) {
                 String userId = jsonObject.get("userId").getAsString();
                 String clientId = ctx.channel().id().toString();
@@ -77,10 +80,16 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
                     gameRoomService.updateThridRoom(dto);
                 }
 
+                System.out.println("보내 온 데이터 requestDto화 완료");
+
                 //3 사람의 모든 데이터가 들어온 경우 true를 반환
                 boolean complete = redisService.checkGameRoomAllClear(gameRoomId, roomNum);
+
+                System.out.println("3명의 데이터가 모두 들어왔는가?");
                 // 모든 데이터를 받았을 경우
                 if (complete) {
+                    System.out.println("3명의 데이터가 모두 들어왔다@@@@@@@@@@@@");
+
                     if (gameRoomService.checkEndGame(gameRoomId)) {
                         gameVictoryProcess(gameRoomId);
                     }
@@ -101,6 +110,8 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
                     // 3. 누군가 게임에서 나간 경우
                     // --> gameOver = true
                     boolean gameOver = gameRoomService.gameLogic(gameRoomId);
+
+                    System.out.println("gameOverCheck");
 
                     // gameOver가 아닌 경우
                     if (!gameOver) {
@@ -145,11 +156,14 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
                         thirdRoomResponseDto.modifyThirdRoomResponseDto(commonDataDto, gameRoom);
                         String thirdRoom = gson.toJson(thirdRoomResponseDto);
 
+                        System.out.println("클라이언트에게 보낼 데이터 정리 완료");
+
                         sendDataToClient(firstClientId, firstRoom);
                         sendDataToClient(secondClientId, secondRoom);
                         sendDataToClient(thirdClientId, thirdRoom);
                     } else {
                         // 게임 오버 true인 경우
+                        System.out.println("게임 패배");
                         gameDefeatedProcess(gameRoomId);
                     }
                 }

@@ -1,9 +1,19 @@
 package com.trinity.trinity.domain.logic.dto;
 
+
+import lombok.Builder;
+
 public class GameRoomCheck {
     private boolean firstRoom;
     private boolean secondRoom;
     private boolean thirdRoom;
+
+    @Builder
+    public GameRoomCheck() {
+        this.firstRoom = false;
+        this.secondRoom = false;
+        this.thirdRoom = false;
+    }
 
     public boolean checkRoom(String roomNum) {
         if (roomNum.equals(firstRoom)) {
