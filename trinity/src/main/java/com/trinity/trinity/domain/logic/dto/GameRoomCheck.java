@@ -4,9 +4,9 @@ package com.trinity.trinity.domain.logic.dto;
 import lombok.Builder;
 
 public class GameRoomCheck {
-    private boolean firstRoom;
-    private boolean secondRoom;
-    private boolean thirdRoom;
+    private volatile boolean firstRoom;
+    private volatile boolean secondRoom;
+    private volatile boolean thirdRoom;
 
     @Builder
     public GameRoomCheck() {
@@ -16,15 +16,14 @@ public class GameRoomCheck {
     }
 
     public boolean checkRoom(String roomNum) {
-        if (roomNum.equals(firstRoom)) {
+        if (roomNum.equals("first")) {
             firstRoom = true;
-        } else if (roomNum.equals(secondRoom)) {
+        } else if (roomNum.equals("second")) {
             secondRoom = true;
         } else {
             thirdRoom = true;
         }
 
-        if (firstRoom && secondRoom && thirdRoom) return true;
-        else return false;
+        return firstRoom && secondRoom && thirdRoom;
     }
 }
