@@ -1,6 +1,14 @@
 package com.trinity.trinity.global.redis.service;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.trinity.trinity.domain.control.dto.request.FirstRoomPlayerRequestDto;
+import com.trinity.trinity.domain.control.dto.request.SecondRoomPlayerRequestDto;
+import com.trinity.trinity.domain.control.dto.request.ThirdRoomPlayerRequestDto;
+import com.trinity.trinity.domain.logic.dto.FirstRoom;
 import com.trinity.trinity.domain.logic.dto.GameRoom;
+import com.trinity.trinity.domain.logic.dto.SecondRoom;
+import com.trinity.trinity.domain.logic.dto.ThirdRoom;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -52,7 +60,6 @@ public class GameRoomRedisService {
         return findRoom;
     }
 
-
     public void saveGameRoomToTemp(GameRoom gameRoom) {
         gameRoomRedisTemplate.opsForHash().put("temp", gameRoom.getGameRoomId(), gameRoom);
     }
@@ -64,8 +71,58 @@ public class GameRoomRedisService {
 
     }
 
-
     public void deleteGameRoom(String gameRoomId) {
         gameRoomRedisTemplate.opsForHash().delete("gameRoom", gameRoomId);
+    }
+
+    public void updateRoom(Gson gson, JsonObject jsonObject, String roomNum) {
+        // 방번호 확인하는 로직
+        if (roomNum.equals("first")) {
+            FirstRoomPlayerRequestDto dto = gson.fromJson(jsonObject.get("FirstRoomPlayerRequestDto").getAsJsonObject(), FirstRoomPlayerRequestDto.class);
+            updateFirstRoom(dto);
+        } else if (roomNum.equals("second")) {
+            SecondRoomPlayerRequestDto dto = gson.fromJson(jsonObject.get("SecondRoomPlayerRequestDto").getAsJsonObject(), SecondRoomPlayerRequestDto.class);
+            updateSecondRoom(dto);
+        } else {
+            ThirdRoomPlayerRequestDto dto = gson.fromJson(jsonObject.get("ThirdRoomPlayerRequestDto").getAsJsonObject(), ThirdRoomPlayerRequestDto.class);
+            updateThridRoom(dto);
+        }
+    }
+
+    public void updateFirstRoom(FirstRoomPlayerRequestDto firstRoomPlayerRequestDto) {
+        // 게임방 가져오고
+        GameRoom gameRoom = getGameRoom(firstRoomPlayerRequestDto.getGameRoomId());
+        // 게임방 1번방 정보 넣기
+        FirstRoom firstRoom = FirstRoom.toDto(firstRoomPlayerRequestDto);
+        FirstRoom oldRoom = gameRoom.getFirstRoom();
+
+        firstRoom.modifyDto(oldRoom);
+        gameRoom.modifyFirstRoom(firstRoom);
+
+        saveGameRoomToTemp(gameRoom);
+    }
+
+    public void updateSecondRoom(SecondRoomPlayerRequestDto secondRoomPlayerRequestDto) {
+        GameRoom gameRoom = getGameRoom(secondRoomPlayerRequestDto.getGameRoomId());
+
+        SecondRoom secondRoom = SecondRoom.toDto(secondRoomPlayerRequestDto);
+        SecondRoom oldRoom = gameRoom.getSecondRoom();
+
+        secondRoom.modifyDto(oldRoom);
+        gameRoom.modifySecondRoom(secondRoom);
+
+        saveGameRoomToTemp(gameRoom);
+    }
+
+    public void updateThridRoom(ThirdRoomPlayerRequestDto thirdRoomPlayerRequestDto) {
+        GameRoom gameRoom = getGameRoom(thirdRoomPlayerRequestDto.getGameRoomId());
+
+        ThirdRoom thirdRoom = ThirdRoom.toDto(thirdRoomPlayerRequestDto);
+        ThirdRoom oldRoom = gameRoom.getThirdRoom();
+
+        thirdRoom.modifyDto(oldRoom);
+        gameRoom.modifyThirdRoom(thirdRoom);
+
+        saveGameRoomToTemp(gameRoom);
     }
 }

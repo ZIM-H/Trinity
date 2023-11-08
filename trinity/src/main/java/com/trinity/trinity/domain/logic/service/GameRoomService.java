@@ -11,11 +11,11 @@ import java.util.List;
 public interface GameRoomService {
     GameRoom createGameRoom(List<PlayerDto> players);
 
-    void updateFirstRoom(FirstRoomPlayerRequestDto firstRoomPlayerRequestDto);
-
-    void updateSecondRoom(SecondRoomPlayerRequestDto secondRoomPlayerRequestDto);
-
-    void updateThridRoom(ThirdRoomPlayerRequestDto thirdRoomPlayerRequestDto);
+//    void updateFirstRoom(FirstRoomPlayerRequestDto firstRoomPlayerRequestDto);
+//
+//    void updateSecondRoom(SecondRoomPlayerRequestDto secondRoomPlayerRequestDto);
+//
+//    void updateThridRoom(ThirdRoomPlayerRequestDto thirdRoomPlayerRequestDto);
 
     boolean gameLogic(String gameRoomId);
 
