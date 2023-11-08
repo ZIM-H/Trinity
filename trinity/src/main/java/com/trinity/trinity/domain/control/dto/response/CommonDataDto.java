@@ -18,13 +18,13 @@ public class CommonDataDto {
     }
 
     public void setCommonDto(GameRoom gameroom) {
-        if (gameroom.getRound().getFirstRoom().getFertilizerUpgradeStatus() == 3) {
+        if (gameroom.getFirstRoom().getFertilizerUpgradeStatus() == 3) {
             this.fertilizerUpgrade = true;
         } else {
             this.fertilizerUpgrade = false;
         }
 
-        if (gameroom.getRound().getThirdRoom().getBarrierStatus() == 2) {
+        if (gameroom.getThirdRoom().getBarrierStatus() == 2) {
             this.barrierUpgrade = true;
         } else {
             this.barrierUpgrade = true;

@@ -35,11 +35,11 @@ public class SecondRoomResponseDto {
         this.conflictAsteroid = commonDataDto.isConflictAsteroid();
         this.gameRoomId = gameRoom.getGameRoomId();
         this.secondResponseDto = SecondResponseDto.builder()
-                .message(gameRoom.getRound().getSecondRoom().getMessage())
-                .fertilizerAmount(gameRoom.getRound().getSecondRoom().getFertilizerAmount())
-                .carbonCaptureTryCount(gameRoom.getRound().getSecondRoom().getCarbonCaptureTryCount())
-                .carbonCaptureStatus(gameRoom.getRound().getSecondRoom().getCarbonCaptureStatus())
-                .farmStatus(gameRoom.getRound().getSecondRoom().isFarmStatus())
+                .message(gameRoom.getSecondRoom().getMessage())
+                .fertilizerAmount(gameRoom.getSecondRoom().getFertilizerAmount())
+                .carbonCaptureTryCount(gameRoom.getSecondRoom().getCarbonCaptureTryCount())
+                .carbonCaptureStatus(gameRoom.getSecondRoom().getCarbonCaptureStatus())
+                .farmStatus(gameRoom.getSecondRoom().isFarmStatus())
                 .build();
     }
 

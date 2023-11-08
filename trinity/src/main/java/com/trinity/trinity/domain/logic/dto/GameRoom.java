@@ -12,27 +12,43 @@ public class GameRoom {
     private String gameRoomId;
     private int foodAmount;
     private int fertilizerAmount;
-    private int roundNo;
-    private Round round;
     private boolean playerStatus;
     private boolean birthday;
     private int event;
     private boolean carbonCaptureNotice;
     private boolean[] blackholeStatus;
     private Events events;
+    private int roundNo;
+    private FirstRoom firstRoom;
+    private SecondRoom secondRoom;
+    private ThirdRoom thirdRoom;
 
     @Builder
-    public GameRoom(String gameRoomId, int foodAmount, int fertilizerAmount, int roundNo, Round round, boolean playerStatus, boolean birthday, int event, boolean carbonCaptureNotice, boolean[] blackholeStatus) {
+    public GameRoom(String gameRoomId, int foodAmount, int fertilizerAmount, int roundNo, boolean playerStatus, boolean birthday, int event, boolean carbonCaptureNotice, boolean[] blackholeStatus, Events events, FirstRoom firstRoom, SecondRoom secondRoom, ThirdRoom thirdRoom) {
         this.gameRoomId = gameRoomId;
         this.foodAmount = foodAmount;
         this.fertilizerAmount = fertilizerAmount;
         this.roundNo = roundNo;
-        this.round = round;
         this.playerStatus = playerStatus;
         this.birthday = birthday;
         this.event = event;
         this.carbonCaptureNotice = carbonCaptureNotice;
         this.blackholeStatus = blackholeStatus;
-        this.events = Events.builder().build();
+        this.events = events;
+        this.firstRoom = firstRoom;
+        this.secondRoom = secondRoom;
+        this.thirdRoom = thirdRoom;
+    }
+
+    public void modifyFirstRoom(FirstRoom firstRoom) {
+        this.firstRoom = firstRoom;
+    }
+
+    public void modifySecondRoom(SecondRoom secondRoom) {
+        this.secondRoom = secondRoom;
+    }
+
+    public void modifyThirdRoom(ThirdRoom thirdRoom) {
+        this.thirdRoom = thirdRoom;
     }
 }
