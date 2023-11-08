@@ -31,7 +31,7 @@ public class RedisService {
     }
 
     public void removeClientSession(String userId) {
-        redisTemplate.opsForHash().delete(userId);
+        redisTemplate.opsForHash().delete("ClientSession", userId);
     }
 
     public String getClientId(String userId) {
