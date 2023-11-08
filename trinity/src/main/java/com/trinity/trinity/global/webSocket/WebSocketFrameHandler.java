@@ -116,7 +116,7 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
                     System.out.println("gameOverCheck");
 
                     // gameOver가 아닌 경우
-                    if (!gameOver) {
+                    if (gameOver) {
 
                         gameRoomService.morningGameLogic(gameRoomId);
 
