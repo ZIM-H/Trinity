@@ -222,11 +222,12 @@ public class GameRoomServiceImpl implements GameRoomService {
             movePlayer(0, gameRoomId);
             thirdRoom.setBlackholeStatus(false);
         }
-
-        movePlayer(1, gameRoomId);
+        else {
+            movePlayer(1, gameRoomId);
+        }
 
         // 1일차에만 랜덤 이벤트 추출
-        if (gameRoom.getRoundNo() == 1){
+        if (gameRoom.getRoundNo() == 1) {
             shuffleEvent(events);
         }
 
@@ -244,12 +245,12 @@ public class GameRoomServiceImpl implements GameRoomService {
 
         int[] eventWeights = {1, 2, 4, 8, 16, 32};
 
-        for(int i=0; i<6; i++){
+        for (int i = 0; i < 6; i++) {
             int[] arr = eventArrays[i];
             int value = eventWeights[i];
 
-            for(int j = 0; j<arr.length; j++){
-                if(arr[j] == gameRoom.getRoundNo()){
+            for (int j = 0; j < arr.length; j++) {
+                if (arr[j] == gameRoom.getRoundNo()) {
                     eventIdx += value;
                     // 선택된 이벤트에 따라 데이터 변경
                     validateEvent(i, gameRoomId);
@@ -259,7 +260,7 @@ public class GameRoomServiceImpl implements GameRoomService {
         }
 
         // 식사는 10일에 고정
-        if(gameRoom.getRoundNo() == 10) {
+        if (gameRoom.getRoundNo() == 10) {
             eventIdx += 64;
 
         }
@@ -274,7 +275,7 @@ public class GameRoomServiceImpl implements GameRoomService {
         gameRoomRedisService.saveGameRoom(gameRoom);
     }
 
-    private void shuffleEvent(Events events){
+    private void shuffleEvent(Events events) {
 
         // 이벤트 등장 일수 랜덤 추출
         int[] randomEvent = shuffleArray(events.getAsteroid(), 12);
@@ -312,7 +313,7 @@ public class GameRoomServiceImpl implements GameRoomService {
             array[i] = list.get(i);
         }
 
-        return  array;
+        return array;
     }
 
     @Override
@@ -368,7 +369,7 @@ public class GameRoomServiceImpl implements GameRoomService {
                 thirdRoom.setBlackholeStatus(true);
                 break;
             case 2:
-                if(secondRoom.getCarbonCaptureStatus() == 0) secondRoom.setCarbonCaptureStatus(1);
+                if (secondRoom.getCarbonCaptureStatus() == 0) secondRoom.setCarbonCaptureStatus(1);
                 break;
             case 3:
                 firstRoom.setPurifierStatus(1);
