@@ -84,7 +84,7 @@ public class MatchQServiceImpl implements MatchQService {
                         playerList.add(GameServerPlayerListRequestDto.builder()
                                 .userId(userAndScore.getFirst())
                                 .build());
-                    
+
                     webClientService.post(playerList);
 
                 } catch (Exception e) {
@@ -103,7 +103,4 @@ public class MatchQServiceImpl implements MatchQService {
             matchRedisTemplate.opsForZSet().add("matchQueue", userAndScore.getFirst(), userAndScore.getSecond());
         }
     }
-
-
-
 }

@@ -14,7 +14,6 @@ import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.netty.http.client.HttpClient;
 
-@Slf4j
 @Configuration
 @RequiredArgsConstructor
 public class WebClientConfig {
