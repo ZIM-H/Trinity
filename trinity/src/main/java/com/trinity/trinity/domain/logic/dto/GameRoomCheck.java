@@ -2,7 +2,9 @@ package com.trinity.trinity.domain.logic.dto;
 
 
 import lombok.Builder;
+import lombok.Getter;
 
+@Getter
 public class GameRoomCheck {
     private volatile boolean firstRoom;
     private volatile boolean secondRoom;
