@@ -98,9 +98,9 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
 
                     // 소행성 충돌 여부 데이터 뽑기
                     boolean asteroidConflict = false;
-                    int barrierStatus = beforeGameRoom.getRound().getThirdRoom().getBarrierStatus();
-                    boolean asteroidStatus = beforeGameRoom.getRound().getThirdRoom().isAsteroidStatus();
-                    boolean asteroidDestroy = beforeGameRoom.getRound().getThirdRoom().isAsteroidDestroyTry();
+                    int barrierStatus = beforeGameRoom.getThirdRoom().getBarrierStatus();
+                    boolean asteroidStatus = beforeGameRoom.getThirdRoom().isAsteroidStatus();
+                    boolean asteroidDestroy = beforeGameRoom.getThirdRoom().isAsteroidDestroyTry();
 
                     if (asteroidStatus && barrierStatus < 2 && !asteroidDestroy) asteroidConflict = true;
 
@@ -123,9 +123,9 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
                         //채널 연결 확인
                         if (userLeaveProcess(gameRoomId)) return;
 
-                        String firstId = gameRoom.getRound().getFirstRoom().getPlayer();
-                        String secondId = gameRoom.getRound().getSecondRoom().getPlayer();
-                        String thirdId = gameRoom.getRound().getThirdRoom().getPlayer();
+                        String firstId = gameRoom.getFirstRoom().getPlayer();
+                        String secondId = gameRoom.getSecondRoom().getPlayer();
+                        String thirdId = gameRoom.getThirdRoom().getPlayer();
 
                         String firstClientId = redisService.getClientId(firstId);
                         String secondClientId = redisService.getClientId(secondId);
@@ -215,9 +215,9 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
         GameRoom gameRoom = gameRoomRedisService.getGameRoom(gameRoomId);
 
         boolean checkActiveAll = true;
-        String firstId = gameRoom.getRound().getFirstRoom().getPlayer();
-        String secondId = gameRoom.getRound().getSecondRoom().getPlayer();
-        String thirdId = gameRoom.getRound().getThirdRoom().getPlayer();
+        String firstId = gameRoom.getFirstRoom().getPlayer();
+        String secondId = gameRoom.getSecondRoom().getPlayer();
+        String thirdId = gameRoom.getThirdRoom().getPlayer();
 
         String firstClientId = redisService.getClientId(firstId);
         String secondClientId = redisService.getClientId(secondId);
@@ -270,9 +270,9 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
 
         GameRoom gameRoom = gameRoomRedisService.getGameRoom(gameRoomId);
 
-        String firstId = gameRoom.getRound().getFirstRoom().getPlayer();
-        String secondId = gameRoom.getRound().getSecondRoom().getPlayer();
-        String thirdId = gameRoom.getRound().getThirdRoom().getPlayer();
+        String firstId = gameRoom.getFirstRoom().getPlayer();
+        String secondId = gameRoom.getSecondRoom().getPlayer();
+        String thirdId = gameRoom.getThirdRoom().getPlayer();
 
         String firstClientId = redisService.getClientId(firstId);
         String secondClientId = redisService.getClientId(secondId);
@@ -314,9 +314,9 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
 
         GameRoom gameRoom = gameRoomRedisService.getGameRoom(gameRoomId);
 
-        String firstId = gameRoom.getRound().getFirstRoom().getPlayer();
-        String secondId = gameRoom.getRound().getSecondRoom().getPlayer();
-        String thirdId = gameRoom.getRound().getThirdRoom().getPlayer();
+        String firstId = gameRoom.getFirstRoom().getPlayer();
+        String secondId = gameRoom.getSecondRoom().getPlayer();
+        String thirdId = gameRoom.getThirdRoom().getPlayer();
 
         String firstClientId = redisService.getClientId(firstId);
         String secondClientId = redisService.getClientId(secondId);

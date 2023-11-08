@@ -26,14 +26,14 @@ public class GameRoomServiceImpl implements GameRoomService {
         SecondRoom secondRoom = createService.createSecondRoom(players.get(1).getUserId());
         ThirdRoom thirdRoom = createService.createThirdRoom(players.get(2).getUserId());
 
-        Round round = createService.createRound(firstRoom, secondRoom, thirdRoom);
-
         GameRoom gameRoom = GameRoom.builder()
                 .gameRoomId(gameRoomId)
                 .foodAmount(3)
                 .fertilizerAmount(0)
                 .roundNo(1)
-                .round(round)
+                .firstRoom(firstRoom)
+                .secondRoom(secondRoom)
+                .thirdRoom(thirdRoom)
                 .playerStatus(false)
                 .birthday(false)
                 .build();
@@ -48,18 +48,11 @@ public class GameRoomServiceImpl implements GameRoomService {
         // 게임방 가져오고
         GameRoom gameRoom = gameRoomRedisService.getGameRoom(firstRoomPlayerRequestDto.getGameRoomId());
         // 게임방 1번방 정보 넣기
-        Round round = gameRoom.getRound();
-
-        if (round == null) {
-            gameRoom.setRound(new Round());
-            round = gameRoom.getRound();
-        }
-
         FirstRoom firstRoom = FirstRoom.toDto(firstRoomPlayerRequestDto);
-        FirstRoom oldRoom = round.getFirstRoom();
+        FirstRoom oldRoom = gameRoom.getFirstRoom();
 
         firstRoom.modifyDto(oldRoom);
-        round.modifyFirstRoom(firstRoom);
+        gameRoom.modifyFirstRoom(firstRoom);
 
         gameRoomRedisService.saveGameRoomToTemp(gameRoom);
     }
@@ -68,18 +61,11 @@ public class GameRoomServiceImpl implements GameRoomService {
     public void updateSecondRoom(SecondRoomPlayerRequestDto secondRoomPlayerRequestDto) {
         GameRoom gameRoom = gameRoomRedisService.getGameRoom(secondRoomPlayerRequestDto.getGameRoomId());
 
-        Round round = gameRoom.getRound();
-
-        if (round == null) {
-            gameRoom.setRound(new Round());
-            round = gameRoom.getRound();
-        }
-
         SecondRoom secondRoom = SecondRoom.toDto(secondRoomPlayerRequestDto);
-        SecondRoom oldRoom = round.getSecondRoom();
+        SecondRoom oldRoom = gameRoom.getSecondRoom();
 
         secondRoom.modifyDto(oldRoom);
-        round.modifySecondRoom(secondRoom);
+        gameRoom.modifySecondRoom(secondRoom);
 
         gameRoomRedisService.saveGameRoomToTemp(gameRoom);
     }
@@ -88,17 +74,11 @@ public class GameRoomServiceImpl implements GameRoomService {
     public void updateThridRoom(ThirdRoomPlayerRequestDto thirdRoomPlayerRequestDto) {
         GameRoom gameRoom = gameRoomRedisService.getGameRoom(thirdRoomPlayerRequestDto.getGameRoomId());
 
-        Round round = gameRoom.getRound();
-
-        if (round == null) {
-            gameRoom.setRound(new Round());
-            round = gameRoom.getRound();
-        }
         ThirdRoom thirdRoom = ThirdRoom.toDto(thirdRoomPlayerRequestDto);
-        ThirdRoom oldRoom = round.getThirdRoom();
+        ThirdRoom oldRoom = gameRoom.getThirdRoom();
 
         thirdRoom.modifyDto(oldRoom);
-        round.modifyThirdRoom(thirdRoom);
+        gameRoom.modifyThirdRoom(thirdRoom);
 
         gameRoomRedisService.saveGameRoomToTemp(gameRoom);
     }
@@ -106,9 +86,9 @@ public class GameRoomServiceImpl implements GameRoomService {
     @Override
     public boolean gameLogic(String gameRoomId) {
         GameRoom gameRoom = gameRoomRedisService.getGameRoom(gameRoomId);
-        FirstRoom firstRoom = gameRoom.getRound().getFirstRoom();
-        SecondRoom secondRoom = gameRoom.getRound().getSecondRoom();
-        ThirdRoom thirdRoom = gameRoom.getRound().getThirdRoom();
+        FirstRoom firstRoom = gameRoom.getFirstRoom();
+        SecondRoom secondRoom = gameRoom.getSecondRoom();
+        ThirdRoom thirdRoom = gameRoom.getThirdRoom();
 
         gameRoom.setFoodAmount(gameRoom.getFoodAmount() - 1);
         if (gameRoom.isCarbonCaptureNotice()) gameRoom.setCarbonCaptureNotice(false);
@@ -209,8 +189,8 @@ public class GameRoomServiceImpl implements GameRoomService {
     @Override
     public void morningGameLogic(String gameRoomId) {
         GameRoom gameRoom = gameRoomRedisService.getGameRoom(gameRoomId);
-        SecondRoom secondRoom = gameRoom.getRound().getSecondRoom();
-        ThirdRoom thirdRoom = gameRoom.getRound().getThirdRoom();
+        SecondRoom secondRoom = gameRoom.getSecondRoom();
+        ThirdRoom thirdRoom = gameRoom.getThirdRoom();
         Events events = gameRoom.getEvents();
 
         // 블랙홀 영향권인지 판단
@@ -326,9 +306,9 @@ public class GameRoomServiceImpl implements GameRoomService {
 
     private void movePlayer(int direction, String gameRoomId) {
         GameRoom gameRoom = gameRoomRedisService.getGameRoom(gameRoomId);
-        FirstRoom firstRoom = gameRoom.getRound().getFirstRoom();
-        SecondRoom secondRoom = gameRoom.getRound().getSecondRoom();
-        ThirdRoom thirdRoom = gameRoom.getRound().getThirdRoom();
+        FirstRoom firstRoom = gameRoom.getFirstRoom();
+        SecondRoom secondRoom = gameRoom.getSecondRoom();
+        ThirdRoom thirdRoom = gameRoom.getThirdRoom();
 
         // 정방향
         if (direction == 1) {
@@ -348,9 +328,9 @@ public class GameRoomServiceImpl implements GameRoomService {
 
     private void validateEvent(int eventIdx, String gameRoomId) {
         GameRoom gameRoom = gameRoomRedisService.getGameRoom(gameRoomId);
-        FirstRoom firstRoom = gameRoom.getRound().getFirstRoom();
-        SecondRoom secondRoom = gameRoom.getRound().getSecondRoom();
-        ThirdRoom thirdRoom = gameRoom.getRound().getThirdRoom();
+        FirstRoom firstRoom = gameRoom.getFirstRoom();
+        SecondRoom secondRoom = gameRoom.getSecondRoom();
+        ThirdRoom thirdRoom = gameRoom.getThirdRoom();
 
         switch (eventIdx) {
             case 0:

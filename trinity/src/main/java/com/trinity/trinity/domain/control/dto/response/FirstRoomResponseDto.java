@@ -38,13 +38,13 @@ public class FirstRoomResponseDto {
         this.gameRoomId = gameRoom.getGameRoomId();
 
         boolean purifierStatus = true;
-        if (gameRoom.getRound().getFirstRoom().getPurifierStatus() != 0) {
+        if (gameRoom.getFirstRoom().getPurifierStatus() != 0) {
             purifierStatus = false;
         }
 
         this.firstResponseDto = FirstResponseDto.builder()
-                .fertilizerAmount(gameRoom.getRound().getFirstRoom().getFertilizerAmount())
-                .message(gameRoom.getRound().getFirstRoom().getMessage())
+                .fertilizerAmount(gameRoom.getFirstRoom().getFertilizerAmount())
+                .message(gameRoom.getFirstRoom().getMessage())
                 .purifierStatus(purifierStatus)
                 .build();
     }
