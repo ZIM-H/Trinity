@@ -30,12 +30,15 @@ public class GameRoomServiceImpl implements GameRoomService {
                 .gameRoomId(gameRoomId)
                 .foodAmount(3)
                 .fertilizerAmount(0)
+                .playerStatus(false)
+                .birthday(false)
+                .carbonCaptureNotice(false)
+                .blackholeStatus(new boolean[13])
+                .events(Events.builder().build())
                 .roundNo(1)
                 .firstRoom(firstRoom)
                 .secondRoom(secondRoom)
                 .thirdRoom(thirdRoom)
-                .playerStatus(false)
-                .birthday(false)
                 .build();
 
         gameRoomRedisService.createGameRoom(gameRoom);
