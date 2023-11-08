@@ -58,6 +58,8 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
                     redisService.saveClient(clientSession);
                 }
 
+                redisService.saveData(userId, String.valueOf(UserStatus.WAITING));
+
                 sendDataToClient(redisService.getClientId(userId), "Connecting SUCCESS!!");
 
             } else if (requestType.equals("roundEnd")) {
