@@ -109,108 +109,109 @@ public class GameRoomRedisService {
         gameRoomRedisTemplate.opsForHash().delete("gameRoom", gameRoomId);
     }
 
-//    public void updateRoom(Gson gson, JsonObject jsonObject, String roomNum, String gameRoomId) {
-//        GameRoom gameRoom = getGameRoom(gameRoomId);
-//
-//        // 방번호 확인하는 로직
-//        if (roomNum.equals("first")) {
-//            FirstRoomPlayerRequestDto dto = gson.fromJson(jsonObject.get("FirstRoomPlayerRequestDto").getAsJsonObject(), FirstRoomPlayerRequestDto.class);
-//            FirstRoom firstRoom = FirstRoom.toDto(dto);
-//            FirstRoom oldRoom = gameRoom.getFirstRoom();
-//            firstRoom.modifyDto(oldRoom);
-//            gameRoom.modifyFirstRoom(firstRoom);
-//        } else if (roomNum.equals("second")) {
-//            SecondRoomPlayerRequestDto dto = gson.fromJson(jsonObject.get("SecondRoomPlayerRequestDto").getAsJsonObject(), SecondRoomPlayerRequestDto.class);
-//            SecondRoom secondRoom = SecondRoom.toDto(dto);
-//            SecondRoom oldRoom = gameRoom.getSecondRoom();
-//            secondRoom.modifyDto(oldRoom);
-//            gameRoom.modifySecondRoom(secondRoom);
-//        } else {
-//            ThirdRoomPlayerRequestDto dto = gson.fromJson(jsonObject.get("ThirdRoomPlayerRequestDto").getAsJsonObject(), ThirdRoomPlayerRequestDto.class);
-//            ThirdRoom thirdRoom = ThirdRoom.toDto(dto);
-//            ThirdRoom oldRoom = gameRoom.getThirdRoom();
-//            thirdRoom.modifyDto(oldRoom);
-//            gameRoom.modifyThirdRoom(thirdRoom);
-//        }
-//        saveGameRoomToTemp(gameRoom);
-//    }
+    @Synchronized
+    public void updateRoom(Gson gson, JsonObject jsonObject, String roomNum, String gameRoomId) {
+        GameRoom gameRoom = getGameRoom(gameRoomId);
 
-    public void updateRoom(Gson gson, JsonObject jsonObject, String roomNum) {
         // 방번호 확인하는 로직
         if (roomNum.equals("first")) {
             FirstRoomPlayerRequestDto dto = gson.fromJson(jsonObject.get("FirstRoomPlayerRequestDto").getAsJsonObject(), FirstRoomPlayerRequestDto.class);
-            updateFirstRoom(dto);
+            FirstRoom firstRoom = FirstRoom.toDto(dto);
+            FirstRoom oldRoom = gameRoom.getFirstRoom();
+            firstRoom.modifyDto(oldRoom);
+            gameRoom.modifyFirstRoom(firstRoom);
         } else if (roomNum.equals("second")) {
             SecondRoomPlayerRequestDto dto = gson.fromJson(jsonObject.get("SecondRoomPlayerRequestDto").getAsJsonObject(), SecondRoomPlayerRequestDto.class);
-            updateSecondRoom(dto);
+            SecondRoom secondRoom = SecondRoom.toDto(dto);
+            SecondRoom oldRoom = gameRoom.getSecondRoom();
+            secondRoom.modifyDto(oldRoom);
+            gameRoom.modifySecondRoom(secondRoom);
         } else {
             ThirdRoomPlayerRequestDto dto = gson.fromJson(jsonObject.get("ThirdRoomPlayerRequestDto").getAsJsonObject(), ThirdRoomPlayerRequestDto.class);
-            updateThridRoom(dto);
+            ThirdRoom thirdRoom = ThirdRoom.toDto(dto);
+            ThirdRoom oldRoom = gameRoom.getThirdRoom();
+            thirdRoom.modifyDto(oldRoom);
+            gameRoom.modifyThirdRoom(thirdRoom);
         }
-    }
-
-    public void updateFirstRoom(FirstRoomPlayerRequestDto firstRoomPlayerRequestDto) {
-        // 게임방 가져오고
-        GameRoom gameRoom = getGameRoom(firstRoomPlayerRequestDto.getGameRoomId());
-        // 게임방 1번방 정보 넣기
-        FirstRoom firstRoom = FirstRoom.toDto(firstRoomPlayerRequestDto);
-        FirstRoom oldRoom = gameRoom.getFirstRoom();
-
-        firstRoom.modifyDto(oldRoom);
-
-        System.out.println("1번방 변경 전");
-        System.out.println("updateFirstRoom 함수 안쪽에서 firstRoom.getPlayer() : " + firstRoom.getPlayer());
-        System.out.println("updateFirstRoom 함수 안쪽에서 getSecondRoom.getPlayer() : " + gameRoom.getSecondRoom().getPlayer());
-        System.out.println("updateFirstRoom 함수 안쪽에서 getThirdRoom.getPlayer() : " + gameRoom.getThirdRoom().getPlayer());
-
-        gameRoom.modifyFirstRoom(firstRoom);
-
-        System.out.println("1번방 변경 후");
-        System.out.println("updateFirstRoom 함수 안쪽에서 gameRoom.getFirstRoom().getPlayer() : " + gameRoom.getFirstRoom().getPlayer());
-
         saveGameRoomToTemp(gameRoom);
     }
 
-    public void updateSecondRoom(SecondRoomPlayerRequestDto secondRoomPlayerRequestDto) {
-        GameRoom gameRoom = getGameRoom(secondRoomPlayerRequestDto.getGameRoomId());
+//    public void updateRoom(Gson gson, JsonObject jsonObject, String roomNum) {
+//        // 방번호 확인하는 로직
+//        if (roomNum.equals("first")) {
+//            FirstRoomPlayerRequestDto dto = gson.fromJson(jsonObject.get("FirstRoomPlayerRequestDto").getAsJsonObject(), FirstRoomPlayerRequestDto.class);
+//            updateFirstRoom(dto);
+//        } else if (roomNum.equals("second")) {
+//            SecondRoomPlayerRequestDto dto = gson.fromJson(jsonObject.get("SecondRoomPlayerRequestDto").getAsJsonObject(), SecondRoomPlayerRequestDto.class);
+//            updateSecondRoom(dto);
+//        } else {
+//            ThirdRoomPlayerRequestDto dto = gson.fromJson(jsonObject.get("ThirdRoomPlayerRequestDto").getAsJsonObject(), ThirdRoomPlayerRequestDto.class);
+//            updateThridRoom(dto);
+//        }
+//    }
 
-        SecondRoom secondRoom = SecondRoom.toDto(secondRoomPlayerRequestDto);
-        SecondRoom oldRoom = gameRoom.getSecondRoom();
-
-        secondRoom.modifyDto(oldRoom);
-
-        System.out.println("2번방 변경 전");
-        System.out.println("updateSecondRoom 함수 안쪽에서 firstRoom.getPlayer() : " + gameRoom.getFirstRoom().getPlayer());
-        System.out.println("updateSecondRoom 함수 안쪽에서 secondRoom.getPlayer() : " + secondRoom.getPlayer());
-        System.out.println("updateSecondRoom 함수 안쪽에서 getThirdRoom.getPlayer() : " + gameRoom.getThirdRoom().getPlayer());
-
-        gameRoom.modifySecondRoom(secondRoom);
-
-        System.out.println("2번방 변경 후");
-        System.out.println("updateSecondRoom 함수 안쪽에서 gameRoom.secondRoom().getPlayer() : " + gameRoom.getSecondRoom().getPlayer());
-
-        saveGameRoomToTemp(gameRoom);
-    }
-
-    public void updateThridRoom(ThirdRoomPlayerRequestDto thirdRoomPlayerRequestDto) {
-        GameRoom gameRoom = getGameRoom(thirdRoomPlayerRequestDto.getGameRoomId());
-
-        ThirdRoom thirdRoom = ThirdRoom.toDto(thirdRoomPlayerRequestDto);
-        ThirdRoom oldRoom = gameRoom.getThirdRoom();
-
-        thirdRoom.modifyDto(oldRoom);
-
-        System.out.println("3번방 변경 전");
-        System.out.println("updateThridRoom 함수 안쪽에서 firstRoom.getPlayer() : " + gameRoom.getFirstRoom().getPlayer());
-        System.out.println("updateThridRoom 함수 안쪽에서 secondRoom.getPlayer() : " + gameRoom.getSecondRoom().getPlayer());
-        System.out.println("updateThridRoom 함수 안쪽에서 thirdRoom.getPlayer() : " + thirdRoom.getPlayer());
-
-
-        gameRoom.modifyThirdRoom(thirdRoom);
-
-        System.out.println("3번방 변경 후");
-        System.out.println("updateThridRoom 함수 안쪽에서 gameRoom.thirdRoom().getPlayer() : " + gameRoom.getThirdRoom().getPlayer());
-
-        saveGameRoomToTemp(gameRoom);
-    }
+//    public void updateFirstRoom(FirstRoomPlayerRequestDto firstRoomPlayerRequestDto) {
+//        // 게임방 가져오고
+//        GameRoom gameRoom = getGameRoom(firstRoomPlayerRequestDto.getGameRoomId());
+//        // 게임방 1번방 정보 넣기
+//        FirstRoom firstRoom = FirstRoom.toDto(firstRoomPlayerRequestDto);
+//        FirstRoom oldRoom = gameRoom.getFirstRoom();
+//
+//        firstRoom.modifyDto(oldRoom);
+//
+//        System.out.println("1번방 변경 전");
+//        System.out.println("updateFirstRoom 함수 안쪽에서 firstRoom.getPlayer() : " + firstRoom.getPlayer());
+//        System.out.println("updateFirstRoom 함수 안쪽에서 getSecondRoom.getPlayer() : " + gameRoom.getSecondRoom().getPlayer());
+//        System.out.println("updateFirstRoom 함수 안쪽에서 getThirdRoom.getPlayer() : " + gameRoom.getThirdRoom().getPlayer());
+//
+//        gameRoom.modifyFirstRoom(firstRoom);
+//
+//        System.out.println("1번방 변경 후");
+//        System.out.println("updateFirstRoom 함수 안쪽에서 gameRoom.getFirstRoom().getPlayer() : " + gameRoom.getFirstRoom().getPlayer());
+//
+//        saveGameRoomToTemp(gameRoom);
+//    }
+//
+//    public void updateSecondRoom(SecondRoomPlayerRequestDto secondRoomPlayerRequestDto) {
+//        GameRoom gameRoom = getGameRoom(secondRoomPlayerRequestDto.getGameRoomId());
+//
+//        SecondRoom secondRoom = SecondRoom.toDto(secondRoomPlayerRequestDto);
+//        SecondRoom oldRoom = gameRoom.getSecondRoom();
+//
+//        secondRoom.modifyDto(oldRoom);
+//
+//        System.out.println("2번방 변경 전");
+//        System.out.println("updateSecondRoom 함수 안쪽에서 firstRoom.getPlayer() : " + gameRoom.getFirstRoom().getPlayer());
+//        System.out.println("updateSecondRoom 함수 안쪽에서 secondRoom.getPlayer() : " + secondRoom.getPlayer());
+//        System.out.println("updateSecondRoom 함수 안쪽에서 getThirdRoom.getPlayer() : " + gameRoom.getThirdRoom().getPlayer());
+//
+//        gameRoom.modifySecondRoom(secondRoom);
+//
+//        System.out.println("2번방 변경 후");
+//        System.out.println("updateSecondRoom 함수 안쪽에서 gameRoom.secondRoom().getPlayer() : " + gameRoom.getSecondRoom().getPlayer());
+//
+//        saveGameRoomToTemp(gameRoom);
+//    }
+//
+//    public void updateThridRoom(ThirdRoomPlayerRequestDto thirdRoomPlayerRequestDto) {
+//        GameRoom gameRoom = getGameRoom(thirdRoomPlayerRequestDto.getGameRoomId());
+//
+//        ThirdRoom thirdRoom = ThirdRoom.toDto(thirdRoomPlayerRequestDto);
+//        ThirdRoom oldRoom = gameRoom.getThirdRoom();
+//
+//        thirdRoom.modifyDto(oldRoom);
+//
+//        System.out.println("3번방 변경 전");
+//        System.out.println("updateThridRoom 함수 안쪽에서 firstRoom.getPlayer() : " + gameRoom.getFirstRoom().getPlayer());
+//        System.out.println("updateThridRoom 함수 안쪽에서 secondRoom.getPlayer() : " + gameRoom.getSecondRoom().getPlayer());
+//        System.out.println("updateThridRoom 함수 안쪽에서 thirdRoom.getPlayer() : " + thirdRoom.getPlayer());
+//
+//
+//        gameRoom.modifyThirdRoom(thirdRoom);
+//
+//        System.out.println("3번방 변경 후");
+//        System.out.println("updateThridRoom 함수 안쪽에서 gameRoom.thirdRoom().getPlayer() : " + gameRoom.getThirdRoom().getPlayer());
+//
+//        saveGameRoomToTemp(gameRoom);
+//    }
 }
