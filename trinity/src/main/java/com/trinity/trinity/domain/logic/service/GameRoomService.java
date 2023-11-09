@@ -8,11 +8,11 @@ import java.util.List;
 public interface GameRoomService {
     GameRoom createGameRoom(List<PlayerDto> players);
 
-    boolean gameLogic(String gameRoomId);
+    boolean gameLogic(GameRoom gameRoom);
 
-    void morningGameLogic(String gameRoomId);
+    void morningGameLogic(GameRoom gameRoom);
 
-    boolean checkEndGame(String gameRoomId);
+    boolean checkEndGame(GameRoom gameRoom);
 
     void endGame(String gameRoomId);
 
