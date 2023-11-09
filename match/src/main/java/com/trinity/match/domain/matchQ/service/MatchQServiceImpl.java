@@ -33,12 +33,9 @@ public class MatchQServiceImpl implements MatchQService {
     public void joinQueue(String userId) {
         double time = System.currentTimeMillis();
         matchRedisTemplate.opsForZSet().add("matchQueue", userId, time);
-
-        Long size = matchRedisTemplate.opsForZSet().size("matchQueue");
-        if (size == 3) checkQueueSize();
     }
 
-//    @Scheduled(fixedRate = 2000)
+    @Scheduled(fixedRate = 10000)
     private void checkQueueSize() {
         // SessionCallback 내에 트랜잭션 구현
         matchRedisTemplate.execute(new SessionCallback<Object>() {
