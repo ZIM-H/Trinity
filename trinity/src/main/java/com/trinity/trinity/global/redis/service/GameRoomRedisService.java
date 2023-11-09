@@ -75,15 +75,17 @@ public class GameRoomRedisService {
         gameRoomRedisTemplate.opsForHash().delete("gameRoom", gameRoomId);
     }
 
-    public void updateRoom(Gson gson, JsonObject jsonObject, String roomNum) {
+    public void updateRoom(Gson gson, JsonObject jsonObject, String roomNum) throws InterruptedException {
         // 방번호 확인하는 로직
         if (roomNum.equals("first")) {
             FirstRoomPlayerRequestDto dto = gson.fromJson(jsonObject.get("FirstRoomPlayerRequestDto").getAsJsonObject(), FirstRoomPlayerRequestDto.class);
             updateFirstRoom(dto);
         } else if (roomNum.equals("second")) {
+            Thread.sleep(1750);
             SecondRoomPlayerRequestDto dto = gson.fromJson(jsonObject.get("SecondRoomPlayerRequestDto").getAsJsonObject(), SecondRoomPlayerRequestDto.class);
             updateSecondRoom(dto);
         } else {
+            Thread.sleep(3500);
             ThirdRoomPlayerRequestDto dto = gson.fromJson(jsonObject.get("ThirdRoomPlayerRequestDto").getAsJsonObject(), ThirdRoomPlayerRequestDto.class);
             updateThridRoom(dto);
         }
