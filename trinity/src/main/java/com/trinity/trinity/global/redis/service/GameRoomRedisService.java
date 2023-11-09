@@ -29,6 +29,7 @@ public class GameRoomRedisService {
         gameRoomRedisTemplate.opsForHash().put("gameRoom", gameRoom.getGameRoomId(), list);
     }
 
+    @Synchronized
     public GameRoom getGameRoom(String gameRoomId) {
         // temp game room에 없으면 만들고
         GameRoom findRoom = (GameRoom) gameRoomRedisTemplate.opsForHash().get("temp", gameRoomId);
@@ -60,10 +61,12 @@ public class GameRoomRedisService {
         return findRoom;
     }
 
+    @Synchronized
     public void saveGameRoomToTemp(GameRoom gameRoom) {
         gameRoomRedisTemplate.opsForHash().put("temp", gameRoom.getGameRoomId(), gameRoom);
     }
 
+    @Synchronized
     public void saveGameRoom(GameRoom gameRoom) {
         List<GameRoom> list = (List<GameRoom>) gameRoomRedisTemplate.opsForHash().get("gameRoom", gameRoom.getGameRoomId());
         list.add(gameRoom);
@@ -71,6 +74,7 @@ public class GameRoomRedisService {
 
     }
 
+    @Synchronized
     public void deleteGameRoom(String gameRoomId) {
         gameRoomRedisTemplate.opsForHash().delete("gameRoom", gameRoomId);
     }
@@ -91,7 +95,6 @@ public class GameRoomRedisService {
         }
     }
 
-    @Synchronized
     public void updateFirstRoom(FirstRoomPlayerRequestDto firstRoomPlayerRequestDto) {
         // 게임방 가져오고
         GameRoom gameRoom = getGameRoom(firstRoomPlayerRequestDto.getGameRoomId());
@@ -105,7 +108,6 @@ public class GameRoomRedisService {
         saveGameRoomToTemp(gameRoom);
     }
 
-    @Synchronized
     public void updateSecondRoom(SecondRoomPlayerRequestDto secondRoomPlayerRequestDto) {
         GameRoom gameRoom = getGameRoom(secondRoomPlayerRequestDto.getGameRoomId());
 
@@ -118,7 +120,6 @@ public class GameRoomRedisService {
         saveGameRoomToTemp(gameRoom);
     }
 
-    @Synchronized
     public void updateThridRoom(ThirdRoomPlayerRequestDto thirdRoomPlayerRequestDto) {
         GameRoom gameRoom = getGameRoom(thirdRoomPlayerRequestDto.getGameRoomId());
 

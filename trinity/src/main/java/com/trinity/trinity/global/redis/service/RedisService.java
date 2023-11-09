@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.trinity.trinity.global.dto.ClientSession;
 import com.trinity.trinity.domain.logic.dto.GameRoomCheck;
 import lombok.RequiredArgsConstructor;
+import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
@@ -17,10 +18,12 @@ public class RedisService {
     private final RedisTemplate<String, String> redisLoginTemplate;
     private final RedisTemplate<String, Object> redisTemplate;
 
+    @Synchronized
     public void saveData(String key, String value) {
         redisLoginTemplate.opsForHash().put("connectingMember", key, value);
     }
 
+    @Synchronized
     public void saveClient(ClientSession clientSession) throws JsonProcessingException {
         redisTemplate.opsForHash().put("ClientSession", clientSession.getUserId(), clientSession);
     }
@@ -30,6 +33,7 @@ public class RedisService {
         return clientSession;
     }
 
+    @Synchronized
     public void removeClientSession(String userId) {
         redisTemplate.opsForHash().delete("ClientSession", userId);
     }
@@ -42,6 +46,7 @@ public class RedisService {
         return clientId;
     }
 
+    @Synchronized
     public void saveGameRoomUserStatus(String gameRoomId) {
         GameRoomCheck gameRoomCheck = GameRoomCheck.builder().build();
         redisTemplate.opsForHash().put("gameRoomCheck", gameRoomId, gameRoomCheck);
