@@ -41,10 +41,13 @@ public class RedisService {
 
     @Synchronized
     public String getClientId(String userId) {
-        System.out.println(userId);
+        System.out.println("getClientId 안쪽의 userId : " + userId);
         ClientSession channelInfo = (ClientSession) redisTemplate.opsForHash()
                 .get("ClientSession", userId);
         String clientId = channelInfo.getClientId();
+
+        System.out.println("getClientId 안쪽의 clientId : " + clientId);
+
         return clientId;
     }
 

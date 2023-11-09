@@ -256,6 +256,8 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
             redisService.saveData(secondId, String.valueOf(UserStatus.LOBBY));
             redisService.saveData(thirdId, String.valueOf(UserStatus.LOBBY));
 
+            System.out.println("여기는 연결이 끊겼다는 가정");
+
             return true;
         } else {
             return false;
