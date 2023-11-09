@@ -11,9 +11,11 @@ import com.trinity.trinity.domain.logic.dto.SecondRoom;
 import com.trinity.trinity.domain.logic.dto.ThirdRoom;
 import lombok.RequiredArgsConstructor;
 import lombok.Synchronized;
+import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +23,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class GameRoomRedisService {
     private final RedisTemplate<String, Object> gameRoomRedisTemplate;
+
+    private HashOperations<String, String, Object> hashOperations;
+
+//    @PostConstruct
+//    private void init() {
+//        hashOperations = gameRoomRedisTemplate.opsForHash();
+//    }
 
     @Synchronized
     public void createGameRoom(GameRoom gameRoom) {
@@ -42,6 +51,15 @@ public class GameRoomRedisService {
             List<GameRoom> before = (List<GameRoom>) gameRoomRedisTemplate.opsForHash().get("gameRoom", gameRoomId);
 
             GameRoom last = before.get(before.size() - 1);
+
+            // 여기서 FirstRoom, SecondRoom, ThirdRoom
+            System.out.println(last.getFirstRoom());
+            System.out.println(last.getSecondRoom());
+            System.out.println(last.getThirdRoom());
+            System.out.println(last.getFirstRoom().getPlayer());
+            System.out.println(last.getSecondRoom().getPlayer());
+            System.out.println(last.getThirdRoom().getPlayer());
+
             GameRoom gameRoom = GameRoom.builder()
                     .foodAmount(last.getFoodAmount())
                     .fertilizerAmount(last.getFertilizerAmount())
@@ -63,6 +81,13 @@ public class GameRoomRedisService {
         }
 
         System.out.println("있다 있다 있ㄲ다");
+
+        System.out.println(findRoom.getFirstRoom());
+        System.out.println(findRoom.getSecondRoom());
+        System.out.println(findRoom.getThirdRoom());
+        System.out.println(findRoom.getFirstRoom().getPlayer());
+        System.out.println(findRoom.getSecondRoom().getPlayer());
+        System.out.println(findRoom.getThirdRoom().getPlayer());
 
         return findRoom;
     }
