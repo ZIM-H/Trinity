@@ -165,12 +165,23 @@ public class GameRoomServiceImpl implements GameRoomService {
         ThirdRoom thirdRoom = gameRoom.getThirdRoom();
         Events events = gameRoom.getEvents();
 
+        System.out.println("firstRoom : " + gameRoom.getFirstRoom().getPlayer());
+        System.out.println("secondRoom : " + gameRoom.getSecondRoom().getPlayer());
+        System.out.println("thirdRoom : " + gameRoom.getThirdRoom().getPlayer());
+
+
         // 블랙홀 영향권인지 판단
         if (gameRoom.getBlackholeStatus()[gameRoom.getRoundNo()]) {
             movePlayer(0, gameRoomId);
             thirdRoom.setBlackholeStatus(false);
         } else {
+            System.out.println("정방향띠");
             movePlayer(1, gameRoomId);
+
+            System.out.println("변환 후");
+            System.out.println("firstRoom : " + gameRoom.getFirstRoom().getPlayer());
+            System.out.println("secondRoom : " + gameRoom.getSecondRoom().getPlayer());
+            System.out.println("thirdRoom : " + gameRoom.getThirdRoom().getPlayer());
         }
 
         // 1일차에만 랜덤 이벤트 추출
@@ -282,12 +293,21 @@ public class GameRoomServiceImpl implements GameRoomService {
         SecondRoom secondRoom = gameRoom.getSecondRoom();
         ThirdRoom thirdRoom = gameRoom.getThirdRoom();
 
+        System.out.println("firstRoom : " + firstRoom.getPlayer());
+        System.out.println("secondRoom : " + secondRoom.getPlayer());
+        System.out.println("thirdRoom : " + thirdRoom.getPlayer());
+
         // 정방향
         if (direction == 1) {
             String temp = thirdRoom.getPlayer();
             thirdRoom.setPlayer(secondRoom.getPlayer());
             secondRoom.setPlayer(firstRoom.getPlayer());
             firstRoom.setPlayer(temp);
+
+            System.out.println("firstRoom : " + firstRoom.getPlayer());
+            System.out.println("secondRoom : " + secondRoom.getPlayer());
+            System.out.println("thirdRoom : " + thirdRoom.getPlayer());
+
             return;
         }
 
@@ -296,6 +316,10 @@ public class GameRoomServiceImpl implements GameRoomService {
         thirdRoom.setPlayer(firstRoom.getPlayer());
         firstRoom.setPlayer(secondRoom.getPlayer());
         secondRoom.setPlayer(temp);
+
+        System.out.println("firstRoom : " + firstRoom.getPlayer());
+        System.out.println("secondRoom : " + secondRoom.getPlayer());
+        System.out.println("thirdRoom : " + thirdRoom.getPlayer());
     }
 
     private void validateEvent(int eventIdx, String gameRoomId) {
