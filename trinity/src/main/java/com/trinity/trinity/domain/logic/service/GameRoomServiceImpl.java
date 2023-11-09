@@ -47,8 +47,8 @@ public class GameRoomServiceImpl implements GameRoomService {
     }
 
     @Override
-    public boolean gameLogic(String gameRoomId) {
-        GameRoom gameRoom = gameRoomRedisService.getGameRoom(gameRoomId);
+    public boolean gameLogic(GameRoom gameRoom) {
+//        GameRoom gameRoom = gameRoomRedisService.getGameRoom(gameRoomId);
         gameRoom.setRoundNo(gameRoom.getRoundNo() + 1);
         FirstRoom firstRoom = gameRoom.getFirstRoom();
         SecondRoom secondRoom = gameRoom.getSecondRoom();
@@ -159,8 +159,8 @@ public class GameRoomServiceImpl implements GameRoomService {
     }
 
     @Override
-    public void morningGameLogic(String gameRoomId) {
-        GameRoom gameRoom = gameRoomRedisService.getGameRoom(gameRoomId);
+    public void morningGameLogic(GameRoom gameRoom) {
+//        GameRoom gameRoom = gameRoomRedisService.getGameRoom(gameRoomId);
         SecondRoom secondRoom = gameRoom.getSecondRoom();
         ThirdRoom thirdRoom = gameRoom.getThirdRoom();
         Events events = gameRoom.getEvents();
@@ -172,11 +172,11 @@ public class GameRoomServiceImpl implements GameRoomService {
 
         // 블랙홀 영향권인지 판단
         if (gameRoom.getBlackholeStatus()[gameRoom.getRoundNo()]) {
-            movePlayer(0, gameRoomId);
+            movePlayer(0, gameRoom);
             thirdRoom.setBlackholeStatus(false);
         } else {
             System.out.println("정방향띠");
-            movePlayer(1, gameRoomId);
+            movePlayer(1, gameRoom);
 
             System.out.println("변환 후");
             System.out.println("firstRoom : " + gameRoom.getFirstRoom().getPlayer());
@@ -211,7 +211,7 @@ public class GameRoomServiceImpl implements GameRoomService {
                 if (arr[j] == gameRoom.getRoundNo()) {
                     eventIdx += value;
                     // 선택된 이벤트에 따라 데이터 변경
-                    validateEvent(i, gameRoomId);
+                    validateEvent(i, gameRoom);
                     break;
                 }
             }
@@ -273,10 +273,10 @@ public class GameRoomServiceImpl implements GameRoomService {
     }
 
     @Override
-    public boolean checkEndGame(String gameRoomId) {
-        GameRoom gameRoom = (GameRoom) gameRoomRedisService.getGameRoom(gameRoomId);
+    public boolean checkEndGame(GameRoom gameRoom) {
+//        GameRoom gameRoom = (GameRoom) gameRoomRedisService.getGameRoom(gameRoomId);
         if (gameRoom.getRoundNo() == 13) {
-            gameRoomRedisService.deleteGameRoom(gameRoomId);
+            gameRoomRedisService.deleteGameRoom(gameRoom.getGameRoomId());
             return true;
         }
         return false;
@@ -287,8 +287,8 @@ public class GameRoomServiceImpl implements GameRoomService {
         gameRoomRedisService.deleteGameRoom(gameRoomId);
     }
 
-    private void movePlayer(int direction, String gameRoomId) {
-        GameRoom gameRoom = gameRoomRedisService.getGameRoom(gameRoomId);
+    private void movePlayer(int direction, GameRoom gameRoom) {
+//        GameRoom gameRoom = gameRoomRedisService.getGameRoom(gameRoomId);
         FirstRoom firstRoom = gameRoom.getFirstRoom();
         SecondRoom secondRoom = gameRoom.getSecondRoom();
         ThirdRoom thirdRoom = gameRoom.getThirdRoom();
@@ -322,8 +322,8 @@ public class GameRoomServiceImpl implements GameRoomService {
         System.out.println("thirdRoom : " + thirdRoom.getPlayer());
     }
 
-    private void validateEvent(int eventIdx, String gameRoomId) {
-        GameRoom gameRoom = gameRoomRedisService.getGameRoom(gameRoomId);
+    private void validateEvent(int eventIdx, GameRoom gameRoom) {
+//        GameRoom gameRoom = gameRoomRedisService.getGameRoom(gameRoomId);
         FirstRoom firstRoom = gameRoom.getFirstRoom();
         SecondRoom secondRoom = gameRoom.getSecondRoom();
         ThirdRoom thirdRoom = gameRoom.getThirdRoom();

@@ -66,8 +66,9 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
                 String gameRoomId = jsonObject.get("gameRoomId").getAsString();
                 String roomNum = jsonObject.get("roomNum").getAsString();
 
+                GameRoom gameRoom = gameRoomRedisService.getGameRoom(gameRoomId);
                 // 채널 연결확인
-                if (userLeaveProcess(gameRoomId)) return;
+                if (userLeaveProcess(gameRoom)) return;
 
 
                 Gson gson = new Gson();
@@ -85,10 +86,6 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
                 if (complete) {
                     System.out.println("3명의 데이터가 모두 들어왔다@@@@@@@@@@@@");
 
-                    if (gameRoomService.checkEndGame(gameRoomId)) {
-                        gameVictoryProcess(gameRoomId);
-                    }
-
                     GameRoom beforeGameRoom = gameRoomRedisService.getGameRoom(gameRoomId);
 
                     // 소행성 충돌 여부 데이터 뽑기
@@ -104,23 +101,28 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
                     // 2. 중간에 게임에서 실패
                     // 3. 누군가 게임에서 나간 경우
                     // --> gameOver = true
-                    boolean gameOver = gameRoomService.gameLogic(gameRoomId);
+                    boolean gameOver = gameRoomService.gameLogic(beforeGameRoom);
 
                     System.out.println("gameOverCheck");
 
                     // gameOver가 아닌 경우
                     if (gameOver) {
 
-                        gameRoomService.morningGameLogic(gameRoomId);
+                        if (gameRoomService.checkEndGame(beforeGameRoom)) {
+                            gameVictoryProcess(beforeGameRoom);
+                        }
 
-                        GameRoom gameRoom = gameRoomRedisService.getGameRoom(gameRoomId);
+                        GameRoom morningRoom = gameRoomRedisService.getGameRoom(gameRoomId);
+
+                        gameRoomService.morningGameLogic(morningRoom);
+
 
                         //채널 연결 확인
-                        if (userLeaveProcess(gameRoomId)) return;
+                        if (userLeaveProcess(morningRoom)) return;
 
-                        String firstId = gameRoom.getFirstRoom().getPlayer();
-                        String secondId = gameRoom.getSecondRoom().getPlayer();
-                        String thirdId = gameRoom.getThirdRoom().getPlayer();
+                        String firstId = morningRoom.getFirstRoom().getPlayer();
+                        String secondId = morningRoom.getSecondRoom().getPlayer();
+                        String thirdId = morningRoom.getThirdRoom().getPlayer();
 
                         String firstClientId = redisService.getClientId(firstId);
                         String secondClientId = redisService.getClientId(secondId);
@@ -130,25 +132,25 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
                                 .conflictAsteroid(asteroidConflict)
                                 .build();
 
-                        commonDataDto.setCommonDto(gameRoom);
+                        commonDataDto.setCommonDto(morningRoom);
 
                         //각 방정보를 뽑아와서 각 플레이어에게 보내기
                         FirstRoomResponseDto firstRoomResponseDto = FirstRoomResponseDto.builder()
                                 .type("nextRound")
                                 .build();
-                        firstRoomResponseDto.modifyFirstRoomResponseDto(commonDataDto, gameRoom);
+                        firstRoomResponseDto.modifyFirstRoomResponseDto(commonDataDto, morningRoom);
                         String firstRoom = gson.toJson(firstRoomResponseDto);
 
                         SecondRoomResponseDto secondRoomResponseDto = SecondRoomResponseDto.builder()
                                 .type("nextRound")
                                 .build();
-                        secondRoomResponseDto.modifySecondRoomResponseDto(commonDataDto, gameRoom);
+                        secondRoomResponseDto.modifySecondRoomResponseDto(commonDataDto, morningRoom);
                         String secondRoom = gson.toJson(secondRoomResponseDto);
 
                         ThirdRoomResponseDto thirdRoomResponseDto = ThirdRoomResponseDto.builder()
                                 .type("nextRound")
                                 .build();
-                        thirdRoomResponseDto.modifyThirdRoomResponseDto(commonDataDto, gameRoom);
+                        thirdRoomResponseDto.modifyThirdRoomResponseDto(commonDataDto, morningRoom);
                         String thirdRoom = gson.toJson(thirdRoomResponseDto);
 
                         System.out.println("클라이언트에게 보낼 데이터 정리 완료");
@@ -159,7 +161,7 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
                     } else {
                         // 게임 오버 true인 경우
                         System.out.println("게임 패배");
-                        gameDefeatedProcess(gameRoomId);
+                        gameDefeatedProcess(beforeGameRoom);
                     }
                 }
             }
@@ -194,8 +196,8 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
         }
     }
 
-    public boolean ChannelAlive(String userId) {
-        String clientId = redisService.getClientId(userId);
+    public boolean ChannelAlive(String clientId) {
+//        String clientId = redisService.getClientId(userId);
         Channel channel = channelManager.getChannel(clientId);
         if (channel.isActive()) {
             return true;
@@ -204,10 +206,11 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
         }
     }
 
-    public boolean userLeaveProcess(String gameRoomId) {
+    public boolean userLeaveProcess(GameRoom gameRoom) {
         Gson gson = new Gson();
+        String gameRoomId = gameRoom.getGameRoomId();
 
-        GameRoom gameRoom = gameRoomRedisService.getGameRoom(gameRoomId);
+//        GameRoom gameRoom = gameRoomRedisService.getGameRoom(gameRoomId);
         System.out.println("@@@@@@@@@@@userLeaveProcess 안쪽의 gameRoomId : " + gameRoomId);
 
         boolean checkActiveAll = true;
@@ -222,7 +225,7 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
         String secondClientId = redisService.getClientId(secondId);
         String thirdClientId = redisService.getClientId(thirdId);
 
-        if (!ChannelAlive(firstId) || !ChannelAlive(secondId) || !ChannelAlive(thirdId)) {
+        if (!ChannelAlive(firstClientId) || !ChannelAlive(secondClientId) || !ChannelAlive(thirdClientId)) {
             checkActiveAll = false;
         }
 
@@ -249,6 +252,7 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
             removeChannels(clientIds);
 
             //clientSession 삭제
+            // 변수 String[] clientIds로 바꾸기
             redisService.removeClientSession(firstId);
             redisService.removeClientSession(secondId);
             redisService.removeClientSession(thirdId);
@@ -265,10 +269,10 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
         }
     }
 
-    public void gameVictoryProcess(String gameRoomId) {
+    public void gameVictoryProcess(GameRoom gameRoom) {
         Gson gson = new Gson();
 
-        GameRoom gameRoom = gameRoomRedisService.getGameRoom(gameRoomId);
+//        GameRoom gameRoom = gameRoomRedisService.getGameRoom(gameRoomId);
 
         String firstId = gameRoom.getFirstRoom().getPlayer();
         String secondId = gameRoom.getSecondRoom().getPlayer();
@@ -301,17 +305,17 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
         //채널 삭제
         removeChannels(clientIds);
 
-        gameRoomService.endGame(gameRoomId);
+        gameRoomService.endGame(gameRoom.getGameRoomId());
 
         redisService.saveData(firstId, String.valueOf(UserStatus.LOBBY));
         redisService.saveData(secondId, String.valueOf(UserStatus.LOBBY));
         redisService.saveData(thirdId, String.valueOf(UserStatus.LOBBY));
     }
 
-    public void gameDefeatedProcess(String gameRoomId) {
+    public void gameDefeatedProcess(GameRoom gameRoom) {
         Gson gson = new Gson();
 
-        GameRoom gameRoom = gameRoomRedisService.getGameRoom(gameRoomId);
+//        GameRoom gameRoom = gameRoomRedisService.getGameRoom(gameRoomId);
 
         String firstId = gameRoom.getFirstRoom().getPlayer();
         String secondId = gameRoom.getSecondRoom().getPlayer();
@@ -344,7 +348,7 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
         redisService.removeClientSession(secondId);
         redisService.removeClientSession(thirdId);
 
-        gameRoomService.endGame(gameRoomId);
+        gameRoomService.endGame(gameRoom.getGameRoomId());
 
         redisService.saveData(firstId, String.valueOf(UserStatus.LOBBY));
         redisService.saveData(secondId, String.valueOf(UserStatus.LOBBY));
