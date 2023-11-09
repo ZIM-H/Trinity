@@ -28,7 +28,7 @@ public class RedisService {
         redisTemplate.opsForHash().put("ClientSession", clientSession.getUserId(), clientSession);
     }
 
-    @Synchronized
+
     public ClientSession getClientSession(String key) {
         ClientSession clientSession = (ClientSession) redisTemplate.opsForHash().get("ClientSession", key);
         return clientSession;
@@ -39,7 +39,7 @@ public class RedisService {
         redisTemplate.opsForHash().delete("ClientSession", userId);
     }
 
-    @Synchronized
+
     public String getClientId(String userId) {
         System.out.println("getClientId 안쪽의 userId : " + userId);
         ClientSession channelInfo = (ClientSession) redisTemplate.opsForHash()
