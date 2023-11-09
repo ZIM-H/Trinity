@@ -10,6 +10,7 @@ import com.trinity.trinity.domain.logic.dto.GameRoom;
 import com.trinity.trinity.domain.logic.dto.SecondRoom;
 import com.trinity.trinity.domain.logic.dto.ThirdRoom;
 import lombok.RequiredArgsConstructor;
+import lombok.Synchronized;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -90,6 +91,7 @@ public class GameRoomRedisService {
         }
     }
 
+    @Synchronized
     public void updateFirstRoom(FirstRoomPlayerRequestDto firstRoomPlayerRequestDto) {
         // 게임방 가져오고
         GameRoom gameRoom = getGameRoom(firstRoomPlayerRequestDto.getGameRoomId());
@@ -103,6 +105,7 @@ public class GameRoomRedisService {
         saveGameRoomToTemp(gameRoom);
     }
 
+    @Synchronized
     public void updateSecondRoom(SecondRoomPlayerRequestDto secondRoomPlayerRequestDto) {
         GameRoom gameRoom = getGameRoom(secondRoomPlayerRequestDto.getGameRoomId());
 
@@ -115,6 +118,7 @@ public class GameRoomRedisService {
         saveGameRoomToTemp(gameRoom);
     }
 
+    @Synchronized
     public void updateThridRoom(ThirdRoomPlayerRequestDto thirdRoomPlayerRequestDto) {
         GameRoom gameRoom = getGameRoom(thirdRoomPlayerRequestDto.getGameRoomId());
 
