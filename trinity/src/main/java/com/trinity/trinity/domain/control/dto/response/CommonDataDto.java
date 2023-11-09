@@ -27,7 +27,7 @@ public class CommonDataDto {
         if (gameroom.getThirdRoom().getBarrierStatus() == 2) {
             this.barrierUpgrade = true;
         } else {
-            this.barrierUpgrade = true;
+            this.barrierUpgrade = false;
         }
     }
 }
