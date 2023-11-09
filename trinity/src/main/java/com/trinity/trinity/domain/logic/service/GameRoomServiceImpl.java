@@ -294,7 +294,7 @@ public class GameRoomServiceImpl implements GameRoomService {
         List<Integer> list = Arrays.asList(days);
         Collections.shuffle(list);
 
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < array.length; i++) {
             array[i] = list.get(i);
         }
 
