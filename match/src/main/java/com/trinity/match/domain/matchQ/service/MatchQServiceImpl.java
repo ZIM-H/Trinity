@@ -3,6 +3,7 @@ package com.trinity.match.domain.matchQ.service;
 import com.trinity.match.domain.matchQ.dto.request.GameServerPlayerListRequestDto;
 import com.trinity.match.global.webClient.WebClientService;
 import lombok.RequiredArgsConstructor;
+import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisOperations;
@@ -32,9 +33,14 @@ public class MatchQServiceImpl implements MatchQService {
     @Override
     public void joinQueue(String userId) {
         double time = System.currentTimeMillis();
+        
         matchRedisTemplate.opsForZSet().add("matchQueue", userId, time);
+
+//        Long size = matchRedisTemplate.opsForZSet().size("matchQueue");
+//        if (size >= 3) checkQueueSize();
     }
 
+    @Synchronized
     @Scheduled(fixedRate = 10000)
     private void checkQueueSize() {
         // SessionCallback 내에 트랜잭션 구현
@@ -76,6 +82,10 @@ public class MatchQServiceImpl implements MatchQService {
                     // 트랜잭션 시작
                     operations.multi();
 
+                    for (Pair<String, Double> userAndScore : waitingList) {
+                        operations.opsForZSet().remove("matchQueue", userAndScore.getFirst());
+                    }
+
                     // 트랜잭션 실행
                     operations.exec();
 
@@ -85,7 +95,13 @@ public class MatchQServiceImpl implements MatchQService {
                                 .userId(userAndScore.getFirst())
                                 .build());
 
-                    webClientService.post(playerList);
+                    try {
+                        webClientService.post(playerList);
+                    } catch (Exception e) {
+                        // WebClient 호출 실패시 대기 큐에 다시 추가
+                        recoverList(waitingList);
+                        throw e;
+                    }
 
                 } catch (Exception e) {
                     // 에러 발생하면 에러 메시지 찍고 대기 큐에 다시 넣기
