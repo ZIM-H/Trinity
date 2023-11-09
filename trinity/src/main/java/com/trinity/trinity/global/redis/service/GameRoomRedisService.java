@@ -135,6 +135,8 @@ public class GameRoomRedisService {
 
         System.out.println("1번방 변경 전");
         System.out.println("updateFirstRoom 함수 안쪽에서 firstRoom.getPlayer() : " + firstRoom.getPlayer());
+        System.out.println("updateFirstRoom 함수 안쪽에서 getSecondRoom.getPlayer() : " + gameRoom.getSecondRoom().getPlayer());
+        System.out.println("updateFirstRoom 함수 안쪽에서 getThirdRoom.getPlayer() : " + gameRoom.getThirdRoom().getPlayer());
 
         gameRoom.modifyFirstRoom(firstRoom);
 
@@ -153,12 +155,14 @@ public class GameRoomRedisService {
         secondRoom.modifyDto(oldRoom);
 
         System.out.println("2번방 변경 전");
-        System.out.println("updateFirstRoom 함수 안쪽에서 secondRoom.getPlayer() : " + secondRoom.getPlayer());
+        System.out.println("updateSecondRoom 함수 안쪽에서 firstRoom.getPlayer() : " + gameRoom.getFirstRoom().getPlayer());
+        System.out.println("updateSecondRoom 함수 안쪽에서 secondRoom.getPlayer() : " + secondRoom.getPlayer());
+        System.out.println("updateSecondRoom 함수 안쪽에서 getThirdRoom.getPlayer() : " + gameRoom.getThirdRoom().getPlayer());
 
         gameRoom.modifySecondRoom(secondRoom);
 
         System.out.println("2번방 변경 후");
-        System.out.println("updateFirstRoom 함수 안쪽에서 gameRoom.secondRoom().getPlayer() : " + gameRoom.getSecondRoom().getPlayer());
+        System.out.println("updateSecondRoom 함수 안쪽에서 gameRoom.secondRoom().getPlayer() : " + gameRoom.getSecondRoom().getPlayer());
 
         saveGameRoomToTemp(gameRoom);
     }
@@ -172,12 +176,15 @@ public class GameRoomRedisService {
         thirdRoom.modifyDto(oldRoom);
 
         System.out.println("3번방 변경 전");
-        System.out.println("updateFirstRoom 함수 안쪽에서 thirdRoom.getPlayer() : " + thirdRoom.getPlayer());
+        System.out.println("updateThridRoom 함수 안쪽에서 firstRoom.getPlayer() : " + gameRoom.getFirstRoom().getPlayer());
+        System.out.println("updateThridRoom 함수 안쪽에서 secondRoom.getPlayer() : " + gameRoom.getSecondRoom().getPlayer());
+        System.out.println("updateThridRoom 함수 안쪽에서 thirdRoom.getPlayer() : " + thirdRoom.getPlayer());
+
 
         gameRoom.modifyThirdRoom(thirdRoom);
 
         System.out.println("3번방 변경 후");
-        System.out.println("updateFirstRoom 함수 안쪽에서 gameRoom.thirdRoom().getPlayer() : " + gameRoom.getThirdRoom().getPlayer());
+        System.out.println("updateThridRoom 함수 안쪽에서 gameRoom.thirdRoom().getPlayer() : " + gameRoom.getThirdRoom().getPlayer());
 
         saveGameRoomToTemp(gameRoom);
     }
