@@ -36,6 +36,9 @@ public class GameRoomRedisService {
         GameRoom findRoom = (GameRoom) gameRoomRedisTemplate.opsForHash().get("temp", gameRoomId);
 
         if (findRoom == null) {
+
+            System.out.println("temp에 없을 때!!!");
+
             List<GameRoom> before = (List<GameRoom>) gameRoomRedisTemplate.opsForHash().get("gameRoom", gameRoomId);
 
             GameRoom last = before.get(before.size() - 1);
@@ -58,6 +61,8 @@ public class GameRoomRedisService {
             gameRoomRedisTemplate.opsForHash().put("temp", gameRoomId, gameRoom);
             return gameRoom;
         }
+
+        System.out.println("있다 있다 있ㄲ다");
 
         return findRoom;
     }
@@ -104,7 +109,12 @@ public class GameRoomRedisService {
         FirstRoom oldRoom = gameRoom.getFirstRoom();
 
         firstRoom.modifyDto(oldRoom);
+
+        System.out.println("firstRoom.getPlayer() : " + firstRoom.getPlayer());
+
         gameRoom.modifyFirstRoom(firstRoom);
+
+        System.out.println(gameRoom.getFirstRoom().getPlayer());
 
         saveGameRoomToTemp(gameRoom);
     }
