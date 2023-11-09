@@ -11,12 +11,10 @@ import lombok.Setter;
 public class ClientSession {
     private String userId;
     private String clientId;
-    private String clientAddress;
 
     @Builder
-    public ClientSession(String userId, String clientId, String clientAddress) {
+    public ClientSession(String userId, String clientId) {
         this.userId = userId;
         this.clientId = clientId;
-        this.clientAddress = clientAddress;
     }
 }
