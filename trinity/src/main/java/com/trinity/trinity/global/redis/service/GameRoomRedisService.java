@@ -53,12 +53,12 @@ public class GameRoomRedisService {
             GameRoom last = before.get(before.size() - 1);
 
             // 여기서 FirstRoom, SecondRoom, ThirdRoom
-            System.out.println(last.getFirstRoom());
-            System.out.println(last.getSecondRoom());
-            System.out.println(last.getThirdRoom());
-            System.out.println(last.getFirstRoom().getPlayer());
-            System.out.println(last.getSecondRoom().getPlayer());
-            System.out.println(last.getThirdRoom().getPlayer());
+            System.out.println("없을 때 : " + last.getFirstRoom());
+            System.out.println("없을 때 : " + last.getSecondRoom());
+            System.out.println("없을 때 : " + last.getThirdRoom());
+            System.out.println("없을 때 : " + last.getFirstRoom().getPlayer());
+            System.out.println("없을 때 : " + last.getSecondRoom().getPlayer());
+            System.out.println("없을 때 : " + last.getThirdRoom().getPlayer());
 
             GameRoom gameRoom = GameRoom.builder()
                     .foodAmount(last.getFoodAmount())
@@ -82,12 +82,12 @@ public class GameRoomRedisService {
 
         System.out.println("있다 있다 있ㄲ다");
 
-        System.out.println(findRoom.getFirstRoom());
-        System.out.println(findRoom.getSecondRoom());
-        System.out.println(findRoom.getThirdRoom());
-        System.out.println(findRoom.getFirstRoom().getPlayer());
-        System.out.println(findRoom.getSecondRoom().getPlayer());
-        System.out.println(findRoom.getThirdRoom().getPlayer());
+        System.out.println("있을 때 : " + findRoom.getFirstRoom());
+        System.out.println("있을 때 : " + findRoom.getSecondRoom());
+        System.out.println("있을 때 : " + findRoom.getThirdRoom());
+        System.out.println("있을 때 : " + findRoom.getFirstRoom().getPlayer());
+        System.out.println("있을 때 : " + findRoom.getSecondRoom().getPlayer());
+        System.out.println("있을 때 : " + findRoom.getThirdRoom().getPlayer());
 
         return findRoom;
     }
@@ -133,11 +133,13 @@ public class GameRoomRedisService {
 
         firstRoom.modifyDto(oldRoom);
 
-        System.out.println("firstRoom.getPlayer() : " + firstRoom.getPlayer());
+        System.out.println("1번방 변경 전");
+        System.out.println("updateFirstRoom 함수 안쪽에서 firstRoom.getPlayer() : " + firstRoom.getPlayer());
 
         gameRoom.modifyFirstRoom(firstRoom);
 
-        System.out.println("gameRoom.getFirstRoom().getPlayer() : " + gameRoom.getFirstRoom().getPlayer());
+        System.out.println("1번방 변경 후");
+        System.out.println("updateFirstRoom 함수 안쪽에서 gameRoom.getFirstRoom().getPlayer() : " + gameRoom.getFirstRoom().getPlayer());
 
         saveGameRoomToTemp(gameRoom);
     }
@@ -149,7 +151,14 @@ public class GameRoomRedisService {
         SecondRoom oldRoom = gameRoom.getSecondRoom();
 
         secondRoom.modifyDto(oldRoom);
+
+        System.out.println("2번방 변경 전");
+        System.out.println("updateFirstRoom 함수 안쪽에서 secondRoom.getPlayer() : " + secondRoom.getPlayer());
+
         gameRoom.modifySecondRoom(secondRoom);
+
+        System.out.println("2번방 변경 후");
+        System.out.println("updateFirstRoom 함수 안쪽에서 gameRoom.secondRoom().getPlayer() : " + gameRoom.getSecondRoom().getPlayer());
 
         saveGameRoomToTemp(gameRoom);
     }
@@ -161,7 +170,14 @@ public class GameRoomRedisService {
         ThirdRoom oldRoom = gameRoom.getThirdRoom();
 
         thirdRoom.modifyDto(oldRoom);
+
+        System.out.println("3번방 변경 전");
+        System.out.println("updateFirstRoom 함수 안쪽에서 thirdRoom.getPlayer() : " + thirdRoom.getPlayer());
+
         gameRoom.modifyThirdRoom(thirdRoom);
+
+        System.out.println("3번방 변경 후");
+        System.out.println("updateFirstRoom 함수 안쪽에서 gameRoom.thirdRoom().getPlayer() : " + gameRoom.getThirdRoom().getPlayer());
 
         saveGameRoomToTemp(gameRoom);
     }
