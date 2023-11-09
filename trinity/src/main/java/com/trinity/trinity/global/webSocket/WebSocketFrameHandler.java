@@ -3,9 +3,6 @@ package com.trinity.trinity.global.webSocket;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.trinity.trinity.domain.control.dto.request.FirstRoomPlayerRequestDto;
-import com.trinity.trinity.domain.control.dto.request.SecondRoomPlayerRequestDto;
-import com.trinity.trinity.domain.control.dto.request.ThirdRoomPlayerRequestDto;
 import com.trinity.trinity.global.dto.ClientSession;
 import com.trinity.trinity.domain.control.dto.response.*;
 import com.trinity.trinity.domain.control.enums.UserStatus;
@@ -31,6 +28,8 @@ import org.springframework.web.socket.PingMessage;
 @RequiredArgsConstructor
 public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocketFrame> {
 
+    static Gson gson = new Gson();
+
     private final RedisService redisService;
     private final GameRoomRedisService gameRoomRedisService;
     private final GameRoomService gameRoomService;
@@ -44,16 +43,13 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
             JsonObject jsonObject = new JsonParser().parse(text).getAsJsonObject();
             String requestType = jsonObject.get("type").getAsString();
 
-            System.out.println("type : " + requestType + "@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-
             if (requestType.equals("matching")) {
                 String userId = jsonObject.get("userId").getAsString();
                 String clientId = ctx.channel().id().toString();
 
-                String clientAddress = ctx.channel().remoteAddress().toString();
                 ClientSession clientSession = redisService.getClientSession(userId);
                 if (clientSession == null) {
-                    clientSession = new ClientSession(userId, clientId, clientAddress);
+                    clientSession = new ClientSession(userId, clientId);
                     // 클라이언트 세션을 Redis에 저장
                     redisService.saveClient(clientSession);
                 }
@@ -70,22 +66,13 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
                 // 채널 연결확인
                 if (userLeaveProcess(gameRoom)) return;
 
-
-                Gson gson = new Gson();
-                
-//                gameRoomRedisService.updateRoom(gson, jsonObject, roomNum, gameRoomId);
                 gameRoomRedisService.updateRoom(gson, jsonObject, roomNum, gameRoomId);
-
-                System.out.println("보내 온 데이터 requestDto화 완료");
 
                 //3 사람의 모든 데이터가 들어온 경우 true를 반환
                 boolean complete = redisService.checkGameRoomAllClear(gameRoomId, roomNum);
 
-                System.out.println("3명의 데이터가 모두 들어왔는가?");
                 // 모든 데이터를 받았을 경우
                 if (complete) {
-                    System.out.println("3명의 데이터가 모두 들어왔다@@@@@@@@@@@@");
-
                     GameRoom beforeGameRoom = gameRoomRedisService.getGameRoom(gameRoomId);
 
                     // 소행성 충돌 여부 데이터 뽑기
@@ -96,14 +83,11 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
 
                     if (asteroidStatus && barrierStatus < 2 && !asteroidDestroy) asteroidConflict = true;
 
-
                     // 1. 13일차 - 위에서 checkEndGame으로 체크
                     // 2. 중간에 게임에서 실패
                     // 3. 누군가 게임에서 나간 경우
                     // --> gameOver = true
                     boolean gameOver = gameRoomService.gameLogic(beforeGameRoom);
-
-                    System.out.println("gameOverCheck");
 
                     // gameOver가 아닌 경우
                     if (gameOver) {
@@ -116,51 +100,20 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
 
                         gameRoomService.morningGameLogic(morningRoom);
 
-
                         //채널 연결 확인
                         if (userLeaveProcess(morningRoom)) return;
 
-                        String firstId = morningRoom.getFirstRoom().getPlayer();
-                        String secondId = morningRoom.getSecondRoom().getPlayer();
-                        String thirdId = morningRoom.getThirdRoom().getPlayer();
+                        String[] users = getUsers(morningRoom);
 
-                        String firstClientId = redisService.getClientId(firstId);
-                        String secondClientId = redisService.getClientId(secondId);
-                        String thirdClientId = redisService.getClientId(thirdId);
+                        String[] clients = redisService.getClientIdList(users);
 
-                        CommonDataDto commonDataDto = CommonDataDto.builder()
-                                .conflictAsteroid(asteroidConflict)
-                                .build();
+                        String[] rooms = getMorningRoom(asteroidConflict, morningRoom);
 
-                        commonDataDto.setCommonDto(morningRoom);
+                        for (int i = 0; i < 3; i++) sendDataToClient(clients[i], rooms[i]);
 
-                        //각 방정보를 뽑아와서 각 플레이어에게 보내기
-                        FirstRoomResponseDto firstRoomResponseDto = FirstRoomResponseDto.builder()
-                                .type("nextRound")
-                                .build();
-                        firstRoomResponseDto.modifyFirstRoomResponseDto(commonDataDto, morningRoom);
-                        String firstRoom = gson.toJson(firstRoomResponseDto);
-
-                        SecondRoomResponseDto secondRoomResponseDto = SecondRoomResponseDto.builder()
-                                .type("nextRound")
-                                .build();
-                        secondRoomResponseDto.modifySecondRoomResponseDto(commonDataDto, morningRoom);
-                        String secondRoom = gson.toJson(secondRoomResponseDto);
-
-                        ThirdRoomResponseDto thirdRoomResponseDto = ThirdRoomResponseDto.builder()
-                                .type("nextRound")
-                                .build();
-                        thirdRoomResponseDto.modifyThirdRoomResponseDto(commonDataDto, morningRoom);
-                        String thirdRoom = gson.toJson(thirdRoomResponseDto);
-
-                        System.out.println("클라이언트에게 보낼 데이터 정리 완료");
-
-                        sendDataToClient(firstClientId, firstRoom);
-                        sendDataToClient(secondClientId, secondRoom);
-                        sendDataToClient(thirdClientId, thirdRoom);
                     } else {
                         // 게임 오버 true인 경우
-                        System.out.println("게임 패배");
+                        log.info("게임 패배");
                         gameDefeatedProcess(beforeGameRoom);
                     }
                 }
@@ -186,6 +139,37 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
         }
     }
 
+    private String[] getMorningRoom(boolean asteroidConflict, GameRoom morningRoom) {
+        String[] rooms = new String[3];
+
+        CommonDataDto commonDataDto = CommonDataDto.builder()
+                .conflictAsteroid(asteroidConflict)
+                .build();
+
+        commonDataDto.setCommonDto(morningRoom);
+
+        //각 방정보를 뽑아와서 각 플레이어에게 보내기
+        FirstRoomResponseDto firstRoomResponseDto = FirstRoomResponseDto.builder()
+                .type("nextRound")
+                .build();
+        firstRoomResponseDto.modifyFirstRoomResponseDto(commonDataDto, morningRoom);
+        rooms[0] = gson.toJson(firstRoomResponseDto);
+
+        SecondRoomResponseDto secondRoomResponseDto = SecondRoomResponseDto.builder()
+                .type("nextRound")
+                .build();
+        secondRoomResponseDto.modifySecondRoomResponseDto(commonDataDto, morningRoom);
+        rooms[1] = gson.toJson(secondRoomResponseDto);
+
+        ThirdRoomResponseDto thirdRoomResponseDto = ThirdRoomResponseDto.builder()
+                .type("nextRound")
+                .build();
+        thirdRoomResponseDto.modifyThirdRoomResponseDto(commonDataDto, morningRoom);
+        rooms[2] = gson.toJson(thirdRoomResponseDto);
+
+        return rooms;
+    }
+
     public void sendDataToClient(String clientId, String data) {
         Channel channel = channelManager.getChannel(clientId);
         if (channel != null) {
@@ -196,8 +180,7 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
         }
     }
 
-    public boolean ChannelAlive(String clientId) {
-//        String clientId = redisService.getClientId(userId);
+    private boolean ChannelAlive(String clientId) {
         Channel channel = channelManager.getChannel(clientId);
         if (channel.isActive()) {
             return true;
@@ -206,27 +189,20 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
         }
     }
 
-    public boolean userLeaveProcess(GameRoom gameRoom) {
-        Gson gson = new Gson();
+    private boolean userLeaveProcess(GameRoom gameRoom) {
         String gameRoomId = gameRoom.getGameRoomId();
 
-//        GameRoom gameRoom = gameRoomRedisService.getGameRoom(gameRoomId);
-        System.out.println("@@@@@@@@@@@userLeaveProcess 안쪽의 gameRoomId : " + gameRoomId);
-
         boolean checkActiveAll = true;
-        String firstId = gameRoom.getFirstRoom().getPlayer();
-        String secondId = gameRoom.getSecondRoom().getPlayer();
-        String thirdId = gameRoom.getThirdRoom().getPlayer();
-        System.out.println("firstUserId : " + firstId);
-        System.out.println("secondUserId : " + secondId);
-        System.out.println("thirdUserId : " + thirdId);
 
-        String firstClientId = redisService.getClientId(firstId);
-        String secondClientId = redisService.getClientId(secondId);
-        String thirdClientId = redisService.getClientId(thirdId);
+        String[] users = getUsers(gameRoom);
 
-        if (!ChannelAlive(firstClientId) || !ChannelAlive(secondClientId) || !ChannelAlive(thirdClientId)) {
-            checkActiveAll = false;
+        String[] clients = redisService.getClientIdList(users);
+
+        for (String client : clients) {
+            if (!ChannelAlive(client)) {
+                checkActiveAll = false;
+                break;
+            }
         }
 
         if (!checkActiveAll) {
@@ -237,31 +213,20 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
 
             String data = gson.toJson(userLeaveGameOverDto);
 
-            sendDataToClient(firstClientId, data);
-            sendDataToClient(secondClientId, data);
-            sendDataToClient(thirdClientId, data);
+            for (String client : clients) sendDataToClient(client, data);
 
             gameRoomService.endGame(gameRoomId);
 
-            String[] clientIds = {firstClientId, secondClientId, thirdClientId};
-
             //채널 닫기
-            channelClose(clientIds);
+            channelClose(clients);
 
             //채널 삭제
-            removeChannels(clientIds);
+            removeChannels(clients);
 
             //clientSession 삭제
-            // 변수 String[] clientIds로 바꾸기
-            redisService.removeClientSession(firstId);
-            redisService.removeClientSession(secondId);
-            redisService.removeClientSession(thirdId);
+            redisService.removeClientListSession(users);
 
-            redisService.saveData(firstId, String.valueOf(UserStatus.LOBBY));
-            redisService.saveData(secondId, String.valueOf(UserStatus.LOBBY));
-            redisService.saveData(thirdId, String.valueOf(UserStatus.LOBBY));
-
-            System.out.println("여기는 연결이 끊겼다는 가정");
+            redisService.backToLooby(users);
 
             return true;
         } else {
@@ -269,18 +234,19 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
         }
     }
 
-    public void gameVictoryProcess(GameRoom gameRoom) {
-        Gson gson = new Gson();
+    private String[] getUsers(GameRoom gameRoom) {
+        String[] users = new String[3];
+        users[0] = gameRoom.getFirstRoom().getPlayer();
+        users[1] = gameRoom.getSecondRoom().getPlayer();
+        users[2] = gameRoom.getThirdRoom().getPlayer();
 
-//        GameRoom gameRoom = gameRoomRedisService.getGameRoom(gameRoomId);
+        return users;
+    }
 
-        String firstId = gameRoom.getFirstRoom().getPlayer();
-        String secondId = gameRoom.getSecondRoom().getPlayer();
-        String thirdId = gameRoom.getThirdRoom().getPlayer();
+    private void gameVictoryProcess(GameRoom gameRoom) {
+        String[] users = getUsers(gameRoom);
 
-        String firstClientId = redisService.getClientId(firstId);
-        String secondClientId = redisService.getClientId(secondId);
-        String thirdClientId = redisService.getClientId(thirdId);
+        String[] clients = redisService.getClientIdList(users);
 
         GameOverDto gameVictoryOverDto = GameOverDto.builder()
                 .status("VICTORY")
@@ -288,42 +254,26 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
 
         String data = gson.toJson(gameVictoryOverDto);
 
-        sendDataToClient(firstClientId, data);
-        sendDataToClient(secondClientId, data);
-        sendDataToClient(thirdClientId, data);
-
-        //clientSession 삭제
-        redisService.removeClientSession(firstId);
-        redisService.removeClientSession(secondId);
-        redisService.removeClientSession(thirdId);
-
-        String[] clientIds = {firstClientId, secondClientId, thirdClientId};
+        for (String client : clients) sendDataToClient(client, data);
 
         //채널 닫기
-        channelClose(clientIds);
+        channelClose(clients);
 
         //채널 삭제
-        removeChannels(clientIds);
+        removeChannels(clients);
+
+        //clientSession 삭제
+        redisService.removeClientListSession(users);
 
         gameRoomService.endGame(gameRoom.getGameRoomId());
 
-        redisService.saveData(firstId, String.valueOf(UserStatus.LOBBY));
-        redisService.saveData(secondId, String.valueOf(UserStatus.LOBBY));
-        redisService.saveData(thirdId, String.valueOf(UserStatus.LOBBY));
+        redisService.backToLooby(users);
     }
 
-    public void gameDefeatedProcess(GameRoom gameRoom) {
-        Gson gson = new Gson();
+    private void gameDefeatedProcess(GameRoom gameRoom) {
+        String[] users = getUsers(gameRoom);
 
-//        GameRoom gameRoom = gameRoomRedisService.getGameRoom(gameRoomId);
-
-        String firstId = gameRoom.getFirstRoom().getPlayer();
-        String secondId = gameRoom.getSecondRoom().getPlayer();
-        String thirdId = gameRoom.getThirdRoom().getPlayer();
-
-        String firstClientId = redisService.getClientId(firstId);
-        String secondClientId = redisService.getClientId(secondId);
-        String thirdClientId = redisService.getClientId(thirdId);
+        String[] clients = redisService.getClientIdList(users);
 
         GameOverDto gameDefeatedOverDto = GameOverDto.builder()
                 .status("DEFEATED")
@@ -331,40 +281,35 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
 
         String data = gson.toJson(gameDefeatedOverDto);
 
-        sendDataToClient(firstClientId, data);
-        sendDataToClient(secondClientId, data);
-        sendDataToClient(thirdClientId, data);
-
-        String[] clientIds = {firstClientId, secondClientId, thirdClientId};
+        for (String client : clients) sendDataToClient(client, data);
 
         //채널 닫기
-        channelClose(clientIds);
+        channelClose(clients);
 
         //채널 삭제
-        removeChannels(clientIds);
+        removeChannels(clients);
 
         //clientSession 삭제
-        redisService.removeClientSession(firstId);
-        redisService.removeClientSession(secondId);
-        redisService.removeClientSession(thirdId);
+        redisService.removeClientListSession(users);
 
         gameRoomService.endGame(gameRoom.getGameRoomId());
 
-        redisService.saveData(firstId, String.valueOf(UserStatus.LOBBY));
-        redisService.saveData(secondId, String.valueOf(UserStatus.LOBBY));
-        redisService.saveData(thirdId, String.valueOf(UserStatus.LOBBY));
+        redisService.backToLooby(users);
+
     }
 
-    public void channelClose(String[] clientIds) {
+    private void channelClose(String[] clientIds) {
         for (int i = 0; i < clientIds.length; i++) {
             Channel channel = channelManager.getChannel(clientIds[i]);
             if (channel.isActive()) channel.close();
         }
     }
 
-    public void removeChannels(String[] clients) {
+    private void removeChannels(String[] clients) {
         for (int i = 0; i < clients.length; i++) {
             channelManager.removeChannel(clients[i]);
         }
     }
+
+
 }
