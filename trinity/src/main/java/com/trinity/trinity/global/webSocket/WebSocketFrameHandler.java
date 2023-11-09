@@ -74,7 +74,7 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
                 Gson gson = new Gson();
                 
 //                gameRoomRedisService.updateRoom(gson, jsonObject, roomNum, gameRoomId);
-                gameRoomRedisService.updateRoom(gson, jsonObject, roomNum);
+                gameRoomRedisService.updateRoom(gson, jsonObject, roomNum, gameRoomId);
 
                 System.out.println("보내 온 데이터 requestDto화 완료");
 
