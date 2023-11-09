@@ -28,6 +28,7 @@ public class RedisService {
         redisTemplate.opsForHash().put("ClientSession", clientSession.getUserId(), clientSession);
     }
 
+    @Synchronized
     public ClientSession getClientSession(String key) {
         ClientSession clientSession = (ClientSession) redisTemplate.opsForHash().get("ClientSession", key);
         return clientSession;
@@ -38,6 +39,7 @@ public class RedisService {
         redisTemplate.opsForHash().delete("ClientSession", userId);
     }
 
+    @Synchronized
     public String getClientId(String userId) {
         System.out.println(userId);
         ClientSession channelInfo = (ClientSession) redisTemplate.opsForHash()
@@ -52,6 +54,7 @@ public class RedisService {
         redisTemplate.opsForHash().put("gameRoomCheck", gameRoomId, gameRoomCheck);
     }
 
+    @Synchronized
     public boolean checkGameRoomAllClear(String gameRoomId, String roomNum) {
         System.out.println("checkGameRoomAllClear의 안쪽입니다!!!!!!!!!!");
 
