@@ -89,6 +89,7 @@ public class GameRoomServiceImpl implements GameRoomService {
     @Override
     public boolean gameLogic(String gameRoomId) {
         GameRoom gameRoom = gameRoomRedisService.getGameRoom(gameRoomId);
+        gameRoom.setRoundNo(gameRoom.getRoundNo() + 1);
         FirstRoom firstRoom = gameRoom.getFirstRoom();
         SecondRoom secondRoom = gameRoom.getSecondRoom();
         ThirdRoom thirdRoom = gameRoom.getThirdRoom();
@@ -191,6 +192,7 @@ public class GameRoomServiceImpl implements GameRoomService {
             if (gameRoom.getRoundNo() + 2 <= 12) gameRoom.getBlackholeStatus()[gameRoom.getRoundNo() + 2] = true;
         }
 
+        gameRoomRedisService.saveGameRoomToTemp(gameRoom);
         gameRoomRedisService.saveGameRoom(gameRoom);
 
         return true;
