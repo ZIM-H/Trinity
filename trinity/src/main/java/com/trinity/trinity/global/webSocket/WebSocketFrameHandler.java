@@ -207,11 +207,15 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
         Gson gson = new Gson();
 
         GameRoom gameRoom = gameRoomRedisService.getGameRoom(gameRoomId);
+        System.out.println("@@@@@@@@@@@userLeaveProcess 안쪽의 gameRoomId : " + gameRoomId);
 
         boolean checkActiveAll = true;
         String firstId = gameRoom.getFirstRoom().getPlayer();
         String secondId = gameRoom.getSecondRoom().getPlayer();
         String thirdId = gameRoom.getThirdRoom().getPlayer();
+        System.out.println("firstUserId : " + firstId);
+        System.out.println("secondUserId : " + secondId);
+        System.out.println("thirdUserId : " + thirdId);
 
         String firstClientId = redisService.getClientId(firstId);
         String secondClientId = redisService.getClientId(secondId);
@@ -227,8 +231,7 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
                     .status("userLeave")
                     .build();
 
-            String userLeaveMessage = gson.toJson(userLeaveGameOverDto);
-            String data = gson.toJson(userLeaveMessage);
+            String data = gson.toJson(userLeaveGameOverDto);
 
             sendDataToClient(firstClientId, data);
             sendDataToClient(secondClientId, data);
@@ -272,12 +275,11 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
         String secondClientId = redisService.getClientId(secondId);
         String thirdClientId = redisService.getClientId(thirdId);
 
-        GameOverDto userLeaveGameOverDto = GameOverDto.builder()
+        GameOverDto gameVictoryOverDto = GameOverDto.builder()
                 .status("VICTORY")
                 .build();
 
-        String userLeaveMessage = gson.toJson(userLeaveGameOverDto);
-        String data = gson.toJson(userLeaveMessage);
+        String data = gson.toJson(gameVictoryOverDto);
 
         sendDataToClient(firstClientId, data);
         sendDataToClient(secondClientId, data);
@@ -316,12 +318,11 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
         String secondClientId = redisService.getClientId(secondId);
         String thirdClientId = redisService.getClientId(thirdId);
 
-        GameOverDto userLeaveGameOverDto = GameOverDto.builder()
+        GameOverDto gameDefeatedOverDto = GameOverDto.builder()
                 .status("DEFEATED")
                 .build();
 
-        String userLeaveMessage = gson.toJson(userLeaveGameOverDto);
-        String data = gson.toJson(userLeaveMessage);
+        String data = gson.toJson(gameDefeatedOverDto);
 
         sendDataToClient(firstClientId, data);
         sendDataToClient(secondClientId, data);
