@@ -15,7 +15,6 @@ import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -109,6 +108,32 @@ public class GameRoomRedisService {
     public void deleteGameRoom(String gameRoomId) {
         gameRoomRedisTemplate.opsForHash().delete("gameRoom", gameRoomId);
     }
+
+//    public void updateRoom(Gson gson, JsonObject jsonObject, String roomNum, String gameRoomId) {
+//        GameRoom gameRoom = getGameRoom(gameRoomId);
+//
+//        // 방번호 확인하는 로직
+//        if (roomNum.equals("first")) {
+//            FirstRoomPlayerRequestDto dto = gson.fromJson(jsonObject.get("FirstRoomPlayerRequestDto").getAsJsonObject(), FirstRoomPlayerRequestDto.class);
+//            FirstRoom firstRoom = FirstRoom.toDto(dto);
+//            FirstRoom oldRoom = gameRoom.getFirstRoom();
+//            firstRoom.modifyDto(oldRoom);
+//            gameRoom.modifyFirstRoom(firstRoom);
+//        } else if (roomNum.equals("second")) {
+//            SecondRoomPlayerRequestDto dto = gson.fromJson(jsonObject.get("SecondRoomPlayerRequestDto").getAsJsonObject(), SecondRoomPlayerRequestDto.class);
+//            SecondRoom secondRoom = SecondRoom.toDto(dto);
+//            SecondRoom oldRoom = gameRoom.getSecondRoom();
+//            secondRoom.modifyDto(oldRoom);
+//            gameRoom.modifySecondRoom(secondRoom);
+//        } else {
+//            ThirdRoomPlayerRequestDto dto = gson.fromJson(jsonObject.get("ThirdRoomPlayerRequestDto").getAsJsonObject(), ThirdRoomPlayerRequestDto.class);
+//            ThirdRoom thirdRoom = ThirdRoom.toDto(dto);
+//            ThirdRoom oldRoom = gameRoom.getThirdRoom();
+//            thirdRoom.modifyDto(oldRoom);
+//            gameRoom.modifyThirdRoom(thirdRoom);
+//        }
+//        saveGameRoomToTemp(gameRoom);
+//    }
 
     public void updateRoom(Gson gson, JsonObject jsonObject, String roomNum) {
         // 방번호 확인하는 로직
