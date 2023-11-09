@@ -45,7 +45,6 @@ public class GameRoomRedisService {
                     .carbonCaptureNotice(last.isCarbonCaptureNotice())
                     .blackholeStatus(last.getBlackholeStatus())
                     .events(last.getEvents())
-                    .roundNo(last.getRoundNo() + 1)
                     .firstRoom(last.getFirstRoom())
                     .secondRoom(last.getSecondRoom())
                     .thirdRoom(last.getThirdRoom())
