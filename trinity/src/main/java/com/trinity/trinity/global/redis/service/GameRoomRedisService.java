@@ -22,6 +22,7 @@ import java.util.List;
 public class GameRoomRedisService {
     private final RedisTemplate<String, Object> gameRoomRedisTemplate;
 
+    @Synchronized
     public void createGameRoom(GameRoom gameRoom) {
         List<GameRoom> list = new ArrayList<>();
         list.add(gameRoom);
