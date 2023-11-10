@@ -7,7 +7,7 @@ public class VariableInitializer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Timeout(6.0f);
+        StartCoroutine(Timeout(6.0f));
     }
 
     IEnumerator Timeout(float time){
@@ -17,6 +17,7 @@ public class VariableInitializer : MonoBehaviour
 
     public void VariableControl()
     {   
+        Debug.Log("VariableControl 실행");
         if (VariableManager.Instance.power < VariableManager.Instance.workLimit) {
             VariableManager.Instance.power = 0;
             VariableManager.Instance.workLimit = 0;
