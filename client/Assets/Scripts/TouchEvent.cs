@@ -13,16 +13,16 @@ public class TouchEvent : MonoBehaviour, IPointerClickHandler
     GameObject joystickVision;
     void Start()
     {
-        condition = false;
         objectName = this.gameObject.name;
-        Debug.Log("hi "+objectName);
+        condition = CanTouchThisObject(objectName);
+        Debug.Log("hi "+objectName + " : " + condition);
         joystick = GameObject.Find("Analog");
         joystickVision = GameObject.Find("AnalogVision");
         canvas = GameObject.Find("Canvas");
     }
     public void OnPointerClick(PointerEventData eventData){
         Debug.Log(condition);
-        PlayerPrefs.SetInt("Power", PlayerPrefs.GetInt("Power")-1);
+        if(condition == false && VariableManager.Instance.power > 0){
         RenderTexture texture; 
 
         string PATH = "InteractiveUI/RenderTexture/Render" + objectName;    //이미지 위치를 저장하는 변수
@@ -43,6 +43,32 @@ public class TouchEvent : MonoBehaviour, IPointerClickHandler
         canvas.transform.Find("InteractiveUIPanel").gameObject.SetActive(true);
         joystick.SetActive(false);
         joystickVision.SetActive(false);
+        }else if(condition == true){
+            Debug.Log("안번쩍거리게해야함");
+        }else if(VariableManager.Instance.power == 0){
+            Debug.Log("힘이 없음");
+        }
+
+        
     }
+    public bool CanTouchThisObject(string name){
+        if(name == "Water" && VariableManager.Instance.purifierStatus){
+        return true;
+        }else if(name == "FertilizerResearch" && VariableManager.Instance.fertilizerUpgrade){
+        return true;
+        }else if(name == "CO2Fix" && VariableManager.Instance.carbonCaptureStatus == 0){
+        return true;
+        }else if(name == "CentralPark" && VariableManager.Instance.farmStatus){
+        return true;
+        }else if(name == "Taurine" && VariableManager.Instance.taurineFilterTry){
+        return true;
+        }else if(name == "Weapon"){
+        return true;
+        }
+        else{
+        return false;
+        }
+    }
+
 }
     // Update is called once per frame

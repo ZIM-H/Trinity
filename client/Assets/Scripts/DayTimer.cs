@@ -14,7 +14,7 @@ public class DayTimer : MonoBehaviour
     {
         time = 0.0f;
         counter = GetComponent<TextMeshProUGUI>();
-        StartCoroutine(ExecuteAfterTime(10f));
+        StartCoroutine(ExecuteAfterTime(40f));
     }
     
     IEnumerator ExecuteAfterTime(float time)
