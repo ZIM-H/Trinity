@@ -4,10 +4,8 @@ import com.trinity.trinity.domain.control.dto.request.ThirdRoomPlayerRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
-//@Setter
 @NoArgsConstructor
 public class ThirdRoom {
     private int fertilizerAmount;

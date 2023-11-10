@@ -4,15 +4,12 @@ import com.trinity.trinity.domain.control.dto.request.FirstRoomPlayerRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 
 @Getter
-@Setter
 @NoArgsConstructor
 public class FirstRoom {
     private int fertilizerAmount;
-    private String player;
+    private String userId;
     private String message;
     private int fertilizerUpgradeStatus;
     private boolean fertilizerUpgradeTry;
@@ -22,9 +19,9 @@ public class FirstRoom {
     private boolean makeFertilizerTry;
 
     @Builder
-    public FirstRoom(int fertilizerAmount, String player, String message, int fertilizerUpgradeStatus, boolean fertilizerUpgradeTry, int purifierStatus, boolean purifierTry, boolean inputFertilizerTry, boolean makeFertilizerTry) {
+    public FirstRoom(int fertilizerAmount, String userId, String message, int fertilizerUpgradeStatus, boolean fertilizerUpgradeTry, int purifierStatus, boolean purifierTry, boolean inputFertilizerTry, boolean makeFertilizerTry) {
         this.fertilizerAmount = fertilizerAmount;
-        this.player = player;
+        this.userId = userId;
         this.message = message;
         this.fertilizerUpgradeStatus = fertilizerUpgradeStatus;
         this.fertilizerUpgradeTry = fertilizerUpgradeTry;
@@ -32,12 +29,11 @@ public class FirstRoom {
         this.purifierTry = purifierTry;
         this.inputFertilizerTry = inputFertilizerTry;
         this.makeFertilizerTry = makeFertilizerTry;
-
     }
 
     public static FirstRoom toDto(FirstRoomPlayerRequestDto dto) {
         return FirstRoom.builder()
-                .player(dto.getUserId())
+                .userId(dto.getUserId())
                 .message(dto.getMessage())
                 .inputFertilizerTry(dto.isInputFertilizerTry())
                 .makeFertilizerTry(dto.isMakeFertilizerTry())
@@ -50,5 +46,37 @@ public class FirstRoom {
         this.fertilizerAmount = oldRoom.getFertilizerAmount();
         this.fertilizerUpgradeStatus = oldRoom.getFertilizerUpgradeStatus();
         this.purifierStatus = oldRoom.getPurifierStatus();
+    }
+
+    public void modifyPurifierStatus(int purifierStatus) {
+        this.purifierStatus = purifierStatus;
+    }
+
+    public void modifyPurifierTry(boolean purifierTry) {
+        this.purifierTry = purifierTry;
+    }
+
+    public void modifyFertilizerUpgradeTry(boolean fertilizerUpgradeTry) {
+        this.fertilizerUpgradeTry = fertilizerUpgradeTry;
+    }
+
+    public void modifyFertilizerUpgradeStatus(int fertilizerUpgradeStatus) {
+        this.fertilizerUpgradeStatus = fertilizerUpgradeStatus;
+    }
+
+    public void modifyUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public void modifyMakeFertilizerTry(boolean makeFertilizerTry) {
+        this.makeFertilizerTry = makeFertilizerTry;
+    }
+
+    public void modifyFertilizerAmount(int fertilizerAmount) {
+        this.fertilizerAmount = fertilizerAmount;
+    }
+
+    public void modifyInputFertilizerTry(boolean inputFertilizerTry) {
+        this.inputFertilizerTry = inputFertilizerTry;
     }
 }

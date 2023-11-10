@@ -72,7 +72,7 @@ public class GameConnectServiceImpl implements GameConnectService {
         String secondRoom = gson.toJson(secondRoomResponseDto);
         String thirdRoom = gson.toJson(thirdRoomResponseDto);
 
-        String firstUserClientId = redisService.getClientId(gameRoom.getFirstRoom().getPlayer());
+        String firstUserClientId = redisService.getClientId(gameRoom.getFirstRoom().getUserId());
         String secondUserClientId = redisService.getClientId(gameRoom.getSecondRoom().getPlayer());
         String thirdUserClientId = redisService.getClientId(gameRoom.getThirdRoom().getUserId());
 
@@ -80,7 +80,7 @@ public class GameConnectServiceImpl implements GameConnectService {
         webSocketFrameHandler.sendDataToClient(secondUserClientId, secondRoom);
         webSocketFrameHandler.sendDataToClient(thirdUserClientId, thirdRoom);
 
-        redisService.saveData(gameRoom.getFirstRoom().getPlayer(), String.valueOf(UserStatus.PLAYING));
+        redisService.saveData(gameRoom.getFirstRoom().getUserId(), String.valueOf(UserStatus.PLAYING));
         redisService.saveData(gameRoom.getSecondRoom().getPlayer(), String.valueOf(UserStatus.PLAYING));
         redisService.saveData(gameRoom.getThirdRoom().getUserId(), String.valueOf(UserStatus.PLAYING));
 

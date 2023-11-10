@@ -62,10 +62,10 @@ public class GameRoomServiceImpl implements GameRoomService {
 
         // 정수 시스템부터 ㄱㄱ
         if (firstRoom.getPurifierStatus() > 0) {
-            firstRoom.setPurifierStatus(firstRoom.getPurifierStatus() + 1);
+            firstRoom.modifyPurifierStatus(firstRoom.getPurifierStatus() + 1);
             if (firstRoom.isPurifierTry()) {
-                firstRoom.setPurifierTry(false);
-                firstRoom.setPurifierStatus(0);
+                firstRoom.modifyPurifierTry(false);
+                firstRoom.modifyPurifierStatus(0);
                 secondRoom.setTaurineFilterStatus(true);
             }
 
@@ -76,8 +76,8 @@ public class GameRoomServiceImpl implements GameRoomService {
 
         } else {
             if (firstRoom.isPurifierTry()) {
-                firstRoom.setPurifierTry(false);
-                firstRoom.setPurifierStatus(1);
+                firstRoom.modifyPurifierTry(false);
+                firstRoom.modifyPurifierStatus(1);
                 secondRoom.setTaurineFilterStatus(false);
             }
         }
@@ -101,8 +101,8 @@ public class GameRoomServiceImpl implements GameRoomService {
 
         // 비료 생성기 업그레이드
         if (firstRoom.isFertilizerUpgradeTry()) {
-            firstRoom.setFertilizerUpgradeTry(false);
-            firstRoom.setFertilizerUpgradeStatus(firstRoom.getFertilizerUpgradeStatus() + 1);
+            firstRoom.modifyFertilizerUpgradeTry(false);
+            firstRoom.modifyFertilizerUpgradeStatus(firstRoom.getFertilizerUpgradeStatus() + 1);
         }
 
         if (firstRoom.getFertilizerUpgradeStatus() == 3) makeFertilizer(firstRoom, secondRoom, thirdRoom, 3);
@@ -112,7 +112,7 @@ public class GameRoomServiceImpl implements GameRoomService {
         if (secondRoom.isTaurineFilterTry()) {
             secondRoom.setTaurineFilterTry(false);
             secondRoom.setTaurineFilterStatus(false);
-            firstRoom.setPurifierStatus(1);
+            firstRoom.modifyPurifierStatus(1);
         }
 
         // 블랙홀
@@ -251,16 +251,16 @@ public class GameRoomServiceImpl implements GameRoomService {
         if (direction == 1) {
             String temp = thirdRoom.getUserId();
             thirdRoom.modifyUserId(secondRoom.getPlayer());
-            secondRoom.setPlayer(firstRoom.getPlayer());
-            firstRoom.setPlayer(temp);
+            secondRoom.setPlayer(firstRoom.getUserId());
+            firstRoom.modifyUserId(temp);
 
             return;
         }
 
         // 역방향
         String temp = thirdRoom.getUserId();
-        thirdRoom.modifyUserId(firstRoom.getPlayer());
-        firstRoom.setPlayer(secondRoom.getPlayer());
+        thirdRoom.modifyUserId(firstRoom.getUserId());
+        firstRoom.modifyUserId(secondRoom.getPlayer());
         secondRoom.setPlayer(temp);
     }
 
@@ -280,7 +280,7 @@ public class GameRoomServiceImpl implements GameRoomService {
                 if (secondRoom.getCarbonCaptureStatus() == 0) secondRoom.setCarbonCaptureStatus(1);
                 break;
             case 3:
-                firstRoom.setPurifierStatus(1);
+                firstRoom.modifyPurifierStatus(1);
                 break;
             case 4:
                 gameRoom.setPlayerStatus(true);
@@ -296,8 +296,8 @@ public class GameRoomServiceImpl implements GameRoomService {
 
     private void makeFertilizer(FirstRoom firstRoom, SecondRoom secondRoom, ThirdRoom thirdRoom, int fertilizer) {
         if (firstRoom.isMakeFertilizerTry()) {
-            firstRoom.setMakeFertilizerTry(false);
-            firstRoom.setFertilizerAmount(firstRoom.getFertilizerAmount() + fertilizer);
+            firstRoom.modifyMakeFertilizerTry(false);
+            firstRoom.modifyFertilizerAmount(firstRoom.getFertilizerAmount() + fertilizer);
         }
         if (secondRoom.isMakeFertilizerTry()) {
             secondRoom.setMakeFertilizerTry(false);
@@ -326,8 +326,8 @@ public class GameRoomServiceImpl implements GameRoomService {
     private void makeFood(GameRoom gameRoom, FirstRoom firstRoom, SecondRoom secondRoom, ThirdRoom thirdRoom) {
         int count = 0;
         if (firstRoom.isInputFertilizerTry()) {
-            firstRoom.setInputFertilizerTry(false);
-            firstRoom.setFertilizerAmount(firstRoom.getFertilizerAmount() - 1);
+            firstRoom.modifyInputFertilizerTry(false);
+            firstRoom.modifyFertilizerAmount(firstRoom.getFertilizerAmount() - 1);
             count++;
         }
         if (secondRoom.isInputFertilizerTry()) {
