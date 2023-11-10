@@ -61,7 +61,7 @@ public class CreateService {
     public SecondRoom createSecondRoom(String userId) {
         return SecondRoom.builder()
                 .fertilizerAmount(3)
-                .player(userId)
+                .userId(userId)
                 .message("")
                 .carbonCaptureStatus(0)
                 .carbonCaptureTry(false)
