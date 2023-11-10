@@ -76,7 +76,7 @@ public class CreateService {
     public FirstRoom createFirstRoom(String userId) {
         return FirstRoom.builder()
                 .fertilizerAmount(3)
-                .player(userId)
+                .userId(userId)
                 .message("")
                 .fertilizerUpgradeStatus(0)
                 .fertilizerUpgradeTry(false)
