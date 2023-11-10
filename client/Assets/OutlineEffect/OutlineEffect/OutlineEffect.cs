@@ -34,12 +34,12 @@ namespace cakeslice
 	/* [ExecuteInEditMode] */
 	public class OutlineEffect : MonoBehaviour
 	{
-		/* #if UNITY_EDITOR
+		 #if UNITY_EDITOR
 				  private void OnValidate()
 				  {
 						CreateMaterialsIfNeeded();
 				  }
-		#endif */
+		#endif 
 
 		public static OutlineEffect Instance { get; private set; }
 

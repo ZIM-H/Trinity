@@ -261,7 +261,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbf3575480402db40813e763382412fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  color: 1
+  color: 0
   eraseRenderer: 0
 --- !u!23 &26743447
 MeshRenderer:
@@ -2048,7 +2048,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbf3575480402db40813e763382412fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  color: 1
+  color: 0
   eraseRenderer: 0
 --- !u!64 &305463373
 MeshCollider:
@@ -2684,7 +2684,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbf3575480402db40813e763382412fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  color: 1
+  color: 0
   eraseRenderer: 0
 --- !u!64 &394300999
 MeshCollider:
@@ -3349,7 +3349,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbf3575480402db40813e763382412fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  color: 1
+  color: 0
   eraseRenderer: 0
 --- !u!1 &482340920
 GameObject:
@@ -3747,7 +3747,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbf3575480402db40813e763382412fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  color: 1
+  color: 0
   eraseRenderer: 0
 --- !u!1 &663052842
 GameObject:
@@ -4587,7 +4587,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbf3575480402db40813e763382412fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  color: 1
+  color: 0
   eraseRenderer: 0
 --- !u!64 &821940896
 MeshCollider:
@@ -5664,7 +5664,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbf3575480402db40813e763382412fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  color: 1
+  color: 0
   eraseRenderer: 0
 --- !u!64 &991262141
 MeshCollider:
@@ -6260,6 +6260,7 @@ GameObject:
   - component: {fileID: 1100688659}
   - component: {fileID: 1100688664}
   - component: {fileID: 1100688663}
+  - component: {fileID: 1100688665}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: Untagged
@@ -6397,7 +6398,7 @@ MonoBehaviour:
   lineThickness: 1.25
   lineIntensity: 0.5
   fillAmount: 0.2
-  lineColor0: {r: 1, g: 0, b: 0, a: 1}
+  lineColor0: {r: 0, g: 1, b: 0, a: 1}
   lineColor1: {r: 0, g: 1, b: 0, a: 1}
   lineColor2: {r: 0, g: 0, b: 1, a: 1}
   additiveRendering: 0
@@ -6409,12 +6410,24 @@ MonoBehaviour:
   scaleWithScreenSize: 1
   alphaCutoff: 0.5
   flipY: 0
-  sourceCamera: {fileID: 0}
+  sourceCamera: {fileID: 1100688662}
   autoEnableOutlines: 0
   outlineCamera: {fileID: 0}
   outlineShaderMaterial: {fileID: 0}
   renderTexture: {fileID: 0}
   extraRenderTexture: {fileID: 0}
+--- !u!114 &1100688665
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1100688657}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c82ebf8862c12d94390270797c4817f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1107390179 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 984155106624167842, guid: 854a63f44bf6e2648888ca6cba2e547c,
@@ -6606,7 +6619,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbf3575480402db40813e763382412fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  color: 1
+  color: 0
   eraseRenderer: 0
 --- !u!64 &1153313320
 MeshCollider:
@@ -7185,7 +7198,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbf3575480402db40813e763382412fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  color: 1
+  color: 0
   eraseRenderer: 0
 --- !u!1001 &1265013087
 PrefabInstance:
@@ -7387,7 +7400,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbf3575480402db40813e763382412fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  color: 1
+  color: 0
   eraseRenderer: 0
 --- !u!1 &1286084370 stripped
 GameObject:
@@ -7573,7 +7586,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbf3575480402db40813e763382412fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  color: 1
+  color: 0
   eraseRenderer: 0
 --- !u!64 &1288572853
 MeshCollider:
@@ -7851,7 +7864,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbf3575480402db40813e763382412fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  color: 1
+  color: 0
   eraseRenderer: 0
 --- !u!1001 &1306139178
 PrefabInstance:
@@ -7963,7 +7976,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbf3575480402db40813e763382412fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  color: 1
+  color: 0
   eraseRenderer: 0
 --- !u!64 &1306597545
 MeshCollider:
@@ -8319,7 +8332,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbf3575480402db40813e763382412fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  color: 1
+  color: 0
   eraseRenderer: 0
 --- !u!64 &1371070856
 MeshCollider:
@@ -8440,7 +8453,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbf3575480402db40813e763382412fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  color: 1
+  color: 0
   eraseRenderer: 0
 --- !u!64 &1390516377
 MeshCollider:
@@ -10113,7 +10126,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbf3575480402db40813e763382412fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  color: 1
+  color: 0
   eraseRenderer: 0
 --- !u!64 &1605323460
 MeshCollider:
@@ -10397,7 +10410,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbf3575480402db40813e763382412fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  color: 1
+  color: 0
   eraseRenderer: 0
 --- !u!64 &1639690223
 MeshCollider:
@@ -11885,7 +11898,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbf3575480402db40813e763382412fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  color: 1
+  color: 0
   eraseRenderer: 0
 --- !u!64 &1855561321
 MeshCollider:
@@ -12870,7 +12883,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbf3575480402db40813e763382412fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  color: 1
+  color: 0
   eraseRenderer: 0
 --- !u!1 &2018725760
 GameObject:
@@ -13110,7 +13123,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbf3575480402db40813e763382412fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  color: 1
+  color: 0
   eraseRenderer: 0
 --- !u!64 &2025585728
 MeshCollider:

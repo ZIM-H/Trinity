@@ -6685,7 +6685,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbf3575480402db40813e763382412fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  color: 1
+  color: 0
   eraseRenderer: 0
 --- !u!1 &870886210
 GameObject:
@@ -8149,6 +8149,7 @@ GameObject:
   - component: {fileID: 1116718193}
   - component: {fileID: 1116718197}
   - component: {fileID: 1116718198}
+  - component: {fileID: 1116718199}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: Untagged
@@ -8262,7 +8263,7 @@ MonoBehaviour:
   lineThickness: 1.25
   lineIntensity: 0.5
   fillAmount: 0.2
-  lineColor0: {r: 1, g: 0, b: 0, a: 1}
+  lineColor0: {r: 0, g: 1, b: 0, a: 1}
   lineColor1: {r: 0, g: 1, b: 0, a: 1}
   lineColor2: {r: 0, g: 0, b: 1, a: 1}
   additiveRendering: 0
@@ -8274,7 +8275,7 @@ MonoBehaviour:
   scaleWithScreenSize: 1
   alphaCutoff: 0.5
   flipY: 0
-  sourceCamera: {fileID: 0}
+  sourceCamera: {fileID: 1116718192}
   autoEnableOutlines: 0
   outlineCamera: {fileID: 0}
   outlineShaderMaterial: {fileID: 0}
@@ -8290,6 +8291,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e12900426d1676a42b765db03ad85b14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1116718199
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1116718191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c82ebf8862c12d94390270797c4817f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1124462935
@@ -13192,7 +13205,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbf3575480402db40813e763382412fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  color: 1
+  color: 0
   eraseRenderer: 0
 --- !u!1001 &1753927143
 PrefabInstance:
@@ -16358,7 +16371,7 @@ Transform:
   m_GameObject: {fileID: 2027589981}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -17175,7 +17188,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbf3575480402db40813e763382412fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  color: 1
+  color: 0
   eraseRenderer: 0
 --- !u!1 &2138888253 stripped
 GameObject:
