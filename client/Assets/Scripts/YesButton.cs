@@ -67,6 +67,9 @@ public class YesButton : MonoBehaviour, IPointerClickHandler
                     Debug.Log(weapon.transform.GetChild(i).name);
                     weapon.transform.GetChild(i).gameObject.GetComponent<cakeslice.Outline>().enabled = true;
                     }
+                
+
+
                 }
             }
         VariableManager.Instance.power--;
@@ -94,9 +97,37 @@ public class YesButton : MonoBehaviour, IPointerClickHandler
         Target.gameObject.GetComponent<TouchEvent>().condition = true;
         Debug.Log("Target status: "+ Target.gameObject.GetComponent<TouchEvent>().condition);
         
-        
-        interactiveUIPanel.SetActive(false);
-        joystick.SetActive(true);
-        joystickVision.SetActive(true);
+        if(target == "Observer" && VariableManager.Instance.asteroidStatus){
+            RenderUIPanel("Asteroids");
+
+        }else if(target == "Observer" && VariableManager.Instance.blackHoleObserved){
+            RenderUIPanel("BlackHole");
+        }else if(target == "Observer"){
+            RenderUIPanel("SilentSpace");    
+        }
+        else{
+            interactiveUIPanel.SetActive(false);
+            joystick.SetActive(true);
+            joystickVision.SetActive(true);
+            }
+
+    }
+    public void RenderUIPanel(string objectName){
+        RenderTexture texture; 
+
+        string PATH = "InteractiveUI/RenderTexture/Render" + objectName;    //이미지 위치를 저장하는 변수
+        texture = Resources.Load(PATH, typeof(RenderTexture)) as RenderTexture;  //이미지 로드
+        Debug.Log(texture);
+        canvas.transform.Find("InteractiveUIPanel").transform.Find("InteractiveCameraImage").GetComponent<RawImage>().texture = texture;
+
+        Texture2D templateImage;
+        string PATH_template = "InteractiveUI/"+objectName;
+        Debug.Log(PATH_template);
+        templateImage = Resources.Load(PATH_template, typeof(Texture2D)) as Texture2D;
+        Debug.Log(templateImage);
+        canvas.transform.Find("InteractiveUIPanel").transform.Find("InteractiveCameraImage").transform.Find("InteractiveUI").GetComponent<RawImage>().texture = templateImage;
+        canvas.transform.Find("InteractiveUIPanel").transform.Find("InteractiveCameraImage").transform.Find("InteractiveUI").transform.Find("OK").GetComponent<OKButtonDisabler>().Activate();
+        canvas.transform.Find("InteractiveUIPanel").transform.Find("InteractiveCameraImage").transform.Find("InteractiveUI").transform.Find("Yes").GetComponent<OKButtonDisabler>().Deactivate();
+        canvas.transform.Find("InteractiveUIPanel").transform.Find("InteractiveCameraImage").transform.Find("InteractiveUI").transform.Find("No").GetComponent<OKButtonDisabler>().Deactivate();
     }
 }

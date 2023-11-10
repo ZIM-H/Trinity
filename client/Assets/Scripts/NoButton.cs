@@ -22,8 +22,30 @@ public class NoButton : MonoBehaviour, IPointerClickHandler
     public void OnPointerClick(PointerEventData eventData){
         Debug.Log("No");
         interactiveUIPanel = GameObject.Find("InteractiveUIPanel");
-        interactiveUIPanel.SetActive(false);
-        joystick.SetActive(true);
-        joystickVision.SetActive(true);
+        if(VariableManager.Instance.asteroidStatus && VariableManager.Instance.blackHoleObserved &&
+         canvas.transform.Find("InteractiveUIPanel").transform.Find("InteractiveCameraImage").GetComponent<RawImage>().name == "Asteroids")
+         {
+            RenderTexture texture; 
+
+            string PATH = "InteractiveUI/RenderTexture/Render/BlackHole";    //이미지 위치를 저장하는 변수
+            texture = Resources.Load(PATH, typeof(RenderTexture)) as RenderTexture;  //이미지 로드
+            Debug.Log(texture);
+            canvas.transform.Find("InteractiveUIPanel").transform.Find("InteractiveCameraImage").GetComponent<RawImage>().texture = texture;
+
+            Texture2D templateImage;
+            string PATH_template = "InteractiveUI/BlackHole";
+            Debug.Log(PATH_template);
+            templateImage = Resources.Load(PATH_template, typeof(Texture2D)) as Texture2D;
+            Debug.Log(templateImage);
+            canvas.transform.Find("InteractiveUIPanel").transform.Find("InteractiveCameraImage").transform.Find("InteractiveUI").GetComponent<RawImage>().texture = templateImage;
+        }else{
+            
+            canvas.transform.Find("InteractiveUIPanel").transform.Find("InteractiveCameraImage").transform.Find("InteractiveUI").transform.Find("Yes").GetComponent<OKButtonDisabler>().Activate();
+            canvas.transform.Find("InteractiveUIPanel").transform.Find("InteractiveCameraImage").transform.Find("InteractiveUI").transform.Find("No").GetComponent<OKButtonDisabler>().Deactivate();
+            canvas.transform.Find("InteractiveUIPanel").transform.Find("InteractiveCameraImage").transform.Find("InteractiveUI").transform.Find("OK").GetComponent<OKButtonDisabler>().Activate();
+            interactiveUIPanel.SetActive(false);
+            joystick.SetActive(true);
+            joystickVision.SetActive(true);
+        }
     }
 }
