@@ -3077,6 +3077,7 @@ GameObject:
   - component: {fileID: 439527876}
   - component: {fileID: 439527878}
   - component: {fileID: 439527877}
+  - component: {fileID: 439527879}
   m_Layer: 0
   m_Name: Alert
   m_TagString: Untagged
@@ -3134,8 +3135,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 255
-  m_fontColor: {r: 1, g: 0, b: 0, a: 0}
+    rgba: 4278190335
+  m_fontColor: {r: 1, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -3202,6 +3203,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 439527875}
   m_CullTransparentMesh: 1
+--- !u!114 &439527879
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 439527875}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdcf500ac09fa254583a7fec8bbcc5ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &439750674
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10138,6 +10151,7 @@ GameObject:
   - component: {fileID: 1527704384}
   - component: {fileID: 1527704386}
   - component: {fileID: 1527704385}
+  - component: {fileID: 1527704387}
   m_Layer: 0
   m_Name: FertilizerAlert
   m_TagString: Untagged
@@ -10194,8 +10208,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 255
-  m_fontColor: {r: 1, g: 0, b: 0, a: 0}
+    rgba: 4278190335
+  m_fontColor: {r: 1, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -10262,6 +10276,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1527704383}
   m_CullTransparentMesh: 1
+--- !u!114 &1527704387
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1527704383}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdcf500ac09fa254583a7fec8bbcc5ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1534934646
 GameObject:
   m_ObjectHideFlags: 0

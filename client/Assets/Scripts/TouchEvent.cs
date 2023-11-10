@@ -22,7 +22,7 @@ public class TouchEvent : MonoBehaviour, IPointerClickHandler
         joystick = GameObject.Find("Analog");
         joystickVision = GameObject.Find("AnalogVision");
         canvas = GameObject.Find("Canvas");
-        alert = GameObject.Find("Alert");
+        alert = canvas.transform.Find("Alert").gameObject;
     }
     public void OnPointerClick(PointerEventData eventData){
         if(condition == false && VariableManager.Instance.power > 0){
@@ -47,14 +47,12 @@ public class TouchEvent : MonoBehaviour, IPointerClickHandler
         joystick.SetActive(false);
         joystickVision.SetActive(false);
         }else if(VariableManager.Instance.power == 0){
-            Color a = alert.GetComponent<TextMeshProUGUI>().color;
-            StartCoroutine(AlertView(0.5f, a, 1));
-            StartCoroutine(AlertView(3.5f, a, 0));
+        StartCoroutine(AlertView(3.0f));
         }
-        IEnumerator AlertView(float time, Color c, float visiblity){
+        IEnumerator AlertView(float time){
+            alert.SetActive(true);
             yield return new WaitForSeconds(time);
-            c.a = visiblity;
-            alert.GetComponent<TextMeshProUGUI>().color = c;
+            alert.SetActive(false);
         }
         
     }
