@@ -238,7 +238,7 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
         String[] users = new String[3];
         users[0] = gameRoom.getFirstRoom().getPlayer();
         users[1] = gameRoom.getSecondRoom().getPlayer();
-        users[2] = gameRoom.getThirdRoom().getPlayer();
+        users[2] = gameRoom.getThirdRoom().getUserId();
 
         return users;
     }
