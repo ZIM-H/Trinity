@@ -45,7 +45,7 @@ public class GameRoomServiceImpl implements GameRoomService {
             } else {
                 if (thirdRoom.getBarrierStatus() < 2) {
                     if (secondRoom.isFarmTry()) checkFarm(gameRoom, firstRoom, secondRoom, thirdRoom);
-                    secondRoom.setFarmStatus(false);
+                    secondRoom.modifyFarmStatus(false);
                     gameRoom.setFertilizerAmount(0);
                 } else {
                     checkFarm(gameRoom, firstRoom, secondRoom, thirdRoom);
@@ -66,7 +66,7 @@ public class GameRoomServiceImpl implements GameRoomService {
             if (firstRoom.isPurifierTry()) {
                 firstRoom.modifyPurifierTry(false);
                 firstRoom.modifyPurifierStatus(0);
-                secondRoom.setTaurineFilterStatus(true);
+                secondRoom.modifyTaurineFilterStatus(true);
             }
 
             if (firstRoom.getPurifierStatus() == 3) {
@@ -78,20 +78,20 @@ public class GameRoomServiceImpl implements GameRoomService {
             if (firstRoom.isPurifierTry()) {
                 firstRoom.modifyPurifierTry(false);
                 firstRoom.modifyPurifierStatus(1);
-                secondRoom.setTaurineFilterStatus(false);
+                secondRoom.modifyTaurineFilterStatus(false);
             }
         }
 
         // 이산화탄소 포집기
         if (secondRoom.getCarbonCaptureStatus() > 0) {
-            secondRoom.setCarbonCaptureStatus(secondRoom.getCarbonCaptureStatus() + 1);
+            secondRoom.modifyCarbonCaptureStatus(secondRoom.getCarbonCaptureStatus() + 1);
             if (secondRoom.isCarbonCaptureTry()) {
-                secondRoom.setCarbonCaptureTry(false);
-                secondRoom.setCarbonCaptureTryCount(secondRoom.getCarbonCaptureTryCount() + 1);
+                secondRoom.modifyCarbonCaptureTry(false);
+                secondRoom.modifyCarbonCaptureTryCount(secondRoom.getCarbonCaptureTryCount() + 1);
             }
             if (secondRoom.getCarbonCaptureTryCount() == 2) {
-                secondRoom.setCarbonCaptureStatus(0);
-                secondRoom.setCarbonCaptureTryCount(0);
+                secondRoom.modifyCarbonCaptureStatus(0);
+                secondRoom.modifyCarbonCaptureTryCount(0);
             }
             if (secondRoom.getCarbonCaptureStatus() == 3) {
                 log.info("이산화탄소 포집기 고장나서 뒤짐");
@@ -110,8 +110,8 @@ public class GameRoomServiceImpl implements GameRoomService {
 
         // 타우린
         if (secondRoom.isTaurineFilterTry()) {
-            secondRoom.setTaurineFilterTry(false);
-            secondRoom.setTaurineFilterStatus(false);
+            secondRoom.modifyTaurineFilterTry(false);
+            secondRoom.modifyTaurineFilterStatus(false);
             firstRoom.modifyPurifierStatus(1);
         }
 
@@ -250,8 +250,8 @@ public class GameRoomServiceImpl implements GameRoomService {
         // 정방향
         if (direction == 1) {
             String temp = thirdRoom.getUserId();
-            thirdRoom.modifyUserId(secondRoom.getPlayer());
-            secondRoom.setPlayer(firstRoom.getUserId());
+            thirdRoom.modifyUserId(secondRoom.getUserId());
+            secondRoom.modifyUserId(firstRoom.getUserId());
             firstRoom.modifyUserId(temp);
 
             return;
@@ -260,8 +260,8 @@ public class GameRoomServiceImpl implements GameRoomService {
         // 역방향
         String temp = thirdRoom.getUserId();
         thirdRoom.modifyUserId(firstRoom.getUserId());
-        firstRoom.modifyUserId(secondRoom.getPlayer());
-        secondRoom.setPlayer(temp);
+        firstRoom.modifyUserId(secondRoom.getUserId());
+        secondRoom.modifyUserId(temp);
     }
 
     private void validateEvent(int eventIdx, GameRoom gameRoom) {
@@ -277,7 +277,7 @@ public class GameRoomServiceImpl implements GameRoomService {
                 thirdRoom.modifyBlackholeStatus(true);
                 break;
             case 2:
-                if (secondRoom.getCarbonCaptureStatus() == 0) secondRoom.setCarbonCaptureStatus(1);
+                if (secondRoom.getCarbonCaptureStatus() == 0) secondRoom.modifyCarbonCaptureStatus(1);
                 break;
             case 3:
                 firstRoom.modifyPurifierStatus(1);
@@ -300,8 +300,8 @@ public class GameRoomServiceImpl implements GameRoomService {
             firstRoom.modifyFertilizerAmount(firstRoom.getFertilizerAmount() + fertilizer);
         }
         if (secondRoom.isMakeFertilizerTry()) {
-            secondRoom.setMakeFertilizerTry(false);
-            secondRoom.setFertilizerAmount(secondRoom.getFertilizerAmount() + fertilizer);
+            secondRoom.modifyMakeFertilizerTry(false);
+            secondRoom.modifyFertilizerAmount(secondRoom.getFertilizerAmount() + fertilizer);
         }
         if (thirdRoom.isMakeFertilizerTry()) {
             thirdRoom.modifyMakeFertilizerTry(false);
@@ -312,8 +312,8 @@ public class GameRoomServiceImpl implements GameRoomService {
     private void checkFarm(GameRoom gameRoom, FirstRoom firstRoom, SecondRoom secondRoom, ThirdRoom thirdRoom) {
         if (!secondRoom.isFarmStatus()) {
             if (secondRoom.isFarmTry()) {
-                secondRoom.setFarmTry(false);
-                secondRoom.setFarmStatus(true);
+                secondRoom.modifyFarmTry(false);
+                secondRoom.modifyFarmStatus(true);
                 // 식량 생산
                 makeFood(gameRoom, firstRoom, secondRoom, thirdRoom);
             }
@@ -331,8 +331,8 @@ public class GameRoomServiceImpl implements GameRoomService {
             count++;
         }
         if (secondRoom.isInputFertilizerTry()) {
-            secondRoom.setInputFertilizerTry(false);
-            secondRoom.setFertilizerAmount(secondRoom.getFertilizerAmount() - 1);
+            secondRoom.modifyInputFertilizerTry(false);
+            secondRoom.modifyFertilizerAmount(secondRoom.getFertilizerAmount() - 1);
             count++;
         }
         if (thirdRoom.isInputFertilizerTry()) {
