@@ -39,9 +39,8 @@ namespace cakeslice
 
 		public int color;
 		public bool eraseRenderer;
-
-		private void Awake()
-		{
+		private void Start()
+		{	
 			Renderer = GetComponent<Renderer>();
 			SkinnedMeshRenderer = GetComponent<SkinnedMeshRenderer>();
 			SpriteRenderer = GetComponent<SpriteRenderer>();

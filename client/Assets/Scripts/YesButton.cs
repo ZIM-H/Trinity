@@ -48,7 +48,7 @@ public class YesButton : MonoBehaviour, IPointerClickHandler
         }else if(target == "Observer"){
             VariableManager.Instance.observerTry = true;
         }
-        Debug.Log(VariableManager.Instance);
+        VariableManager.Instance.power--;
         Target.gameObject.GetComponent<TouchEvent>().condition = true;
         Debug.Log("Target status: "+ Target.gameObject.GetComponent<TouchEvent>().condition);
         

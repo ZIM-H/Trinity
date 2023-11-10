@@ -7,7 +7,7 @@ public class VariableInitializer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Timeout(6.0f);
+        StartCoroutine(Timeout(6.0f));
     }
 
     IEnumerator Timeout(float time){
