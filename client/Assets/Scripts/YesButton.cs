@@ -118,7 +118,7 @@ public class YesButton : MonoBehaviour, IPointerClickHandler
             }else if(VariableManager.Instance.blackHoleObserved==true){
                 RenderUIPanel("BlackHole");
             }else{
-                RenderUIPanel("SilentSpace");    
+                RenderUIPanel("SilentSpace");
             }
         }else{
             interactiveUIPanel.SetActive(false);
