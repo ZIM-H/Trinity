@@ -11,9 +11,11 @@ import com.trinity.trinity.domain.logic.dto.SecondRoom;
 import com.trinity.trinity.domain.logic.dto.ThirdRoom;
 import lombok.RequiredArgsConstructor;
 import lombok.Synchronized;
+import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,28 +24,28 @@ import java.util.List;
 public class GameRoomRedisService {
     private final RedisTemplate<String, Object> gameRoomRedisTemplate;
 
-//    private HashOperations<String, String, Object> hashOperations;
+    private HashOperations<String, String, Object> hashOperations;
 
-//    @PostConstruct
-//    private void init() {
-//        hashOperations = gameRoomRedisTemplate.opsForHash();
-//    }
+    @PostConstruct
+    private void init() {
+        hashOperations = gameRoomRedisTemplate.opsForHash();
+    }
 
     @Synchronized
     public void createGameRoom(GameRoom gameRoom) {
         List<GameRoom> list = new ArrayList<>();
         list.add(gameRoom);
 
-        gameRoomRedisTemplate.opsForHash().put("gameRoom", gameRoom.getGameRoomId(), list);
+        hashOperations.put("gameRoom", gameRoom.getGameRoomId(), list);
     }
 
     @Synchronized
     public GameRoom getGameRoom(String gameRoomId) {
         // temp game room에 없으면 만들고
-        GameRoom findRoom = (GameRoom) gameRoomRedisTemplate.opsForHash().get("temp", gameRoomId);
+        GameRoom findRoom = (GameRoom) hashOperations.get("temp", gameRoomId);
 
         if (findRoom == null) {
-            List<GameRoom> before = (List<GameRoom>) gameRoomRedisTemplate.opsForHash().get("gameRoom", gameRoomId);
+            List<GameRoom> before = (List<GameRoom>) hashOperations.get("gameRoom", gameRoomId);
 
             GameRoom last = before.get(before.size() - 1);
 
@@ -63,7 +65,7 @@ public class GameRoomRedisService {
 
             gameRoom.setGameRoomId(gameRoomId);
 
-            gameRoomRedisTemplate.opsForHash().put("temp", gameRoomId, gameRoom);
+            hashOperations.put("temp", gameRoomId, gameRoom);
             return gameRoom;
         }
         return findRoom;
@@ -71,20 +73,20 @@ public class GameRoomRedisService {
 
     @Synchronized
     public void saveGameRoomToTemp(GameRoom gameRoom) {
-        gameRoomRedisTemplate.opsForHash().put("temp", gameRoom.getGameRoomId(), gameRoom);
+        hashOperations.put("temp", gameRoom.getGameRoomId(), gameRoom);
     }
 
     @Synchronized
     public void saveGameRoom(GameRoom gameRoom) {
         List<GameRoom> list = (List<GameRoom>) gameRoomRedisTemplate.opsForHash().get("gameRoom", gameRoom.getGameRoomId());
         list.add(gameRoom);
-        gameRoomRedisTemplate.opsForHash().put("gameRoom", gameRoom.getGameRoomId(), list);
+        hashOperations.put("gameRoom", gameRoom.getGameRoomId(), list);
 
     }
 
     @Synchronized
     public void deleteGameRoom(String gameRoomId) {
-        gameRoomRedisTemplate.opsForHash().delete("gameRoom", gameRoomId);
+        hashOperations.delete("gameRoom", gameRoomId);
     }
 
     @Synchronized
