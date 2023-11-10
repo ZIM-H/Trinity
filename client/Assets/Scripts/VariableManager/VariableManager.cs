@@ -49,6 +49,11 @@ public class VariableManager : MonoBehaviour
     public bool barrierUpgrade;
     public bool blackHoleObserved;
     public bool observerTry; 
+    // 전날 행동에 대한 정보를 밤에 보여주는 문구
+    public string nightTitleText;
+    public string nightContextText;
+    public string morningTitleText;
+    public string morningContextText;
 
     private void Awake()
     {
@@ -92,37 +97,33 @@ public class VariableManager : MonoBehaviour
             fertilizerAmountInRoom = firstDayData.thirdResponseDto.fertilizerAmount;
             message = firstDayData.thirdResponseDto.message;
         }
+        date ++;
     }
 
     public void SetNextDayData(string receivedMessage)
     {
-        DayData nextDayData = JsonConvert.DeserializeObject<DayData>(receivedMessage);
         InitializeAction();
-        // 여기서 필요한 변수에 데이터 할당
-        fertilizerAmount = nextDayData.fertilizerAmount;
-        eventCode = nextDayData.eventCode;
-        fertilizerUpgrade = nextDayData.fertilizerUpgrade;
-        barrierUpgrade = nextDayData.barrierUpgrade;
-        conflictAsteroid = nextDayData.conflictAsteroid;
-        gameRoomId = nextDayData.gameRoomId;
-        foodAmount = nextDayData.foodAmount;
-        if (nextDayData.firstResponseDto != null) {
-            roomNo = 1;
-            purifierStatus = nextDayData.firstResponseDto.purifierStatus;
-            fertilizerAmountInRoom = nextDayData.firstResponseDto.fertilizerAmount;
-            message = nextDayData.firstResponseDto.message;
-        } else if (nextDayData.secondResponseDto != null) {
-            roomNo = 2;
-            farmStatus = nextDayData.secondResponseDto.farmStatus;
-            carbonCaptureStatus = nextDayData.secondResponseDto.carbonCaptureStatus;
-            carbonCaptureTryCount = nextDayData.secondResponseDto.carbonCaptureTryCount;
-            fertilizerAmountInRoom = nextDayData.secondResponseDto.fertilizerAmount;
-            message = nextDayData.secondResponseDto.message;
+        SetFirstDayData(receivedMessage);
+        morningTitleText = date.ToString() + "일차 시작";
+        bool overworked = false;
+        if ( power < workLimit ) {
+            morningContextText += "전날 과로하여 오늘은 활동할 수 없습니다.\n휴식을 취하세요.\n";
+            overworked = true;
         } else {
-            roomNo = 3;
-            fertilizerAmountInRoom = nextDayData.thirdResponseDto.fertilizerAmount;
-            message = nextDayData.thirdResponseDto.message;
+            morningContextText = "";
         }
+        if ( !overworked ) {
+            if ( eventCode / 4 % 2 == 1) {
+                morningContextText += "오늘은 트리니티 호의 생일입니다.\n과로 페널티 없이 최대치의 행동을 할 수 있습니다.\n";
+            }
+            if ( eventCode / 8 % 2 == 1) {
+                morningContextText += "당신은 우주 멀미에 빠졌습니다.\n최대 행동 가능 횟수가 1 줄어듭니다.\n";
+            }
+        }
+        if ( date == 10 ) {
+            morningContextText += "우주선에 비축해둔 비상식량을 발견했습니다.\n보유 식량 수가 1 증가합니다.\n";
+        }
+        morningContextText += "트리니티 호의 하루가 시작됩니다.\n생존을 위한 활동을 이어나가세요.";
     }
 
     public void InitializeAction() {
