@@ -23,7 +23,7 @@ public class NoButton : MonoBehaviour, IPointerClickHandler
         Debug.Log("No");
         interactiveUIPanel = GameObject.Find("InteractiveUIPanel");
         if(VariableManager.Instance.asteroidStatus && VariableManager.Instance.blackHoleObserved &&
-         canvas.transform.Find("InteractiveUIPanel").transform.Find("InteractiveCameraImage").GetComponent<RawImage>().name == "Asteroids")
+         canvas.transform.Find("InteractiveUIPanel").transform.Find("InteractiveCameraImage").transform.Find("InteractiveUI").GetComponent<RawImage>().name == "Asteroids")
          {
             RenderTexture texture; 
 

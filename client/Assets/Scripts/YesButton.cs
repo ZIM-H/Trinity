@@ -110,15 +110,17 @@ public class YesButton : MonoBehaviour, IPointerClickHandler
         Target.gameObject.GetComponent<TouchEvent>().condition = true;
         Debug.Log("Target status: "+ Target.gameObject.GetComponent<TouchEvent>().condition);
         
-        if(target == "Observer" && VariableManager.Instance.asteroidStatus){
-            RenderUIPanel("Asteroids");
-
-        }else if(target == "Observer" && VariableManager.Instance.blackHoleObserved){
-            RenderUIPanel("BlackHole");
-        }else if(target == "Observer"){
-            RenderUIPanel("SilentSpace");    
-        }
-        else{
+        if(target == "Observer"){
+            if(VariableManager.Instance.asteroidStatus==true){
+                Debug.Log("이벤트 코드: "+VariableManager.Instance.eventCode);
+                Debug.Log(VariableManager.Instance.asteroidStatus);
+                RenderUIPanel("Asteroids");
+            }else if(VariableManager.Instance.blackHoleObserved==true){
+                RenderUIPanel("BlackHole");
+            }else{
+                RenderUIPanel("SilentSpace");    
+            }
+        }else{
             interactiveUIPanel.SetActive(false);
             joystick.SetActive(true);
             joystickVision.SetActive(true);
