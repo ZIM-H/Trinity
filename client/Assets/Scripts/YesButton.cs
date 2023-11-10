@@ -34,10 +34,10 @@ public class YesButton : MonoBehaviour, IPointerClickHandler
 
     }
     IEnumerator LackOfFertilizer(float time, float visiblity){
+        yield return new WaitForSeconds(time);
         Color c = fertilizerAlert.GetComponent<TextMeshProUGUI>().color;
         c.a = visiblity;
         fertilizerAlert.GetComponent<TextMeshProUGUI>().color = c;
-        yield return new WaitForSeconds(time);
     }
     public void OnPointerClick(PointerEventData eventData){
         Debug.Log("Yes");
@@ -50,8 +50,8 @@ public class YesButton : MonoBehaviour, IPointerClickHandler
                 VariableManager.Instance.inputFertilizerTry = true;
             }else{
                 VariableManager.Instance.power++;
-                StartCoroutine(LackOfFertilizer(3.5f, 1));
-                StartCoroutine(LackOfFertilizer(0.5f, 0));
+                StartCoroutine(LackOfFertilizer(0.5f, 1));
+                StartCoroutine(LackOfFertilizer(3.5f, 0));
             }
         }else if(target == "FertilizerMaker"){
             VariableManager.Instance.makeFertilizerTry = true;

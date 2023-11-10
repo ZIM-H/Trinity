@@ -48,13 +48,13 @@ public class TouchEvent : MonoBehaviour, IPointerClickHandler
         joystickVision.SetActive(false);
         }else if(VariableManager.Instance.power == 0){
             Color a = alert.GetComponent<TextMeshProUGUI>().color;
-            StartCoroutine(AlertView(3.5f, a, 1));
+            StartCoroutine(AlertView(0.5f, a, 1));
             StartCoroutine(AlertView(3.5f, a, 0));
         }
         IEnumerator AlertView(float time, Color c, float visiblity){
+            yield return new WaitForSeconds(time);
             c.a = visiblity;
             alert.GetComponent<TextMeshProUGUI>().color = c;
-            yield return new WaitForSeconds(time);
         }
         
     }

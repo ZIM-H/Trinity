@@ -23,11 +23,11 @@ public class NoButton : MonoBehaviour, IPointerClickHandler
         Debug.Log("No");
         interactiveUIPanel = GameObject.Find("InteractiveUIPanel");
         if(VariableManager.Instance.asteroidStatus && VariableManager.Instance.blackHoleObserved &&
-         canvas.transform.Find("InteractiveUIPanel").transform.Find("InteractiveCameraImage").transform.Find("InteractiveUI").GetComponent<RawImage>().name == "Asteroids")
+         canvas.transform.Find("InteractiveUIPanel").transform.Find("InteractiveCameraImage").transform.Find("InteractiveUI").GetComponent<RawImage>().texture.name == "Asteroids")
          {
             RenderTexture texture; 
 
-            string PATH = "InteractiveUI/RenderTexture/Render/BlackHole";    //이미지 위치를 저장하는 변수
+            string PATH = "InteractiveUI/RenderTexture/RenderBlackHole";    //이미지 위치를 저장하는 변수
             texture = Resources.Load(PATH, typeof(RenderTexture)) as RenderTexture;  //이미지 로드
             Debug.Log(texture);
             canvas.transform.Find("InteractiveUIPanel").transform.Find("InteractiveCameraImage").GetComponent<RawImage>().texture = texture;
@@ -39,7 +39,6 @@ public class NoButton : MonoBehaviour, IPointerClickHandler
             Debug.Log(templateImage);
             canvas.transform.Find("InteractiveUIPanel").transform.Find("InteractiveCameraImage").transform.Find("InteractiveUI").GetComponent<RawImage>().texture = templateImage;
         }else{
-            
             canvas.transform.Find("InteractiveUIPanel").transform.Find("InteractiveCameraImage").transform.Find("InteractiveUI").transform.Find("Yes").GetComponent<OKButtonDisabler>().Activate();
             canvas.transform.Find("InteractiveUIPanel").transform.Find("InteractiveCameraImage").transform.Find("InteractiveUI").transform.Find("No").GetComponent<OKButtonDisabler>().Activate();
             canvas.transform.Find("InteractiveUIPanel").transform.Find("InteractiveCameraImage").transform.Find("InteractiveUI").transform.Find("OK").GetComponent<OKButtonDisabler>().Deactivate();
