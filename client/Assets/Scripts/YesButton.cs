@@ -51,6 +51,7 @@ public class YesButton : MonoBehaviour, IPointerClickHandler
             if(VariableManager.Instance.fertilizerAmountInRoom > 0){
                 VariableManager.Instance.inputFertilizerTry = true;
             }else{
+                VariableManager.Instance.power++;
                 StartCoroutine(LackOfFertilizer(3.5f));
             }
         }else if(target == "FertilizerMaker"){
