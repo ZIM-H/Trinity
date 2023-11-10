@@ -343,11 +343,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uB2F9\uC2E0\uC740 \uBB34\uC0AC\uD788 \uC0DD\uC874\uD588\uC2B5\uB2C8\uB2E4.\n\uC911\uC559
-    \uC815\uC6D0 \uBE44\uB8CC : 3/4"
+  m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 376093a255a836f45b03b65a797b121b, type: 2}
-  m_sharedMaterial: {fileID: -4155960982659703079, guid: 376093a255a836f45b03b65a797b121b,
+  m_fontAsset: {fileID: 11400000, guid: c625cf755cae05a4994cc07914717996, type: 2}
+  m_sharedMaterial: {fileID: -8362957051966488609, guid: c625cf755cae05a4994cc07914717996,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -429,7 +428,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 562610233}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2a2ec1363960ea54eba59ede21214158, type: 3}
   m_Name: 
@@ -587,10 +586,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "1\uC77C\uCC28 \uC885\uB8CC"
+  m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: e64be1e8f028bc94a8823975d47eef8a, type: 2}
-  m_sharedMaterial: {fileID: -1767274298032661282, guid: e64be1e8f028bc94a8823975d47eef8a,
+  m_fontAsset: {fileID: 11400000, guid: c625cf755cae05a4994cc07914717996, type: 2}
+  m_sharedMaterial: {fileID: -8362957051966488609, guid: c625cf755cae05a4994cc07914717996,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -621,7 +620,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
   m_textAlignment: 65535
@@ -672,7 +671,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1379292959}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2a2ec1363960ea54eba59ede21214158, type: 3}
   m_Name: 
@@ -694,6 +693,7 @@ GameObject:
   - component: {fileID: 1391085314}
   - component: {fileID: 1391085313}
   - component: {fileID: 1391085319}
+  - component: {fileID: 1391085320}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -734,6 +734,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53d2b61ae7e642c46a4af5098680307e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 0.08
 --- !u!114 &1391085314
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -844,6 +845,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa288aea1a0daf14d91620f2584e8b52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1391085320
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1391085311}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc211ac5c8d56294b8f6e636388fba3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputTitle1: "1\uC77C\uCC28 \uC885\uB8CC"
+  inputContext1: "\uAC00\uB098\uB2E4\uB77C\uB9C8\uBC14\uC0AC\uC544\uC790\uCC28\uCE74\uD0C0\uD30C\uD558\uAC70\uB108\uB354\uB7EC\uBA38\uBC84\uC11C\uC5B4\uC800\uCC98\uCEE4\uD130\uD37C\uD5C8"
+  inputTitle2: "2\uC77C\uCC28 \uC2DC\uC791"
+  inputContext2: "\uC288\uB8B0\uB529\uAC70\uC758 \uACE0\uC591\uC774\uB780 \uB9D0\uC57C.
+    \uAD00\uCE21\uD558\uAE30 \uC804\uAE4C\uC9C0\uB294 \uC0C1\uD0DC\uB97C \uC54C \uC218
+    \uAC00 \uC5C6\uC5B4."
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
