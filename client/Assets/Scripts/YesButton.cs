@@ -33,9 +33,8 @@ public class YesButton : MonoBehaviour, IPointerClickHandler
         joystickVision = canvas.transform.Find("AnalogVision").gameObject;
 
     }
-    IEnumerator LackOfFertilizer(float time, float visiblity){
+    IEnumerator LackOfFertilizer(float time, Color c, float visiblity){
         yield return new WaitForSeconds(time);
-        Color c = fertilizerAlert.GetComponent<TextMeshProUGUI>().color;
         c.a = visiblity;
         fertilizerAlert.GetComponent<TextMeshProUGUI>().color = c;
     }
@@ -50,8 +49,10 @@ public class YesButton : MonoBehaviour, IPointerClickHandler
                 VariableManager.Instance.inputFertilizerTry = true;
             }else{
                 VariableManager.Instance.power++;
-                StartCoroutine(LackOfFertilizer(0.5f, 1));
-                StartCoroutine(LackOfFertilizer(3.5f, 0));
+
+                Color a = fertilizerAlert.GetComponent<TextMeshProUGUI>().color;
+                StartCoroutine(LackOfFertilizer(0.5f, a, 1));
+                StartCoroutine(LackOfFertilizer(3.5f, a, 0));
             }
         }else if(target == "FertilizerMaker"){
             VariableManager.Instance.makeFertilizerTry = true;
