@@ -22,6 +22,8 @@ public class TextTyper : MonoBehaviour
     {
         titleText = transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>();
         contextText = transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>();
+        inputTitle1 = VariableManager.Instance.nightTitleText;
+        inputContext1 = VariableManager.Instance.nightContextText;
         StartCoroutine(TypeTotal(6.0f));
     }
 
@@ -31,6 +33,8 @@ public class TextTyper : MonoBehaviour
         Type(inputTitle1, inputContext1);
         yield return new WaitForSeconds(time);
         TypeInitializer();
+        inputTitle2 = VariableManager.Instance.morningTitleText;
+        inputContext2 = VariableManager.Instance.morningContextText;
         Type(inputTitle2, inputContext2);
     }
 

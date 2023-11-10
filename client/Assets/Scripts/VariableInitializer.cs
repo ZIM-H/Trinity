@@ -32,7 +32,6 @@ public class VariableInitializer : MonoBehaviour
             VariableManager.Instance.workLimit = 0;
             VariableManager.Instance.usedTaurine = false;
         }
-        VariableManager.Instance.date ++;
         VariableManager.Instance.morningEvent = 0;
         int code = VariableManager.Instance.eventCode;
         if ( code%2 == 1 ) {
