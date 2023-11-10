@@ -117,6 +117,8 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
                         gameDefeatedProcess(beforeGameRoom);
                     }
                 }
+            } else if(requestType.equals("ping")) {
+                sendDataToClient(ctx.channel().id().toString(), "pong");
             }
         } else {
             String message = "unsupported frame type: " + frame.getClass().getName();
