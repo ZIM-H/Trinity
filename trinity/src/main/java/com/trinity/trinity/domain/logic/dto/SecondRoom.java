@@ -4,14 +4,12 @@ import com.trinity.trinity.domain.control.dto.request.SecondRoomPlayerRequestDto
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
-@Setter
 @NoArgsConstructor
 public class SecondRoom {
     private int fertilizerAmount;
-    private String player;
+    private String userId;
     private String message;
     private int carbonCaptureStatus;
     private int carbonCaptureTryCount;
@@ -24,10 +22,9 @@ public class SecondRoom {
     private boolean makeFertilizerTry;
 
     @Builder
-    public SecondRoom(int fertilizerAmount, String player, String message, int carbonCaptureStatus, int carbonCaptureTryCount, boolean carbonCaptureTry, boolean farmStatus, boolean farmTry, boolean taurineFilterStatus, boolean taurineFilterTry, boolean inputFertilizerTry, boolean makeFertilizerTry) {
-
+    public SecondRoom(int fertilizerAmount, String userId, String message, int carbonCaptureStatus, int carbonCaptureTryCount, boolean carbonCaptureTry, boolean farmStatus, boolean farmTry, boolean taurineFilterStatus, boolean taurineFilterTry, boolean inputFertilizerTry, boolean makeFertilizerTry) {
         this.fertilizerAmount = fertilizerAmount;
-        this.player = player;
+        this.userId = userId;
         this.message = message;
         this.carbonCaptureStatus = carbonCaptureStatus;
         this.carbonCaptureTryCount = carbonCaptureTryCount;
@@ -42,7 +39,7 @@ public class SecondRoom {
 
     public static SecondRoom toDto(SecondRoomPlayerRequestDto dto) {
         return SecondRoom.builder()
-                .player(dto.getUserId())
+                .userId(dto.getUserId())
                 .message(dto.getMessage())
                 .inputFertilizerTry(dto.isInputFertilizerTry())
                 .makeFertilizerTry(dto.isMakeFertilizerTry())
@@ -58,5 +55,48 @@ public class SecondRoom {
         this.carbonCaptureTryCount = oldRoom.getCarbonCaptureTryCount();
         this.taurineFilterStatus = oldRoom.isTaurineFilterStatus();
         this.farmStatus = oldRoom.isFarmStatus();
+    }
+
+    public void modifyFarmStatus(boolean farmStatus) {
+        this.farmStatus = farmStatus;
+    }
+
+    public void modifyFarmTry(boolean farmTry) {
+        this.farmTry = farmTry;
+    }
+
+    public void modifyTaurineFilterStatus(boolean taurineFilterStatus) {
+        this.taurineFilterStatus = taurineFilterStatus;
+    }
+    public void modifyTaurineFilterTry(boolean taurineFilterTry) {
+        this.taurineFilterTry = taurineFilterTry;
+    }
+
+    public void modifyCarbonCaptureStatus(int carbonCaptureStatus) {
+        this.carbonCaptureStatus = carbonCaptureStatus;
+    }
+
+    public void modifyCarbonCaptureTry(boolean carbonCaptureTry) {
+        this.carbonCaptureTry = carbonCaptureTry;
+    }
+
+    public void modifyCarbonCaptureTryCount(int carbonCaptureTryCount) {
+        this.carbonCaptureTryCount = carbonCaptureTryCount;
+    }
+
+    public void modifyUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public void modifyMakeFertilizerTry(boolean makeFertilizerTry) {
+        this.makeFertilizerTry = makeFertilizerTry;
+    }
+
+    public void modifyFertilizerAmount(int fertilizerAmount) {
+        this.fertilizerAmount = fertilizerAmount;
+    }
+
+    public void modifyInputFertilizerTry(boolean inputFertilizerTry) {
+        this.inputFertilizerTry = inputFertilizerTry;
     }
 }
