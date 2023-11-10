@@ -49,7 +49,7 @@ public class CharacterControl : MonoBehaviour
     void Start()
     {
         characterController = GetComponent<CharacterController>();
-
+        Debug.Log("블랙홀 뜨나 안뜨나 : " + VariableManager.Instance.blackHoleObserved);
         // footsteps.Volum_max = walk_volum_max;
         // footsteps.Volum_min = walk_volum_min;
         // footsteps.step_Distance = walk_step_distance;
@@ -66,10 +66,10 @@ public class CharacterControl : MonoBehaviour
         moveDirection = (forward * curSpeedX) + (right * curSpeedY);
         moveDirection.y = movementDirectionY;
         
-        // if (!characterController.isGrounded)
-        // {
-        //     moveDirection.y -= gravity * Time.deltaTime;
-        // }
+        if (!characterController.isGrounded)
+        {
+            moveDirection.y -= gravity * Time.deltaTime;
+        }
        
         characterController.Move(moveDirection * Time.deltaTime);
 

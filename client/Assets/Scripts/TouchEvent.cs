@@ -72,6 +72,8 @@ public class TouchEvent : MonoBehaviour, IPointerClickHandler
         return true;
         }else if(name == "Weapon"){
         return true;
+        }else if(name == "Barrier" && VariableManager.Instance.barrierUpgrade){
+        return true;
         }
         else{
         return false;
@@ -84,7 +86,6 @@ public class TouchEvent : MonoBehaviour, IPointerClickHandler
                 transform.GetChild(i).gameObject.GetComponent<cakeslice.Outline>().enabled = false;
             }
         }
-        
     }
 }
     // Update is called once per frame

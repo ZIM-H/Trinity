@@ -41,8 +41,8 @@ public class NoButton : MonoBehaviour, IPointerClickHandler
         }else{
             
             canvas.transform.Find("InteractiveUIPanel").transform.Find("InteractiveCameraImage").transform.Find("InteractiveUI").transform.Find("Yes").GetComponent<OKButtonDisabler>().Activate();
-            canvas.transform.Find("InteractiveUIPanel").transform.Find("InteractiveCameraImage").transform.Find("InteractiveUI").transform.Find("No").GetComponent<OKButtonDisabler>().Deactivate();
-            canvas.transform.Find("InteractiveUIPanel").transform.Find("InteractiveCameraImage").transform.Find("InteractiveUI").transform.Find("OK").GetComponent<OKButtonDisabler>().Activate();
+            canvas.transform.Find("InteractiveUIPanel").transform.Find("InteractiveCameraImage").transform.Find("InteractiveUI").transform.Find("No").GetComponent<OKButtonDisabler>().Activate();
+            canvas.transform.Find("InteractiveUIPanel").transform.Find("InteractiveCameraImage").transform.Find("InteractiveUI").transform.Find("OK").GetComponent<OKButtonDisabler>().Deactivate();
             interactiveUIPanel.SetActive(false);
             joystick.SetActive(true);
             joystickVision.SetActive(true);
