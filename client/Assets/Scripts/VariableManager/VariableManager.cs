@@ -31,12 +31,12 @@ public class VariableManager : MonoBehaviour
     public bool inputFertilizerTry;
     public bool makeFertilizerTry;
     // 1번 비료방 정보 및 행동
-    public bool purifierStatus;
-    public bool farmStatus;
+    public bool purifierStatus = true;
     public bool fertilizerUpgrade;
     public bool fertilizerUpgradeTry;
     public bool purifierTry;
     // 2번 타우린방 정보 및 행동
+    public bool farmStatus = true;
     public int carbonCaptureStatus;
     public int carbonCaptureTryCount;
     public bool carbonCaptureTry;
@@ -48,7 +48,7 @@ public class VariableManager : MonoBehaviour
     public bool barrierDevTry;
     public bool barrierUpgrade;
     public bool blackHoleObserved;
-
+    public bool observerTry; 
 
     private void Awake()
     {
@@ -135,7 +135,7 @@ public class VariableManager : MonoBehaviour
         farmTry = false;
         asteroidDestroyTry = false;
         barrierDevTry = false;
-
+        observerTry = false;
     }
 
     public class DayData

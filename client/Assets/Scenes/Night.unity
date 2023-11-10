@@ -694,6 +694,7 @@ GameObject:
   - component: {fileID: 1391085313}
   - component: {fileID: 1391085319}
   - component: {fileID: 1391085320}
+  - component: {fileID: 1391085321}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -863,6 +864,18 @@ MonoBehaviour:
   inputContext2: "\uC288\uB8B0\uB529\uAC70\uC758 \uACE0\uC591\uC774\uB780 \uB9D0\uC57C.
     \uAD00\uCE21\uD558\uAE30 \uC804\uAE4C\uC9C0\uB294 \uC0C1\uD0DC\uB97C \uC54C \uC218
     \uAC00 \uC5C6\uC5B4."
+--- !u!114 &1391085321
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1391085311}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc5b0ad8691672e42a0055c0ad1b94c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
