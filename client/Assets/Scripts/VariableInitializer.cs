@@ -17,6 +17,7 @@ public class VariableInitializer : MonoBehaviour
 
     public void VariableControl()
     {   
+        Debug.Log("VariableControl 실행");
         if (VariableManager.Instance.power < VariableManager.Instance.workLimit) {
             VariableManager.Instance.power = 0;
             VariableManager.Instance.workLimit = 0;
