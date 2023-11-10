@@ -31,6 +31,7 @@ public class MatchQServiceImpl implements MatchQService {
     private final WebClientService webClientService;
 
     @Override
+    @Synchronized
     public void joinQueue(String userId) {
         double time = System.currentTimeMillis();
         matchRedisTemplate.opsForZSet().add("matchQueue", userId, time);
@@ -110,6 +111,7 @@ public class MatchQServiceImpl implements MatchQService {
         });
     }
 
+    @Synchronized
     private void recoverList(List<Pair<String, Double>> waitingList) {
         for (Pair<String, Double> userAndScore : waitingList) {
             matchRedisTemplate.opsForZSet().add("matchQueue", userAndScore.getFirst(), userAndScore.getSecond());
