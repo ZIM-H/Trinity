@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.trinity.trinity.domain.control.dto.PlayerDto;
 import com.trinity.trinity.domain.control.dto.response.*;
 import com.trinity.trinity.domain.logic.dto.GameRoom;
-import com.trinity.trinity.domain.logic.service.GameRoomService;
+import com.trinity.trinity.domain.logic.service.CreateService;
 import com.trinity.trinity.domain.control.enums.UserStatus;
 import com.trinity.trinity.global.redis.service.RedisService;
 import com.trinity.trinity.global.webClient.service.WebClientService;
@@ -21,7 +21,7 @@ public class GameConnectServiceImpl implements GameConnectService {
 
     private final RedisService redisService;
     private final WebClientService webClientService;
-    private final GameRoomService gameRoomService;
+    private final CreateService createService;
     private final WebSocketFrameHandler webSocketFrameHandler;
 
     @Override
@@ -42,7 +42,7 @@ public class GameConnectServiceImpl implements GameConnectService {
     @Override
     public void createGameRoom(List<PlayerDto> players) {
 
-        GameRoom gameRoom = gameRoomService.createGameRoom(players);
+        GameRoom gameRoom = createService.createGameRoom(players);
         redisService.saveGameRoomUserStatus(gameRoom.getGameRoomId());
 
         Gson gson = new Gson();
@@ -72,17 +72,17 @@ public class GameConnectServiceImpl implements GameConnectService {
         String secondRoom = gson.toJson(secondRoomResponseDto);
         String thirdRoom = gson.toJson(thirdRoomResponseDto);
 
-        String firstUserClientId = redisService.getClientId(gameRoom.getFirstRoom().getPlayer());
+        String firstUserClientId = redisService.getClientId(gameRoom.getFirstRoom().getUserId());
         String secondUserClientId = redisService.getClientId(gameRoom.getSecondRoom().getPlayer());
-        String thirdUserClientId = redisService.getClientId(gameRoom.getThirdRoom().getPlayer());
+        String thirdUserClientId = redisService.getClientId(gameRoom.getThirdRoom().getUserId());
 
         webSocketFrameHandler.sendDataToClient(firstUserClientId, firstRoom);
         webSocketFrameHandler.sendDataToClient(secondUserClientId, secondRoom);
         webSocketFrameHandler.sendDataToClient(thirdUserClientId, thirdRoom);
 
-        redisService.saveData(gameRoom.getFirstRoom().getPlayer(), String.valueOf(UserStatus.PLAYING));
+        redisService.saveData(gameRoom.getFirstRoom().getUserId(), String.valueOf(UserStatus.PLAYING));
         redisService.saveData(gameRoom.getSecondRoom().getPlayer(), String.valueOf(UserStatus.PLAYING));
-        redisService.saveData(gameRoom.getThirdRoom().getPlayer(), String.valueOf(UserStatus.PLAYING));
+        redisService.saveData(gameRoom.getThirdRoom().getUserId(), String.valueOf(UserStatus.PLAYING));
 
     }
 }

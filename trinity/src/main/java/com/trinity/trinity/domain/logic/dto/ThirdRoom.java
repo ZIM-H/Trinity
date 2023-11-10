@@ -4,14 +4,12 @@ import com.trinity.trinity.domain.control.dto.request.ThirdRoomPlayerRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
-@Setter
 @NoArgsConstructor
 public class ThirdRoom {
     private int fertilizerAmount;
-    private String player;
+    private String userId;
     private String message;
     private boolean asteroidStatus;
     private boolean blackholeStatus;
@@ -23,9 +21,9 @@ public class ThirdRoom {
     private boolean asteroidDestroyTry;
 
     @Builder
-    public ThirdRoom(int fertilizerAmount, String player, String message, boolean asteroidStatus, boolean blackholeStatus, int barrierStatus, boolean barrierDevTry, String developer, boolean inputFertilizerTry, boolean makeFertilizerTry, boolean asteroidDestroyTry) {
+    public ThirdRoom(int fertilizerAmount, String userId, String message, boolean asteroidStatus, boolean blackholeStatus, int barrierStatus, boolean barrierDevTry, String developer, boolean inputFertilizerTry, boolean makeFertilizerTry, boolean asteroidDestroyTry) {
         this.fertilizerAmount = fertilizerAmount;
-        this.player = player;
+        this.userId = userId;
         this.message = message;
         this.asteroidStatus = asteroidStatus;
         this.blackholeStatus = blackholeStatus;
@@ -39,7 +37,7 @@ public class ThirdRoom {
 
     public static ThirdRoom toDto(ThirdRoomPlayerRequestDto dto) {
         return ThirdRoom.builder()
-                .player(dto.getUserId())
+                .userId(dto.getUserId())
                 .message(dto.getMessage())
                 .inputFertilizerTry(dto.isInputFertilizerTry())
                 .makeFertilizerTry(dto.isMakeFertilizerTry())
@@ -54,5 +52,45 @@ public class ThirdRoom {
         this.barrierStatus = oldRoom.getBarrierStatus();
         this.developer = oldRoom.getDeveloper();
         this.blackholeStatus = oldRoom.isBlackholeStatus();
+    }
+
+    public void modifyBarrierDevTry(boolean barrierDevTry) {
+        this.barrierDevTry = barrierDevTry;
+    }
+
+    public void modifyBarrierStatus(int status) {
+        this.barrierStatus = status;
+    }
+
+    public void modifyDeveloper(String developer) {
+        this.developer = developer;
+    }
+
+    public void modifyAsteroidDestroyTry(boolean asteroidDestroyTry) {
+        this.asteroidDestroyTry = asteroidDestroyTry;
+    }
+
+    public void modifyAsteroidStatus(boolean asteroidStatus) {
+        this.asteroidStatus = asteroidStatus;
+    }
+
+    public void modifyBlackholeStatus(boolean blackholeStatus) {
+        this.blackholeStatus = blackholeStatus;
+    }
+
+    public void modifyUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public void modifyMakeFertilizerTry(boolean makeFertilizerTry) {
+        this.makeFertilizerTry = makeFertilizerTry;
+    }
+
+    public void modifyFertilizerAmount(int fertilizerAmount) {
+        this.fertilizerAmount = fertilizerAmount;
+    }
+
+    public void modifyInputFertilizerTry(boolean inputFertilizerTry) {
+        this.inputFertilizerTry = inputFertilizerTry;
     }
 }

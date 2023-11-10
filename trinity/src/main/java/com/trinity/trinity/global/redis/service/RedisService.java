@@ -1,17 +1,14 @@
 package com.trinity.trinity.global.redis.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.trinity.trinity.domain.control.enums.UserStatus;
 import com.trinity.trinity.global.dto.ClientSession;
 import com.trinity.trinity.domain.logic.dto.GameRoomCheck;
 import lombok.RequiredArgsConstructor;
 import lombok.Synchronized;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 
-@Slf4j
 @Component
 @RequiredArgsConstructor
 public class RedisService {

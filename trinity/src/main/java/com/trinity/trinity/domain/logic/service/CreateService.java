@@ -1,16 +1,51 @@
 package com.trinity.trinity.domain.logic.service;
 
-import com.trinity.trinity.domain.logic.dto.FirstRoom;
-import com.trinity.trinity.domain.logic.dto.SecondRoom;
-import com.trinity.trinity.domain.logic.dto.ThirdRoom;
+import com.trinity.trinity.domain.control.dto.PlayerDto;
+import com.trinity.trinity.domain.logic.dto.*;
+import com.trinity.trinity.global.redis.service.GameRoomRedisService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.UUID;
+
 @Service
+@RequiredArgsConstructor
 public class CreateService {
-    public ThirdRoom createThirdRoom(String playerId) {
+
+    private final GameRoomRedisService gameRoomRedisService;
+
+    public GameRoom createGameRoom(List<PlayerDto> players) {
+        String gameRoomId = UUID.randomUUID().toString();
+
+        FirstRoom firstRoom = createFirstRoom(players.get(0).getUserId());
+        SecondRoom secondRoom = createSecondRoom(players.get(1).getUserId());
+        ThirdRoom thirdRoom = createThirdRoom(players.get(2).getUserId());
+
+        GameRoom gameRoom = GameRoom.builder()
+                .gameRoomId(gameRoomId)
+                .foodAmount(3)
+                .fertilizerAmount(0)
+                .playerStatus(false)
+                .birthday(false)
+                .carbonCaptureNotice(false)
+                .blackholeStatus(new boolean[13])
+                .events(Events.builder().build())
+                .roundNo(1)
+                .firstRoom(firstRoom)
+                .secondRoom(secondRoom)
+                .thirdRoom(thirdRoom)
+                .build();
+
+        gameRoomRedisService.createGameRoom(gameRoom);
+
+        return gameRoom;
+    }
+
+    public ThirdRoom createThirdRoom(String userId) {
         return ThirdRoom.builder()
                 .fertilizerAmount(3)
-                .player(playerId)
+                .userId(userId)
                 .message("")
                 .asteroidStatus(false)
                 .blackholeStatus(false)
@@ -23,10 +58,10 @@ public class CreateService {
                 .build();
     }
 
-    public SecondRoom createSecondRoom(String playerId) {
+    public SecondRoom createSecondRoom(String userId) {
         return SecondRoom.builder()
                 .fertilizerAmount(3)
-                .player(playerId)
+                .player(userId)
                 .message("")
                 .carbonCaptureStatus(0)
                 .carbonCaptureTry(false)
@@ -38,10 +73,10 @@ public class CreateService {
                 .build();
     }
 
-    public FirstRoom createFirstRoom(String playerId) {
+    public FirstRoom createFirstRoom(String userId) {
         return FirstRoom.builder()
                 .fertilizerAmount(3)
-                .player(playerId)
+                .userId(userId)
                 .message("")
                 .fertilizerUpgradeStatus(0)
                 .fertilizerUpgradeTry(false)
