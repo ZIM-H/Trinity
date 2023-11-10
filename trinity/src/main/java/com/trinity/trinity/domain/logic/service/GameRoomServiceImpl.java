@@ -139,10 +139,19 @@ public class GameRoomServiceImpl implements GameRoomService {
             movePlayer(1, gameRoom);
         }
 
-//        // 1일차에만 랜덤 이벤트 추출
-//        if (gameRoom.getRoundNo() == 1) {
-//            shuffleEvent(events);
-//        }
+        gameRoom = checkEvent(gameRoom);
+
+        // 이산화탄소 고장 일수 2일차인지 판단
+        if (secondRoom.getCarbonCaptureStatus() == 2) gameRoom.setCarbonCaptureNotice(true);
+
+        // 로직 끝
+        gameRoomRedisService.saveGameRoomToTemp(gameRoom);
+        gameRoomRedisService.saveGameRoom(gameRoom);
+    }
+
+    @Override
+    public GameRoom checkEvent(GameRoom gameRoom) {
+        Events events = gameRoom.getEvents();
 
         // 라운드 수와 이벤트 종류에 따라 계산한 event 종류 저장
         int eventIdx = 0;
@@ -179,12 +188,7 @@ public class GameRoomServiceImpl implements GameRoomService {
 
         gameRoom.setEvent(eventIdx);
 
-        // 이산화탄소 고장 일수 2일차인지 판단
-        if (secondRoom.getCarbonCaptureStatus() == 2) gameRoom.setCarbonCaptureNotice(true);
-
-        // 로직 끝
-        gameRoomRedisService.saveGameRoomToTemp(gameRoom);
-        gameRoomRedisService.saveGameRoom(gameRoom);
+        return gameRoom;
     }
 
     @Override
@@ -200,47 +204,6 @@ public class GameRoomServiceImpl implements GameRoomService {
     public void endGame(String gameRoomId) {
         gameRoomRedisService.deleteGameRoom(gameRoomId);
     }
-
-
-//    private void shuffleEvent(Events events) {
-//
-//        // 이벤트 등장 일수 랜덤 추출
-//        int[] randomEvent = shuffleArray(events.getAsteroid(), 12);
-//        events.setAsteroid(randomEvent);
-//
-//        randomEvent = shuffleArray(events.getBlackhole(), 9);
-//        events.setBlackhole(randomEvent);
-//
-//        randomEvent = shuffleArray(events.getBirthday(), 12);
-//        events.setBirthday(randomEvent);
-//
-//        randomEvent = shuffleArray(events.getSickness(), 12);
-//        events.setSickness(randomEvent);
-//
-//        randomEvent = shuffleArray(events.getPurifier(), 9);
-//        events.setPurifier(randomEvent);
-//
-//        randomEvent = shuffleArray(events.getCarbonCapture(), 9);
-//        events.setCarbonCapture(randomEvent);
-//    }
-//
-//    // 랜덤 이벤트 추출
-//    private int[] shuffleArray(int[] array, int size) {
-//        Integer[] days = new Integer[size];
-//
-//        for (int i = 0; i < size; i++) {
-//            days[i] = i + 1;
-//        }
-//
-//        List<Integer> list = Arrays.asList(days);
-//        Collections.shuffle(list);
-//
-//        for (int i = 0; i < array.length; i++) {
-//            array[i] = list.get(i);
-//        }
-//
-//        return array;
-//    }
 
     private void movePlayer(int direction, GameRoom gameRoom) {
         FirstRoom firstRoom = gameRoom.getFirstRoom();

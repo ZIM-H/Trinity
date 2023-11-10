@@ -12,4 +12,5 @@ public interface GameRoomService {
 
     void endGame(String gameRoomId);
 
+    GameRoom checkEvent(GameRoom gameRoom);
 }

@@ -14,6 +14,7 @@ import java.util.UUID;
 public class CreateService {
 
     private final GameRoomRedisService gameRoomRedisService;
+    private final GameRoomService gameRoomService;
 
     public GameRoom createGameRoom(List<PlayerDto> players) {
         String gameRoomId = UUID.randomUUID().toString();
@@ -40,6 +41,7 @@ public class CreateService {
                 .thirdRoom(thirdRoom)
                 .build();
 
+        gameRoomService.checkEvent(gameRoom);
         gameRoomRedisService.createGameRoom(gameRoom);
 
         return gameRoom;
