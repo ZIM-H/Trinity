@@ -144,6 +144,20 @@ public class GameRoomServiceImpl implements GameRoomService {
 //            shuffleEvent(events);
 //        }
 
+        gameRoom = checkEvent(gameRoom);
+
+        // 이산화탄소 고장 일수 2일차인지 판단
+        if (secondRoom.getCarbonCaptureStatus() == 2) gameRoom.setCarbonCaptureNotice(true);
+
+        // 로직 끝
+        gameRoomRedisService.saveGameRoomToTemp(gameRoom);
+        gameRoomRedisService.saveGameRoom(gameRoom);
+    }
+
+    @Override
+    public GameRoom checkEvent(GameRoom gameRoom) {
+        Events events = gameRoom.getEvents();
+
         // 라운드 수와 이벤트 종류에 따라 계산한 event 종류 저장
         int eventIdx = 0;
 
@@ -179,12 +193,7 @@ public class GameRoomServiceImpl implements GameRoomService {
 
         gameRoom.setEvent(eventIdx);
 
-        // 이산화탄소 고장 일수 2일차인지 판단
-        if (secondRoom.getCarbonCaptureStatus() == 2) gameRoom.setCarbonCaptureNotice(true);
-
-        // 로직 끝
-        gameRoomRedisService.saveGameRoomToTemp(gameRoom);
-        gameRoomRedisService.saveGameRoom(gameRoom);
+        return gameRoom;
     }
 
     @Override
