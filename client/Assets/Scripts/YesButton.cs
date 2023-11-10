@@ -49,7 +49,6 @@ public class YesButton : MonoBehaviour, IPointerClickHandler
                 VariableManager.Instance.inputFertilizerTry = true;
             }else{
                 VariableManager.Instance.power++;
-
                 Color a = fertilizerAlert.GetComponent<TextMeshProUGUI>().color;
                 StartCoroutine(LackOfFertilizer(0.5f, a, 1));
                 StartCoroutine(LackOfFertilizer(3.5f, a, 0));
