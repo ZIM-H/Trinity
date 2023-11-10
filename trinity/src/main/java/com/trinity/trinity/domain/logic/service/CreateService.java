@@ -22,6 +22,9 @@ public class CreateService {
         SecondRoom secondRoom = createSecondRoom(players.get(1).getUserId());
         ThirdRoom thirdRoom = createThirdRoom(players.get(2).getUserId());
 
+        Events events = Events.builder().build();
+        events.shuffleEvent();
+
         GameRoom gameRoom = GameRoom.builder()
                 .gameRoomId(gameRoomId)
                 .foodAmount(3)
@@ -30,7 +33,7 @@ public class CreateService {
                 .birthday(false)
                 .carbonCaptureNotice(false)
                 .blackholeStatus(new boolean[13])
-                .events(Events.builder().build())
+                .events(events)
                 .roundNo(1)
                 .firstRoom(firstRoom)
                 .secondRoom(secondRoom)
