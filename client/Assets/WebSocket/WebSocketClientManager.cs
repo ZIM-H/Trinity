@@ -55,6 +55,11 @@ public class WebSocketClientManager : MonoBehaviour
                 Debug.Log("저장된 userId: " + userId);
                 VariableManager.Instance.playerId = userId;
                 SendUserId(userId);
+                // 연결되어 있을 때만 주기적으로 메시지 전송 시작
+                UnityMainThreadDispatcher.Enqueue(() =>
+                {
+                    InvokeRepeating("SendPeriodicMessage", 0f, 30f);
+                });
             };
             webSocket.OnError += (sender, e) => Debug.LogError("WebSocket error: " + e.Message);
             webSocket.ConnectAsync();
@@ -92,6 +97,18 @@ public class WebSocketClientManager : MonoBehaviour
                 }
             };
 
+        }
+    }
+
+    private void SendPeriodicMessage()
+    {
+        // 서버에 주기적으로 메시지를 보내는 로직을 추가
+        if (isConnected)
+        {
+            Debug.Log("Sending periodic message to the server");
+
+            // 여기에 원하는 메시지 전송 로직 추가
+            webSocket.Send("{\"type\":\"ping\"}");
         }
     }
 
