@@ -12,7 +12,7 @@ public class TouchEvent : MonoBehaviour, IPointerClickHandler
     GameObject canvas;
     GameObject joystick;
     GameObject joystickVision;
-    GameObject alert;
+    GameObject player;
     void Start()
     {
         objectName = this.gameObject.name;
@@ -22,7 +22,7 @@ public class TouchEvent : MonoBehaviour, IPointerClickHandler
         joystick = GameObject.Find("Analog");
         joystickVision = GameObject.Find("AnalogVision");
         canvas = GameObject.Find("Canvas");
-        alert = canvas.transform.Find("Alert").gameObject;
+        player = GameObject.Find("Player");
     }
     public void OnPointerClick(PointerEventData eventData){
         if(condition == false && VariableManager.Instance.power > 0){
@@ -47,12 +47,7 @@ public class TouchEvent : MonoBehaviour, IPointerClickHandler
         joystick.SetActive(false);
         joystickVision.SetActive(false);
         }else if(VariableManager.Instance.power == 0){
-        StartCoroutine(AlertView(3.0f));
-        }
-        IEnumerator AlertView(float time){
-            alert.SetActive(true);
-            yield return new WaitForSeconds(time);
-            alert.SetActive(false);
+        player.GetComponent<CoroutineController>().AlertCoroutine();
         }
         
     }

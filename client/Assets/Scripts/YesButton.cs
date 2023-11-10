@@ -21,22 +21,17 @@ public class YesButton : MonoBehaviour, IPointerClickHandler
     GameObject Target;
     GameObject canvas;
     GameObject weapon;
-    GameObject fertilizerAlert;
+    GameObject player;
     void Start()
     {   
         powerBar = GameObject.Find("Fill");
         mainCamera = GameObject.Find("Main Camera");
         weapon = GameObject.Find("Weapon");
         canvas = GameObject.Find("Canvas");
-        fertilizerAlert = canvas.transform.Find("FertilizerAlert").gameObject;
+        player = GameObject.Find("Player");
         joystick = canvas.transform.Find("Analog").gameObject;
         joystickVision = canvas.transform.Find("AnalogVision").gameObject;
 
-    }
-    IEnumerator LackOfFertilizer(float time){
-        fertilizerAlert.SetActive(true);
-        yield return new WaitForSeconds(time);
-        fertilizerAlert.SetActive(false);
     }
     public void OnPointerClick(PointerEventData eventData){
         Debug.Log("Yes");
@@ -49,7 +44,7 @@ public class YesButton : MonoBehaviour, IPointerClickHandler
                 VariableManager.Instance.inputFertilizerTry = true;
             }else{
                 VariableManager.Instance.power++;
-                StartCoroutine(LackOfFertilizer(3f));
+                player.GetComponent<CoroutineController>().FertilizerAlertCoroutine();
             }
         }else if(target == "FertilizerMaker"){
             VariableManager.Instance.makeFertilizerTry = true;
