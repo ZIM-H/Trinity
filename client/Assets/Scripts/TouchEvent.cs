@@ -1,3 +1,5 @@
+using System.Collections;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -10,6 +12,7 @@ public class TouchEvent : MonoBehaviour, IPointerClickHandler
     GameObject canvas;
     GameObject joystick;
     GameObject joystickVision;
+    GameObject alert;
     void Start()
     {
         objectName = this.gameObject.name;
@@ -19,6 +22,7 @@ public class TouchEvent : MonoBehaviour, IPointerClickHandler
         joystick = GameObject.Find("Analog");
         joystickVision = GameObject.Find("AnalogVision");
         canvas = GameObject.Find("Canvas");
+        alert = GameObject.Find("Alert");
     }
     public void OnPointerClick(PointerEventData eventData){
         if(condition == false && VariableManager.Instance.power > 0){
@@ -43,9 +47,16 @@ public class TouchEvent : MonoBehaviour, IPointerClickHandler
         joystick.SetActive(false);
         joystickVision.SetActive(false);
         }else if(VariableManager.Instance.power == 0){
-            Debug.Log("힘이 없음");
+            Color a = alert.GetComponent<TextMeshProUGUI>().color;
+            StartCoroutine(AlertView(3.5f, a));
         }
-
+        IEnumerator AlertView(float time, Color c){
+            c.a = 1;
+            c = alert.GetComponent<TextMeshProUGUI>().color;
+            yield return new WaitForSeconds(time);
+            c.a = 0;
+            c = alert.GetComponent<TextMeshProUGUI>().color;
+        }
         
     }
     public bool CanTouchThisObject(string name){

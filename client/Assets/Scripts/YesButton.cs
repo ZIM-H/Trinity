@@ -5,11 +5,14 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
+using DG.Tweening;
+using Unity.VisualScripting;
 
 public class YesButton : MonoBehaviour, IPointerClickHandler
 {
 
     // Start is called before the first frame update
+    GameObject powerBar;
     GameObject joystick; 
     GameObject joystickVision;
     GameObject interactiveUIPanel;
@@ -18,8 +21,10 @@ public class YesButton : MonoBehaviour, IPointerClickHandler
     GameObject Target;
     GameObject canvas;
     GameObject weapon;
+
     void Start()
     {   
+        powerBar = GameObject.Find("Fill");
         mainCamera = GameObject.Find("Main Camera");
         weapon = GameObject.Find("Weapon");
         canvas = GameObject.Find("Canvas");
@@ -45,6 +50,7 @@ public class YesButton : MonoBehaviour, IPointerClickHandler
             VariableManager.Instance.carbonCaptureTry = true;
         }else if(target == "Taurine"){
             VariableManager.Instance.taurineFilterTry = true;
+            VariableManager.Instance.hasTaurine = 1;
         }else if(target == "CentralPark"){
             VariableManager.Instance.farmTry = true;
         }else if(target == "Weapon"){
@@ -64,13 +70,16 @@ public class YesButton : MonoBehaviour, IPointerClickHandler
                 }
             }
         VariableManager.Instance.power--;
+        powerBar.transform.DOScaleX(0.335f*VariableManager.Instance.power, 1.5f);
+        
         if(VariableManager.Instance.power == VariableManager.Instance.workLimit){
+            powerBar.GetComponent<UnityEngine.UI.Image>().DOColor(Color.black, 2.0f);
             Color c = mainCamera.GetComponent<cakeslice.OutlineEffect>().lineColor0;
             c.r = 1;
             c.g = 0;
             mainCamera.GetComponent<cakeslice.OutlineEffect>().lineColor0 = c;
         }
-        else if(VariableManager.Instance.power == 0){
+        if(VariableManager.Instance.power == 0){
             mainCamera.GetComponent<cakeslice.OutlineAnimation>().enabled = false;
             mainCamera.GetComponent<cakeslice.OutlineEffect>().enabled = false;
             

@@ -22,16 +22,16 @@ public class TextTyper : MonoBehaviour
     {
         titleText = transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>();
         contextText = transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>();
-        StartCoroutine(TypeTotal(6.0f, inputTitle1, inputContext1, inputTitle2, inputContext2));
+        StartCoroutine(TypeTotal(6.0f));
     }
 
-    IEnumerator TypeTotal(float time, string inputT1, string inputC1, string inputT2, string inputC2)
+    IEnumerator TypeTotal(float time)
     {
         TypeInitializer();
-        Type(inputT1, inputC1);
+        Type(inputTitle1, inputContext1);
         yield return new WaitForSeconds(time);
         TypeInitializer();
-        Type(inputT2, inputC2);
+        Type(inputTitle2, inputContext2);
     }
 
 
