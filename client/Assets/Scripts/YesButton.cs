@@ -7,7 +7,7 @@ using UnityEngine.UI;
 using UnityEngine.UIElements;
 using DG.Tweening;
 using Unity.VisualScripting;
-
+using TMPro;
 public class YesButton : MonoBehaviour, IPointerClickHandler
 {
 
@@ -21,16 +21,25 @@ public class YesButton : MonoBehaviour, IPointerClickHandler
     GameObject Target;
     GameObject canvas;
     GameObject weapon;
-
+    GameObject fertilizerAlert;
     void Start()
     {   
         powerBar = GameObject.Find("Fill");
         mainCamera = GameObject.Find("Main Camera");
         weapon = GameObject.Find("Weapon");
         canvas = GameObject.Find("Canvas");
+        fertilizerAlert = GameObject.Find("FertilizerAlert");
         joystick = canvas.transform.Find("Analog").gameObject;
         joystickVision = canvas.transform.Find("AnalogVision").gameObject;
 
+    }
+    IEnumerator LackOfFertilizer(float time){
+        Color c = fertilizerAlert.GetComponent<TextMeshProUGUI>().color;
+        c.a = 1;
+        fertilizerAlert.GetComponent<TextMeshProUGUI>().color = c;
+        yield return new WaitForSeconds(time);
+        c.a = 0;
+        fertilizerAlert.GetComponent<TextMeshProUGUI>().color = c;
     }
     public void OnPointerClick(PointerEventData eventData){
         Debug.Log("Yes");
@@ -39,7 +48,11 @@ public class YesButton : MonoBehaviour, IPointerClickHandler
         Debug.Log(target);
         Target = GameObject.Find(target);
         if(target == "Fertilizer"){
-            VariableManager.Instance.inputFertilizerTry = true;
+            if(VariableManager.Instance.fertilizerAmountInRoom > 0){
+                VariableManager.Instance.inputFertilizerTry = true;
+            }else{
+                StartCoroutine(LackOfFertilizer(3.5f));
+            }
         }else if(target == "FertilizerMaker"){
             VariableManager.Instance.makeFertilizerTry = true;
         }else if(target == "Water"){
