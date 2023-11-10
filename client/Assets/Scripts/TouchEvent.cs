@@ -7,7 +7,6 @@ public class TouchEvent : MonoBehaviour, IPointerClickHandler
 {
     string objectName;
     public bool condition = false;
-
     GameObject canvas;
     GameObject joystick;
     GameObject joystickVision;
@@ -16,12 +15,12 @@ public class TouchEvent : MonoBehaviour, IPointerClickHandler
         objectName = this.gameObject.name;
         condition = CanTouchThisObject(objectName);
         Debug.Log("hi "+objectName + " : " + condition);
+        OutlineModifier();
         joystick = GameObject.Find("Analog");
         joystickVision = GameObject.Find("AnalogVision");
         canvas = GameObject.Find("Canvas");
     }
     public void OnPointerClick(PointerEventData eventData){
-        Debug.Log(condition);
         if(condition == false && VariableManager.Instance.power > 0){
         RenderTexture texture; 
 
@@ -43,8 +42,6 @@ public class TouchEvent : MonoBehaviour, IPointerClickHandler
         canvas.transform.Find("InteractiveUIPanel").gameObject.SetActive(true);
         joystick.SetActive(false);
         joystickVision.SetActive(false);
-        }else if(condition == true){
-            Debug.Log("안번쩍거리게해야함");
         }else if(VariableManager.Instance.power == 0){
             Debug.Log("힘이 없음");
         }
@@ -69,6 +66,14 @@ public class TouchEvent : MonoBehaviour, IPointerClickHandler
         return false;
         }
     }
-
+    public void OutlineModifier(){
+        if (condition == true){
+            int numOfChild = transform.childCount;
+            for (int i = 0; i < numOfChild; i++){
+                transform.GetChild(i).gameObject.GetComponent<cakeslice.Outline>().enabled = false;
+            }
+        }
+        
+    }
 }
     // Update is called once per frame
