@@ -5,8 +5,11 @@ import com.trinity.trinity.global.dto.ClientSession;
 import com.trinity.trinity.domain.logic.dto.GameRoomCheck;
 import lombok.RequiredArgsConstructor;
 import lombok.Synchronized;
+import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
 
 
 @Component
@@ -16,37 +19,48 @@ public class RedisService {
     private final RedisTemplate<String, String> redisLoginTemplate;
     private final RedisTemplate<String, Object> redisTemplate;
 
+    private HashOperations<String, String, String> loginHashOperations;
+    private HashOperations<String, String, Object> hashOperations;
+
+    @PostConstruct
+    private void initLoginHash() {
+        loginHashOperations = redisLoginTemplate.opsForHash();
+    }
+    @PostConstruct
+    private void init() {
+        hashOperations = redisTemplate.opsForHash();
+    }
+
     @Synchronized
     public void saveData(String key, String value) {
-        redisLoginTemplate.opsForHash().put("connectingMember", key, value);
+        loginHashOperations.put("connectingMember", key, value);
     }
 
     @Synchronized
     public void backToLooby(String[] userIds) {
         for (String userId : userIds)
-            redisLoginTemplate.opsForHash().put("connectingMember", userId, String.valueOf(UserStatus.LOBBY));
+            loginHashOperations.put("connectingMember", userId, String.valueOf(UserStatus.LOBBY));
     }
 
     @Synchronized
     public void saveClient(ClientSession clientSession) {
-        redisTemplate.opsForHash().put("ClientSession", clientSession.getUserId(), clientSession);
+        hashOperations.put("ClientSession", clientSession.getUserId(), clientSession);
     }
 
 
     public ClientSession getClientSession(String key) {
-        ClientSession clientSession = (ClientSession) redisTemplate.opsForHash().get("ClientSession", key);
+        ClientSession clientSession = (ClientSession) hashOperations.get("ClientSession", key);
         return clientSession;
     }
 
     @Synchronized
     public void removeClientListSession(String[] userIds) {
-        for (String userId : userIds) redisTemplate.opsForHash().delete("ClientSession", userId);
+        for (String userId : userIds) hashOperations.delete("ClientSession", userId);
     }
 
 
     public String getClientId(String userId) {
-        ClientSession channelInfo = (ClientSession) redisTemplate.opsForHash()
-                .get("ClientSession", userId);
+        ClientSession channelInfo = (ClientSession) hashOperations.get("ClientSession", userId);
         String clientId = channelInfo.getClientId();
 
         return clientId;
@@ -56,8 +70,7 @@ public class RedisService {
     public String[] getClientIdList(String[] userIds) {
         String[] result = new String[3];
         for (int i = 0; i < 3; i++) {
-            ClientSession channelInfo = (ClientSession) redisTemplate.opsForHash()
-                    .get("ClientSession", userIds[i]);
+            ClientSession channelInfo = (ClientSession) hashOperations.get("ClientSession", userIds[i]);
             result[i] = channelInfo.getClientId();
         }
 
@@ -67,19 +80,19 @@ public class RedisService {
     @Synchronized
     public void saveGameRoomUserStatus(String gameRoomId) {
         GameRoomCheck gameRoomCheck = GameRoomCheck.builder().build();
-        redisTemplate.opsForHash().put("gameRoomCheck", gameRoomId, gameRoomCheck);
+        hashOperations.put("gameRoomCheck", gameRoomId, gameRoomCheck);
     }
 
     @Synchronized
     public boolean checkGameRoomAllClear(String gameRoomId, String roomNum) {
-        GameRoomCheck checkList = (GameRoomCheck) redisTemplate.opsForHash().get("gameRoomCheck", gameRoomId);
+        GameRoomCheck checkList = (GameRoomCheck) hashOperations.get("gameRoomCheck", gameRoomId);
         boolean complete = checkList.checkRoom(roomNum);
         if (complete) {
             checkList = new GameRoomCheck();
-            redisTemplate.opsForHash().put("gameRoomCheck", gameRoomId, checkList);
+            hashOperations.put("gameRoomCheck", gameRoomId, checkList);
             return true;
         } else {
-            redisTemplate.opsForHash().put("gameRoomCheck", gameRoomId, checkList);
+            hashOperations.put("gameRoomCheck", gameRoomId, checkList);
             return false;
         }
     }
