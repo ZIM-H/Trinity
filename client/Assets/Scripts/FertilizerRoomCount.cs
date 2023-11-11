@@ -17,6 +17,6 @@ public class FertilizerRoomCount : MonoBehaviour
     {
     }
     public void UseFertilizerUI(){
-        GetComponent<TextMeshProUGUI>().text = "X" + (VariableManager.Instance.fertilizerAmountInRoom-1);
+        GetComponent<TextMeshProUGUI>().text = "X " + (VariableManager.Instance.fertilizerAmountInRoom-1);
     }
 }
