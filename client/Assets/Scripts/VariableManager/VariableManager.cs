@@ -52,8 +52,13 @@ public class VariableManager : MonoBehaviour
     // 전날 행동에 대한 정보를 밤에 보여주는 문구
     public string nightTitleText;
     public string nightContextText;
+    // 다음날 아침 시작을 알리고, 이벤트 발생시 보여주는 문구
     public string morningTitleText;
     public string morningContextText;
+    // 게임 오버 판단 및 문구 출력용
+    public bool gameOver;
+    public bool victory;
+    public string gameOverText;
 
     private void Awake()
     {
@@ -69,7 +74,7 @@ public class VariableManager : MonoBehaviour
         }
     }
 
-    public void SetFirstDayData(string receivedMessage)
+    public void SetDayData(string receivedMessage)
     {
         DayData firstDayData = JsonConvert.DeserializeObject<DayData>(receivedMessage);
         // 여기서 필요한 변수에 데이터 할당
@@ -98,12 +103,6 @@ public class VariableManager : MonoBehaviour
             message = firstDayData.thirdResponseDto.message;
         }
         date ++;
-    }
-
-    public void SetNextDayData(string receivedMessage)
-    {
-        InitializeAction();
-        SetFirstDayData(receivedMessage);
         morningTitleText = date.ToString() + "일차 시작";
         bool overworked = false;
         if ( power < workLimit ) {
@@ -124,6 +123,19 @@ public class VariableManager : MonoBehaviour
             morningContextText += "우주선에 비축해둔 비상식량을 발견했습니다.\n보유 식량 수가 1 증가합니다.\n";
         }
         morningContextText += "트리니티 호의 하루가 시작됩니다.\n생존을 위한 활동을 이어나가세요.";
+    }
+
+    public void SetFirstDayData(string receivedMessage)
+    {
+        nightTitleText = "게임이 시작됩니다.";
+        nightContextText = "트리니티호는 외계 기생충의 습격을 받았습니다.\n소통은 단절되어 딱 한 글자의 메모만을 남길 수 있습니다.\n당신과 팀원들은 12일간 협동하여 생존해야 합니다.";
+        SetDayData(receivedMessage);
+    }
+
+    public void SetNextDayData(string receivedMessage)
+    {
+        InitializeAction();
+        SetDayData(receivedMessage);
     }
 
     public void InitializeAction() {
@@ -176,4 +188,22 @@ public class VariableManager : MonoBehaviour
         // public bool asteroidStatus { get; set; }
     }
 
+    public void GameOver(bool win, string reason) {
+        gameOver = true;
+        if (win) {
+            victory = true;
+            gameOverText = "트리니티 호가 우주 기지에 도착했습니다.\n당신과 팀원들은 12일간 무사히 생존했습니다.";
+        } else {
+            victory = false;
+            if ( reason == "userLeave") {
+                gameOverText = "팀원 중 한명의 연결이 끊겼습니다.\n더 이상 게임을 진행할 수 없습니다.";
+            } else if ( reason == "starve") {
+                gameOverText = "트리니티 호에 비축된 식량이 모두 떨어졌습니다.\n당신과 팀원들은 모두 굶어 죽었습니다.";
+            } else if ( reason == "contaminated" ) {
+                gameOverText = "정수 시스템이 고장난 지 2일째 수리되지 않았습니다.\n당신과 팀원들은 오염된 식수에 감염되어 죽었습니다.";
+            } else {
+                gameOverText = "이산화탄소 포집기가 고장난 지 3일째 수리되지 않았습니다.\n당신과 팀원들은 산소 부족으로 질식사했습니다.";
+            }
+        }
+    }
 }
