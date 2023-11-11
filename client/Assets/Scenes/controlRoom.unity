@@ -6050,6 +6050,7 @@ Transform:
   m_PrefabInstance: {fileID: 880635620}
   m_PrefabAsset: {fileID: 0}
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 --- !u!1 &690834533
 GameObject:
@@ -6125,6 +6126,8 @@ CanvasRenderer:
   m_GameObject: {fileID: 690834533}
   m_CullTransparentMesh: 1
 >>>>>>> 3e86ae5d6086d17ebd26989aff8010cc28be9512
+=======
+>>>>>>> client-feature-heo
 --- !u!1001 &698335637
 PrefabInstance:
   m_ObjectHideFlags: 0

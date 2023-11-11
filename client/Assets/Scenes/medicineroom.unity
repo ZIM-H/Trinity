@@ -3930,6 +3930,7 @@ Light:
   m_ShadowRadius: 0
   m_ShadowAngle: 0
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 --- !u!1 &645586755
 GameObject:
@@ -4005,6 +4006,8 @@ CanvasRenderer:
   m_GameObject: {fileID: 645586755}
   m_CullTransparentMesh: 1
 >>>>>>> 3e86ae5d6086d17ebd26989aff8010cc28be9512
+=======
+>>>>>>> client-feature-heo
 --- !u!1 &645823896
 GameObject:
   m_ObjectHideFlags: 0
