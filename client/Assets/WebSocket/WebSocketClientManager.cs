@@ -16,6 +16,7 @@ public class WebSocketClientManager : MonoBehaviour
     private string apiUrl = "https://k9b308.p.ssafy.io/api/game/match/"; // 대상 URL로 바꾸세요.
 
 
+
     void Awake(){
         ship = GameObject.Find("spaceship_revert");
         Debug.Log("ship : " + ship);
