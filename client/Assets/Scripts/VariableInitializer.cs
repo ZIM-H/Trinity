@@ -36,6 +36,8 @@ public class VariableInitializer : MonoBehaviour
         int code = VariableManager.Instance.eventCode;
         if ( code%2 == 1 ) {
             VariableManager.Instance.asteroidStatus = true;
+        } else {
+            VariableManager.Instance.asteroidStatus = false;
         }  // 이벤트 코드 1 : 소행성 출현
         code /= 2;
         if ( code%2 == 1 ) {

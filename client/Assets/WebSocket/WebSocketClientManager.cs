@@ -36,7 +36,8 @@ public class WebSocketClientManager : MonoBehaviour
             webSocket.Close();
             isConnected = false;
             Debug.Log("WebSocket disconnected");
-        
+            SceneManager.LoadScene("mainScreen");
+            Destroy(gameObject);
         }
         else
         {
@@ -89,6 +90,24 @@ public class WebSocketClientManager : MonoBehaviour
                             // 이 부분에서 메인 스레드에서 실행하고자 하는 작업을 수행
                             VariableManager.Instance.SetNextDayData(receivedMessage);
                         });
+                    } else if (type == "gameOver") {
+                        Debug.Log("게임 종료");
+                        UnityMainThreadDispatcher.Enqueue(() =>
+                        {
+                            // 이 부분에서 메인 스레드에서 실행하고자 하는 작업을 수행
+                            string status = (string)jsonObject["status"];
+                            if (status == "VICTORY") {
+                                VariableManager.Instance.GameOver(true,"");
+                            } else {
+                                string reason;
+                                if (status == "userLeave") {
+                                    reason = status;
+                                } else {
+                                    reason = (string)jsonObject["reason"];
+                                }
+                                VariableManager.Instance.GameOver(false,reason);
+                            }
+                        });
                     }
                 }
                 catch (Exception ex)
@@ -121,7 +140,8 @@ public class WebSocketClientManager : MonoBehaviour
         Debug.Log("Message processing completed.");
 
         // 다음 씬으로 전환
-        AsyncOperation asyncOp = SceneManager.LoadSceneAsync("GameInitializer");
+        AsyncOperation asyncOp = SceneManager.LoadSceneAsync("Night");
+        yield return new WaitForSeconds(2.0f);
         asyncOp.allowSceneActivation = false;
 
         while (!asyncOp.isDone)
