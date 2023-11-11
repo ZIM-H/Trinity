@@ -33,17 +33,8 @@ public class TextTyper : MonoBehaviour
         Type(inputTitle1, inputContext1);
         yield return new WaitForSeconds(time);
         TypeInitializer();
-        if (!VariableManager.Instance.gameOver) {
-            inputTitle2 = VariableManager.Instance.morningTitleText;
-            inputContext2 = VariableManager.Instance.morningContextText;
-        } else {
-            if (VariableManager.Instance.victory) {
-                inputTitle2 = "승리했습니다!";
-            } else {
-                inputTitle2 = VariableManager.Instance.date.ToString() + "일차 사망";
-            }
-            inputContext2 = VariableManager.Instance.gameOverText;
-        }
+        inputTitle2 = VariableManager.Instance.morningTitleText;
+        inputContext2 = VariableManager.Instance.morningContextText;
         Type(inputTitle2, inputContext2);
     }
 
