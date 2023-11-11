@@ -8,9 +8,12 @@ using UnityEngine.UIElements;
 using DG.Tweening;
 using Unity.VisualScripting;
 using TMPro;
+
 public class YesButton : MonoBehaviour, IPointerClickHandler
 {
 
+
+    GameObject fertilizerRoomCount;
     // Start is called before the first frame update
     GameObject powerBar;
     GameObject joystick; 
@@ -31,6 +34,7 @@ public class YesButton : MonoBehaviour, IPointerClickHandler
         player = GameObject.Find("Player");
         joystick = canvas.transform.Find("Analog").gameObject;
         joystickVision = canvas.transform.Find("AnalogVision").gameObject;
+        fertilizerRoomCount = canvas.transform.Find("FertilizerRoomCountImage").GetChild(0).gameObject;
 
     }
     public void OnPointerClick(PointerEventData eventData){
@@ -42,6 +46,7 @@ public class YesButton : MonoBehaviour, IPointerClickHandler
         if(target == "Fertilizer"){
             if(VariableManager.Instance.fertilizerAmountInRoom > 0){
                 VariableManager.Instance.inputFertilizerTry = true;
+                fertilizerRoomCount.GetComponent<FertilizerRoomCount>().UseFertilizerUI();
             }else{
                 VariableManager.Instance.power++;
                 player.GetComponent<CoroutineController>().FertilizerAlertCoroutine();
