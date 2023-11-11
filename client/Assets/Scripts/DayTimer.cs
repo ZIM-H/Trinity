@@ -8,18 +8,21 @@ public class DayTimer : MonoBehaviour
 {
     private TextMeshProUGUI counter;
     private float time;
+    GameObject canvas;
     // Start is called before the first frame update
     
     void Start()
     {
         time = 0.0f;
         counter = GetComponent<TextMeshProUGUI>();
+        canvas = GameObject.Find("Canvas");
         StartCoroutine(ExecuteAfterTime(40f));
     }
     
     IEnumerator ExecuteAfterTime(float time)
     {
         yield return new WaitForSeconds(time);
+        canvas.GetComponent<MessageController>().MessageSend();
         VariableManager.Instance.nightTitleText = VariableManager.Instance.date.ToString() + "일차 종료\n";
         string nightText = "오늘 한 일\n";
         bool didSomething = false;
