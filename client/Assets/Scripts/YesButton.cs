@@ -12,7 +12,6 @@ using TMPro;
 public class YesButton : MonoBehaviour, IPointerClickHandler
 {
 
-
     GameObject fertilizerRoomCount;
     // Start is called before the first frame update
     GameObject powerBar;

@@ -5,6 +5,7 @@ using UnityEngine;
 using TMPro;
 using System;
 
+
 public class TextTyper : MonoBehaviour
 {
     public string inputTitle1;
