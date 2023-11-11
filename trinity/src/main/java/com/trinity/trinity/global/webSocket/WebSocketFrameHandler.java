@@ -87,10 +87,10 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
                     // 2. 중간에 게임에서 실패
                     // 3. 누군가 게임에서 나간 경우
                     // --> gameOver = true
-                    boolean gameOver = gameRoomService.gameLogic(beforeGameRoom);
+                    String gameOver = gameRoomService.gameLogic(beforeGameRoom);
 
                     // gameOver가 아닌 경우
-                    if (gameOver) {
+                    if (gameOver.equals("live")) {
 
                         if (gameRoomService.checkEndGame(beforeGameRoom)) {
                             gameVictoryProcess(beforeGameRoom);
@@ -114,7 +114,7 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
                     } else {
                         // 게임 오버 true인 경우
                         log.info("게임 패배");
-                        gameDefeatedProcess(beforeGameRoom);
+                        gameDefeatedProcess(beforeGameRoom, gameOver);
                     }
                 }
             } else if(requestType.equals("ping")) {
@@ -272,13 +272,14 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
         redisService.backToLooby(users);
     }
 
-    private void gameDefeatedProcess(GameRoom gameRoom) {
+    private void gameDefeatedProcess(GameRoom gameRoom, String reason) {
         String[] users = getUsers(gameRoom);
 
         String[] clients = redisService.getClientIdList(users);
 
         GameOverDto gameDefeatedOverDto = GameOverDto.builder()
                 .status("DEFEATED")
+                .reason(reason)
                 .build();
 
         String data = gson.toJson(gameDefeatedOverDto);
