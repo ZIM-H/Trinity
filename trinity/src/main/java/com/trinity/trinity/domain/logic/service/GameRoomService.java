@@ -4,7 +4,7 @@ import com.trinity.trinity.domain.logic.dto.GameRoom;
 
 public interface GameRoomService {
 
-    boolean gameLogic(GameRoom gameRoom);
+    String gameLogic(GameRoom gameRoom);
 
     void morningGameLogic(GameRoom gameRoom);
 

@@ -16,7 +16,7 @@ public class GameRoomServiceImpl implements GameRoomService {
     private final GameRoomRedisService gameRoomRedisService;
 
     @Override
-    public boolean gameLogic(GameRoom gameRoom) {
+    public String gameLogic(GameRoom gameRoom) {
         gameRoom.setRoundNo(gameRoom.getRoundNo() + 1);
         FirstRoom firstRoom = gameRoom.getFirstRoom();
         SecondRoom secondRoom = gameRoom.getSecondRoom();
@@ -57,7 +57,7 @@ public class GameRoomServiceImpl implements GameRoomService {
 
         if (gameRoom.getFoodAmount() == 0) {
             log.info("식량 없어서 뒤짐");
-            return false;
+            return "starve";
         }
 
         // 정수 시스템부터 ㄱㄱ
@@ -71,7 +71,7 @@ public class GameRoomServiceImpl implements GameRoomService {
 
             if (firstRoom.getPurifierStatus() == 3) {
                 log.info("정수 시스템 고장나서 뒤짐");
-                return false;
+                return "contaminated";
             }
 
         } else {
@@ -95,7 +95,7 @@ public class GameRoomServiceImpl implements GameRoomService {
             }
             if (secondRoom.getCarbonCaptureStatus() == 3) {
                 log.info("이산화탄소 포집기 고장나서 뒤짐");
-                return false;
+                return "suffocation";
             }
         }
 
@@ -122,7 +122,7 @@ public class GameRoomServiceImpl implements GameRoomService {
 
         gameRoomRedisService.saveGameRoomToTemp(gameRoom);
 
-        return true;
+        return "live";
     }
 
     @Override
