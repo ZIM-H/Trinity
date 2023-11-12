@@ -14,8 +14,8 @@ public class Timer : MonoBehaviour
     
     void Start()
     {
-        if(VariableManager.Instance.MonsterDate == 0){
-            VariableManager.Instance.MonsterDate = Random.Range(1,13);
+        if(VariableManager.Instance.monsterDate == 0){
+            VariableManager.Instance.monsterDate = Random.Range(1,13);
         }
         fade = GameObject.Find("Fade");
         StartCoroutine(ExecuteAfterTime(15.0f));

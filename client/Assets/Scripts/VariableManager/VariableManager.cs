@@ -59,7 +59,7 @@ public class VariableManager : MonoBehaviour
     public bool gameOver;
     public bool victory;
     public string gameOverText;
-    public int MonsterDate;
+    public int monsterDate = 0;
 
     private void Awake()
     {
@@ -193,6 +193,7 @@ public class VariableManager : MonoBehaviour
     }
 
     public void GameOver(bool win, string reason) {
+        Instance.monsterDate = 0;
         gameOver = true;
         if (win) {
             victory = true;

@@ -10,12 +10,18 @@ public class AlienController : MonoBehaviour
     void Start()
     {
         player = GameObject.Find("Player");
-        // firstRoomMover();
-        secondRoomMover();
+        if(VariableManager.Instance.monsterDate == VariableManager.Instance.date){
+            if(VariableManager.Instance.roomNo == 1){
+                firstRoomMover();
+            }else if(VariableManager.Instance.roomNo == 2){
+                secondRoomMover();
+            }else{
+                thirdRoomMover();
+            }
+
+        }
     }
 
-        float time = 0f; 
-        bool button = false;
     public void firstRoomMover(){
         Vector3[] Point = new Vector3[9] {
         new Vector3(11.54f, 0.03f,-7.26f),
@@ -70,8 +76,10 @@ public class AlienController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other) {
         Debug.Log(other.gameObject.name);
+        if(other.gameObject.name == "Player"){
         movingAlien.Kill();
         StartCoroutine(WhenWeMet());
+        }
     }
 
     IEnumerator WhenWeMet(){
@@ -94,11 +102,4 @@ public class AlienController : MonoBehaviour
 
 
     // Update is called once per frame
-    void Update()
-    {
-        time += Time.fixedDeltaTime/30;
-        if(button){
-            Debug.Log(time);
-        }
-    }
 }
