@@ -9,6 +9,7 @@ public class AlienController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Debug.Log("기생충 방번호 디버그: " + VariableManager.Instance.roomNo);
         player = GameObject.Find("Player");
         if(VariableManager.Instance.monsterDate == VariableManager.Instance.date){
             if(VariableManager.Instance.roomNo == 1){
