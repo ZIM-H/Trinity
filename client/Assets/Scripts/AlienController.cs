@@ -18,7 +18,8 @@ public class AlienController : MonoBehaviour
             }else{
                 thirdRoomMover();
             }
-
+        }else{
+            gameObject.SetActive(false);
         }
     }
 

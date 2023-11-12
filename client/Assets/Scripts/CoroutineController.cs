@@ -10,6 +10,7 @@ public class CoroutineController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Debug.Log("기생충의 습격: " + VariableManager.Instance.monsterDate);
         canvas = GameObject.Find("Canvas");
         alert = canvas.transform.Find("Alert").gameObject;
         fertilizerAlert = canvas.transform.Find("FertilizerAlert").gameObject;
