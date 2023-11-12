@@ -108,7 +108,10 @@ public class YesButton : MonoBehaviour, IPointerClickHandler
         for (int i = 0; i < numOfChild; i++){
             Debug.Log(Target.transform.GetChild(i));
             Debug.Log(Target.transform.GetChild(i).name);
+            if(Target.transform.GetChild(i).gameObject.name != "Smoke" && Target.transform.GetChild(i).gameObject.name != "Smoke2"){
             Target.transform.GetChild(i).gameObject.GetComponent<cakeslice.Outline>().enabled = false;
+            }
+            // 여기 문제
         }
 
         Target.gameObject.GetComponent<TouchEvent>().condition = true;
