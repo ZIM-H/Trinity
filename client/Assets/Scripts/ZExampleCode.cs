@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,6 +10,8 @@ public class ZExampleCode : MonoBehaviour, IPointerClickHandler
     void Start()
     {
         canvas = GameObject.Find("Canvas");
+        int result = UnityEngine.Random.Range(0, 10);
+        Debug.Log("최 우선 사항:"+result);
     }
 
     public void OnPointerClick(PointerEventData eventData){

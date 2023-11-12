@@ -59,9 +59,13 @@ public class VariableManager : MonoBehaviour
     public bool gameOver;
     public bool victory;
     public string gameOverText;
+    public int MonsterDate;
 
     private void Awake()
     {
+
+
+
         if (Instance == null)
         {
             Instance = this;

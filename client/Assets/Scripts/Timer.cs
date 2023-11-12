@@ -9,12 +9,14 @@ public class Timer : MonoBehaviour
 
     GameObject fade;
     string[] roomNames = new string[] { "", "BiRyoRoom", "medicineroom", "controlRoom" };
-    private float time;
+
     // Start is called before the first frame update
     
     void Start()
     {
-        time = 0.0f;
+        if(VariableManager.Instance.MonsterDate == 0){
+            VariableManager.Instance.MonsterDate = Random.Range(1,13);
+        }
         fade = GameObject.Find("Fade");
         StartCoroutine(ExecuteAfterTime(15.0f));
     }
@@ -22,7 +24,6 @@ public class Timer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        time += Time.deltaTime;
     }
     
     IEnumerator ExecuteAfterTime(float time)
