@@ -15,7 +15,7 @@ public class SmokeController : MonoBehaviour
             gameObject.SetActive(true);
         }else if(VariableManager.Instance.carbonCaptureStatus == 1 && target == "CO2Fix"){
             gameObject.SetActive(true);
-        }else if(VariableManager.Instance.farmStatus && target == "CentralPark"){
+        }else if(VariableManager.Instance.farmStatus == false && target == "CentralPark"){
             gameObject.SetActive(true);
         }else{
             gameObject.SetActive(false);
