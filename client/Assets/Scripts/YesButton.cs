@@ -54,15 +54,22 @@ public class YesButton : MonoBehaviour, IPointerClickHandler
             VariableManager.Instance.makeFertilizerTry = true;
         }else if(target == "Water"){
             VariableManager.Instance.purifierTry = true;
+            Target.transform.Find("Smoke").gameObject.SetActive(false);
         }else if(target == "FertilizerResearch"){
             VariableManager.Instance.fertilizerUpgradeTry = true;
         }else if(target == "CO2Fix"){
             VariableManager.Instance.carbonCaptureTry = true;
+            if(VariableManager.Instance.carbonCaptureStatus == 2){
+                Target.transform.Find("Smoke2").gameObject.SetActive(false);
+            }else{
+                Target.transform.Find("Smoke").gameObject.SetActive(false);
+            }
         }else if(target == "Taurine"){
             VariableManager.Instance.taurineFilterTry = true;
             VariableManager.Instance.hasTaurine = 1;
         }else if(target == "CentralPark"){
             VariableManager.Instance.farmTry = true;
+            Target.transform.Find("Smoke").gameObject.SetActive(false);
         }else if(target == "Weapon"){
             VariableManager.Instance.asteroidDestroyTry = true;
         }else if(target == "Barrier"){

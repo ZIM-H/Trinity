@@ -6,6 +6,8 @@ using UnityEngine.SceneManagement;
 
 public class Timer : MonoBehaviour
 {
+
+    GameObject fade;
     string[] roomNames = new string[] { "", "BiRyoRoom", "medicineroom", "controlRoom" };
     private float time;
     // Start is called before the first frame update
@@ -13,6 +15,7 @@ public class Timer : MonoBehaviour
     void Start()
     {
         time = 0.0f;
+        fade = GameObject.Find("Fade");
         StartCoroutine(ExecuteAfterTime(15.0f));
     }
 
@@ -45,6 +48,8 @@ public class Timer : MonoBehaviour
             string room = roomNames[roomNo];
             Debug.Log("여기부터 : "+roomNo);
             Debug.Log("여기부터 : "+room);
+            fade.GetComponent<Fade>().FadeOut();
+            yield return new WaitForSeconds(1.0f);
             SceneManager.LoadScene(room);
         }
     }

@@ -3,25 +3,41 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using TMPro;
+using UnityEngine.UI;
+using DG.Tweening;
 public class DayTimer : MonoBehaviour
 {
-    private TextMeshProUGUI counter;
-    private float time;
+    RawImage clockNeedle;
     GameObject canvas;
+    GameObject fade;
     // Start is called before the first frame update
     
     void Start()
     {
-        time = 0.0f;
-        counter = GetComponent<TextMeshProUGUI>();
+
+        clockNeedle = transform.GetChild(0).gameObject.GetComponent<RawImage>();
         canvas = GameObject.Find("Canvas");
+        fade = canvas.transform.Find("Fade").gameObject;
+        clockNeedle.transform.DORotate(new Vector3(0,0,-360),41f, RotateMode.FastBeyond360).SetEase(Ease.Linear);
+        StartCoroutine(Shake());
         StartCoroutine(ExecuteAfterTime(40f));
     }
+
+    IEnumerator Shake(){
+        yield return new WaitForSeconds(35.0f);
+        for (int i = 0; i < 6; i++){
+        gameObject.transform.DOShakePosition(20.0f).SetEase(Ease.Linear);
+        yield return new WaitForSeconds(1.0f);
+        }
+    }
+
     
     IEnumerator ExecuteAfterTime(float time)
     {
+        
         yield return new WaitForSeconds(time);
+        fade.GetComponent<Fade>().FadeOut();
+        yield return new WaitForSeconds(1.0f);
         canvas.GetComponent<MessageController>().MessageSend();
         VariableManager.Instance.nightTitleText = VariableManager.Instance.date.ToString() + "일차 종료\n";
         string nightText = "오늘 한 일\n";
@@ -96,8 +112,5 @@ public class DayTimer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        time += Time.deltaTime;
-        int intTime = 60 - (int)time;
-        counter.text = intTime.ToString();
     }
 }
