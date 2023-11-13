@@ -77,4 +77,8 @@ public class GameRoom {
     public void modifyPlayerStatus(boolean playerStatus) {
         this.playerStatus = playerStatus;
     }
+
+    public void modifyGameRoomId(String gameRoomId) {
+        this.gameRoomId = gameRoomId;
+    }
 }
