@@ -23,18 +23,76 @@ public class GameRoomServiceImpl implements GameRoomService {
         gameRoom.modifyFoodAmount(gameRoom.getFoodAmount() - 1);
         if (gameRoom.isCarbonCaptureNotice()) gameRoom.modifyCarbonCaptureNotice(false);
 
-        // 자동 보호막
-        if (thirdRoom.isBarrierDevTry()) {
-            thirdRoom.modifyBarrierDevTry(false);
-            if (thirdRoom.getUserId().equals(thirdRoom.getDeveloper())) {
-                thirdRoom.modifyBarrierStatus(thirdRoom.getBarrierStatus() + 1);
-            } else {
-                thirdRoom.modifyBarrierStatus(1);
-                thirdRoom.modifyDeveloper(thirdRoom.getUserId());
-            }
+        // 식량 점검
+        if (!checkFoodAmount(gameRoom, thirdRoom)) {
+            log.info("식량 없어서 뒤짐");
+            return "starve";
         }
 
+        // 정수 시스템 점검
+        if (!checkPurifierStatus(firstRoom, secondRoom)) {
+            log.info("정수 시스템 고장나서 뒤짐");
+            return "contaminated";
+        }
+
+        // 이산화탄소 포집기 점검
+        if (!checkCarbonCaptureStatus(secondRoom)) {
+            log.info("이산화탄소 포집기 고장나서 뒤짐");
+            return "suffocation";
+        }
+
+        // 비료 생성기 업그레이드
+        checkFertilizerUpgradeStatus(firstRoom, secondRoom, thirdRoom);
+
+        // 타우린
+        checkTaurineFilterStatus(firstRoom, secondRoom);
+
+        // 블랙홀
+        if (thirdRoom.isBlackholeStatus()) {
+            if (gameRoom.getRoundNo() + 2 <= 12) gameRoom.getBlackholeStatus()[gameRoom.getRoundNo() + 2] = true;
+        }
+
+        gameRoomRedisService.saveGameRoomToTemp(gameRoom);
+
+        return "alive";
+    }
+
+    private void checkTaurineFilterStatus(FirstRoom firstRoom, SecondRoom secondRoom) {
+        if (secondRoom.isTaurineFilterTry()) {
+            secondRoom.modifyTaurineFilterTry(false);
+            secondRoom.modifyTaurineFilterStatus(false);
+            firstRoom.modifyPurifierStatus(1);
+        }
+    }
+
+    private void checkFertilizerUpgradeStatus(FirstRoom firstRoom, SecondRoom secondRoom, ThirdRoom thirdRoom) {
+        if (firstRoom.isFertilizerUpgradeTry()) {
+            firstRoom.modifyFertilizerUpgradeTry(false);
+            firstRoom.modifyFertilizerUpgradeStatus(firstRoom.getFertilizerUpgradeStatus() + 1);
+        }
+
+        if (firstRoom.getFertilizerUpgradeStatus() == 3) makeFertilizer(firstRoom, secondRoom, thirdRoom, 3);
+        else makeFertilizer(firstRoom, secondRoom, thirdRoom, 2);
+    }
+
+    private boolean checkFoodAmount(GameRoom gameRoom, ThirdRoom thirdRoom) {
+        // 자동 보호막
+        checkBarrier(thirdRoom);
         // 소행성
+        checkAsteroidStatus(gameRoom);
+
+        if (gameRoom.getFoodAmount() == 0) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private void checkAsteroidStatus(GameRoom gameRoom) {
+        FirstRoom firstRoom = gameRoom.getFirstRoom();
+        SecondRoom secondRoom = gameRoom.getSecondRoom();
+        ThirdRoom thirdRoom = gameRoom.getThirdRoom();
+
         if (thirdRoom.isAsteroidStatus()) {
             if (thirdRoom.isAsteroidDestroyTry()) {
                 thirdRoom.modifyAsteroidDestroyTry(false);
@@ -52,35 +110,21 @@ public class GameRoomServiceImpl implements GameRoomService {
 
             thirdRoom.modifyAsteroidStatus(false);
         } else checkFarm(gameRoom, firstRoom, secondRoom, thirdRoom);
+    }
 
-        if (gameRoom.getFoodAmount() == 0) {
-            log.info("식량 없어서 뒤짐");
-            return "starve";
-        }
-
-        // 정수 시스템부터 ㄱㄱ
-        if (firstRoom.getPurifierStatus() > 0) {
-            firstRoom.modifyPurifierStatus(firstRoom.getPurifierStatus() + 1);
-            if (firstRoom.isPurifierTry()) {
-                firstRoom.modifyPurifierTry(false);
-                firstRoom.modifyPurifierStatus(0);
-                secondRoom.modifyTaurineFilterStatus(true);
-            }
-
-            if (firstRoom.getPurifierStatus() == 3) {
-                log.info("정수 시스템 고장나서 뒤짐");
-                return "contaminated";
-            }
-
-        } else {
-            if (firstRoom.isPurifierTry()) {
-                firstRoom.modifyPurifierTry(false);
-                firstRoom.modifyPurifierStatus(1);
-                secondRoom.modifyTaurineFilterStatus(false);
+    private void checkBarrier(ThirdRoom thirdRoom) {
+        if (thirdRoom.isBarrierDevTry()) {
+            thirdRoom.modifyBarrierDevTry(false);
+            if (thirdRoom.getUserId().equals(thirdRoom.getDeveloper())) {
+                thirdRoom.modifyBarrierStatus(thirdRoom.getBarrierStatus() + 1);
+            } else {
+                thirdRoom.modifyBarrierStatus(1);
+                thirdRoom.modifyDeveloper(thirdRoom.getUserId());
             }
         }
+    }
 
-        // 이산화탄소 포집기
+    private boolean checkCarbonCaptureStatus(SecondRoom secondRoom) {
         if (secondRoom.getCarbonCaptureStatus() > 0) {
             secondRoom.modifyCarbonCaptureStatus(secondRoom.getCarbonCaptureStatus() + 1);
             if (secondRoom.isCarbonCaptureTry()) {
@@ -92,35 +136,34 @@ public class GameRoomServiceImpl implements GameRoomService {
                 secondRoom.modifyCarbonCaptureTryCount(0);
             }
             if (secondRoom.getCarbonCaptureStatus() == 4) {
-                log.info("이산화탄소 포집기 고장나서 뒤짐");
-                return "suffocation";
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean checkPurifierStatus(FirstRoom firstRoom, SecondRoom secondRoom) {
+        if (firstRoom.getPurifierStatus() > 0) {
+            firstRoom.modifyPurifierStatus(firstRoom.getPurifierStatus() + 1);
+            if (firstRoom.isPurifierTry()) {
+                firstRoom.modifyPurifierTry(false);
+                firstRoom.modifyPurifierStatus(0);
+                secondRoom.modifyTaurineFilterStatus(true);
+            }
+
+            if (firstRoom.getPurifierStatus() == 3) {
+                return false;
+            }
+
+        } else {
+            if (firstRoom.isPurifierTry()) {
+                firstRoom.modifyPurifierTry(false);
+                firstRoom.modifyPurifierStatus(1);
+                secondRoom.modifyTaurineFilterStatus(false);
             }
         }
 
-        // 비료 생성기 업그레이드
-        if (firstRoom.isFertilizerUpgradeTry()) {
-            firstRoom.modifyFertilizerUpgradeTry(false);
-            firstRoom.modifyFertilizerUpgradeStatus(firstRoom.getFertilizerUpgradeStatus() + 1);
-        }
-
-        if (firstRoom.getFertilizerUpgradeStatus() == 3) makeFertilizer(firstRoom, secondRoom, thirdRoom, 3);
-        else makeFertilizer(firstRoom, secondRoom, thirdRoom, 2);
-
-        // 타우린
-        if (secondRoom.isTaurineFilterTry()) {
-            secondRoom.modifyTaurineFilterTry(false);
-            secondRoom.modifyTaurineFilterStatus(false);
-            firstRoom.modifyPurifierStatus(1);
-        }
-
-        // 블랙홀
-        if (thirdRoom.isBlackholeStatus()) {
-            if (gameRoom.getRoundNo() + 2 <= 12) gameRoom.getBlackholeStatus()[gameRoom.getRoundNo() + 2] = true;
-        }
-
-        gameRoomRedisService.saveGameRoomToTemp(gameRoom);
-
-        return "alive";
+        return true;
     }
 
     @Override
