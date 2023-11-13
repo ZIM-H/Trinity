@@ -69,8 +69,9 @@ public class TextTyper : MonoBehaviour
     public void Type(string stringInput, string contextInput){
         inputString = stringInput;
         charArray = inputString.ToCharArray();
-        
+        StartCoroutine(TypingSound(0,1.0f));
         StartCoroutine(Typing(1.0f/charArray.Length, titleText));
+        StartCoroutine(TypingSound(1.5f,2.0f));
         StartCoroutine(ExecuteAfterTitleType(1.5f, contextInput, 2.0f));
         
 
@@ -82,10 +83,15 @@ public class TextTyper : MonoBehaviour
         // foodAmountTextArray = foodAmountText.ToCharArray();
         // monsterTextArray = monsterText.ToCharArray();
         
+        StartCoroutine(TypingSound(0,1.0f));
         StartCoroutine(Typing(1.0f/charArray.Length, titleText));
+        StartCoroutine(TypingSound(1.5f,2.0f));
         StartCoroutine(ExecuteAfterTitleType(1.5f, contextInput, 2.0f));
+        
+        StartCoroutine(TypingSound(3.75f,0.5f));
         StartCoroutine(ExecuteAfterTitleTypeWithColor(3.75f, foodAmountText, 0.5f, "green"));
         if (monsterText.Length > 0) {
+            StartCoroutine(TypingSound(4.5f,0.5f));
             StartCoroutine(ExecuteAfterTitleTypeWithColor(4.5f, monsterText, 0.5f, "red"));
         }
 
@@ -123,4 +129,11 @@ public class TextTyper : MonoBehaviour
         yield return new WaitForSeconds(time);
         TypeContextWithColor(text, typingTime, color);
     }
+    IEnumerator TypingSound(float time1, float time2){
+        yield return new WaitForSeconds(time1);
+        GetComponent<AudioSource>().Play();
+        yield return new WaitForSeconds(time2);
+        GetComponent<AudioSource>().Stop();
+    }
+
 }
