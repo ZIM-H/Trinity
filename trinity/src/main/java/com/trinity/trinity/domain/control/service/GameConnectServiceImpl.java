@@ -40,6 +40,14 @@ public class GameConnectServiceImpl implements GameConnectService {
     }
 
     @Override
+    public boolean checkUserStatus(List<PlayerDto> players) {
+        for(PlayerDto p : players) {
+            if(!redisService.getData(p.getUserId()).equals("WAITING")) return false;
+        }
+        return true;
+    }
+
+    @Override
     public void createGameRoom(List<PlayerDto> players) {
 
         GameRoom gameRoom = createService.createGameRoom(players);
