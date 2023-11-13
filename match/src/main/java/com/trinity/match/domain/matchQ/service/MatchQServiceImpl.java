@@ -5,10 +5,10 @@ import com.trinity.match.global.webClient.WebClientService;
 import lombok.RequiredArgsConstructor;
 import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.data.util.Pair;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -27,15 +27,30 @@ public class MatchQServiceImpl implements MatchQService {
     private final RedisTemplate<String, String> matchRedisTemplate;
     @Qualifier("gameRedisTemplate")
     private final RedisTemplate<String, String> gameRedisTemplate;
-
+    private final RedissonClient matchRedissonClient;
     private final WebClientService webClientService;
 
+    private static final String MATCH_QUEUE = "matchQueue";
+    private static final String LOCK_NAME = "matchQueueLock";
+
     @Override
-    @Synchronized
     public void joinQueue(String userId) {
-        double time = System.currentTimeMillis();
-        matchRedisTemplate.opsForZSet().add("matchQueue", userId, time);
+        RLock lock = matchRedissonClient.getLock(LOCK_NAME);
+        lock.lock();
+        try {
+            double time = System.currentTimeMillis();
+            matchRedisTemplate.opsForZSet().add(MATCH_QUEUE, userId, time);
+        } finally {
+            lock.unlock();
+        }
     }
+
+//    @Override
+//    @Synchronized
+//    public void joinQueue(String userId) {
+//        double time = System.currentTimeMillis();
+//        matchRedisTemplate.opsForZSet().add("matchQueue", userId, time);
+//    }
 
 //    @Synchronized
 //    @Scheduled(fixedRate = 2000)
@@ -111,9 +126,67 @@ public class MatchQServiceImpl implements MatchQService {
 //        });
 //    }
 
+//    @Synchronized
+//    @Scheduled(fixedRate = 2000)
+//    private void checkQueueSize() {
+//        List<Pair<String, Double>> waitingList = new ArrayList<>();
+//        try {
+//            // 대기 큐의 크기가 3 보다 작으면 그만
+//            if (getSize() < 3) return;
+//
+//            while (waitingList.size() != 3) {
+//                // 1순위 사람 뽑기
+//                Set<ZSetOperations.TypedTuple<String>> rangeWithScores = getSet();
+//                if (rangeWithScores == null || rangeWithScores.isEmpty()) break;
+//
+//                ZSetOperations.TypedTuple<String> next = rangeWithScores.iterator().next();
+//                String findUserId = next.getValue();
+//                Double score = next.getScore();
+//
+//                // 게임 서버 redis에 접근해 유효성 검사
+//                Object state = validate(findUserId);
+//                if (state != null && state.toString().equals("WAITING")) {
+//                    waitingList.add(Pair.of(findUserId, score));
+//                }
+//                deleteData(findUserId);
+//            }
+//
+//            // 게임 서버에 보낼 리스트의 크기가 3보다 작으면 다시 대기큐에 넣고 돌아가기
+//            if (waitingList.size() < 3) {
+//                recoverList(waitingList);
+//                return;
+//            }
+//
+//            for (Pair<String, Double> userAndScore : waitingList) {
+//                deleteData(userAndScore.getFirst());
+//            }
+//
+//            List<GameServerPlayerListRequestDto> playerList = new ArrayList<>();
+//            for (Pair<String, Double> userAndScore : waitingList)
+//                playerList.add(GameServerPlayerListRequestDto.builder()
+//                        .userId(userAndScore.getFirst())
+//                        .build());
+//
+//            try {
+//                webClientService.post(playerList);
+//            } catch (Exception e) {
+//                // WebClient 호출 실패시 대기 큐에 다시 추가
+//                recoverList(waitingList);
+//                throw e;
+//            }
+//
+//        } catch (Exception e) {
+//            // 에러 발생하면 에러 메시지 찍고 대기 큐에 다시 넣기
+//            log.error(e.getMessage());
+//            recoverList(waitingList);
+//        }
+//    }
+
     @Synchronized
     @Scheduled(fixedRate = 2000)
     private void checkQueueSize() {
+        RLock lock = matchRedissonClient.getLock(LOCK_NAME);
+        lock.lock();
         List<Pair<String, Double>> waitingList = new ArrayList<>();
         try {
             // 대기 큐의 크기가 3 보다 작으면 그만
@@ -164,6 +237,8 @@ public class MatchQServiceImpl implements MatchQService {
             // 에러 발생하면 에러 메시지 찍고 대기 큐에 다시 넣기
             log.error(e.getMessage());
             recoverList(waitingList);
+        } finally {
+            lock.unlock();
         }
     }
 
