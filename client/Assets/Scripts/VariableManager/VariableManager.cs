@@ -55,6 +55,10 @@ public class VariableManager : MonoBehaviour
     // 다음날 아침 시작을 알리고, 이벤트 발생시 보여주는 문구
     public string morningTitleText;
     public string morningContextText;
+    public string morningFoodAmountText;
+    public string morningMonsterText;
+    public string[] monsterWarningText;
+    
     // 게임 오버 판단 및 문구 출력용
     public bool gameOver;
     public bool victory;
@@ -63,14 +67,19 @@ public class VariableManager : MonoBehaviour
 
     private void Awake()
     {
-
-
-
         if (Instance == null)
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
             playerId = PlayerPrefs.GetString("PlayerId");
+            monsterWarningText = new string[]
+            {
+                "방 안에서 수상한 기척이 느껴집니다...",
+                "좋지 않은 낌새가 느껴집니다...",
+                "불길한 예감이 듭니다...",
+                "방 안에 무언가 있는 것 같습니다...",
+                "이게 무슨 소리죠..?",
+            };
         }
         else
         {
@@ -107,6 +116,7 @@ public class VariableManager : MonoBehaviour
             message = firstDayData.thirdResponseDto.message;
         }
         date ++;
+       monsterDate = Random.Range(1,13);
         morningTitleText = date.ToString() + "일차 시작";
         bool overworked = false;
         if ( power < workLimit ) {
@@ -126,8 +136,13 @@ public class VariableManager : MonoBehaviour
         if ( date == 10 ) {
             morningContextText += "우주선에 비축해둔 비상식량을 발견했습니다.\n보유 식량 수가 1 증가합니다.\n";
         }
-        morningContextText += "트리니티 호의 하루가 시작됩니다.\n생존을 위한 활동을 이어나가세요.\n";
-        morningContextText += "현재 중앙 정원에 투입된 비료 수 : " + fertilizerAmount.ToString();
+        morningContextText += "트리니티 호의 하루가 시작됩니다.\n생존을 위한 활동을 이어나가세요.";
+        morningFoodAmountText = "현재 식량 비축분 : " + foodAmount.ToString();
+        if (monsterDate <= date) {
+            morningMonsterText = monsterWarningText[Random.Range(0, 5)];
+        } else {
+            morningMonsterText = "";
+        }
     }
 
     public void SetFirstDayData(string receivedMessage)
