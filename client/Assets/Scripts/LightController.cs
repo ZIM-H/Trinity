@@ -7,7 +7,7 @@ public class LightController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if(VariableManager.Instance.monsterDate == VariableManager.Instance.date){
+        if(VariableManager.Instance.monsterDate <= VariableManager.Instance.date){
         for(int i = 0; i < transform.childCount; i++){
             transform.GetChild(i).GetComponent<Light>().intensity = 0;
         }
