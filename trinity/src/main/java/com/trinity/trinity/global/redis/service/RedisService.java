@@ -3,15 +3,17 @@ package com.trinity.trinity.global.redis.service;
 import com.trinity.trinity.domain.control.enums.UserStatus;
 import com.trinity.trinity.global.dto.ClientSession;
 import com.trinity.trinity.domain.logic.dto.GameRoomCheck;
+import com.trinity.trinity.global.dto.ClientUserId;
 import lombok.RequiredArgsConstructor;
 import lombok.Synchronized;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 
-
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class RedisService {
@@ -37,9 +39,19 @@ public class RedisService {
     }
 
     @Synchronized
+    public  String getData(String key) {
+        return loginHashOperations.get("connectingMember", key);
+    }
+
+    @Synchronized
     public void backToLooby(String[] userIds) {
         for (String userId : userIds)
             loginHashOperations.put("connectingMember", userId, String.valueOf(UserStatus.LOBBY));
+    }
+
+    @Synchronized
+    public void removeMatching(String userId) {
+        loginHashOperations.put("connectingMember", userId, String.valueOf(UserStatus.LOBBY));
     }
 
     @Synchronized
@@ -58,6 +70,11 @@ public class RedisService {
         for (String userId : userIds) hashOperations.delete("ClientSession", userId);
     }
 
+    @Synchronized
+    public void removeClientSession(String userId) {
+        System.out.println("removeClientSession");
+        hashOperations.delete("ClientSession", userId);
+    }
 
     public String getClientId(String userId) {
         ClientSession channelInfo = (ClientSession) hashOperations.get("ClientSession", userId);
@@ -95,5 +112,25 @@ public class RedisService {
             hashOperations.put("gameRoomCheck", gameRoomId, checkList);
             return false;
         }
+    }
+
+    @Synchronized
+    public void removeCheckGameRoom(String gameRoomId) {
+        hashOperations.delete("gameRoomCheck", gameRoomId);
+    }
+
+    //clientId - userId 부분
+
+    @Synchronized
+    public void saveUserId(ClientUserId client) {
+        hashOperations.put("ClientUserId", client.getClientId(), client.getUserId());
+    }
+
+    public String getUserId(String clientId) {
+        return (String) hashOperations.get("ClientUserId", clientId);
+    }
+
+    public void removeUserId(String clientId) {
+        hashOperations.delete("ClientUserId", clientId);
     }
 }

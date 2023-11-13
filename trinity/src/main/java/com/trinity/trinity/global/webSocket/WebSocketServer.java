@@ -13,11 +13,9 @@ import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.SelfSignedCertificate;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-@Slf4j
 @Component
 public final class WebSocketServer {
     static final boolean SSL = System.getProperty("ssl") != null;
@@ -49,9 +47,9 @@ public final class WebSocketServer {
         try {
             ServerBootstrap b = new ServerBootstrap();
             b.group(bossGroup, workerGroup)
-                    .channel(NioServerSocketChannel.class)
-                    .handler(new LoggingHandler(LogLevel.INFO))
-                    .childHandler(new WebSocketServerInitializer(sslCtx, redisService, gameRoomService, gameRoomRedisService, channelManager));
+                .channel(NioServerSocketChannel.class)
+                .handler(new LoggingHandler(LogLevel.INFO))
+                .childHandler(new WebSocketServerInitializer(sslCtx, redisService, gameRoomService, gameRoomRedisService, channelManager));
 
             Channel ch = b.bind(PORT).sync().channel();
 

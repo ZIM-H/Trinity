@@ -8,6 +8,7 @@ import com.trinity.trinity.domain.control.dto.response.*;
 import com.trinity.trinity.domain.control.enums.UserStatus;
 import com.trinity.trinity.domain.logic.dto.GameRoom;
 import com.trinity.trinity.domain.logic.service.GameRoomService;
+import com.trinity.trinity.global.dto.ClientUserId;
 import com.trinity.trinity.global.redis.service.GameRoomRedisService;
 import com.trinity.trinity.global.redis.service.RedisService;
 import io.netty.channel.Channel;
@@ -50,8 +51,10 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
                 ClientSession clientSession = redisService.getClientSession(userId);
                 if (clientSession == null) {
                     clientSession = new ClientSession(userId, clientId);
+                    ClientUserId clientUserId = new ClientUserId(clientId, userId);
                     // 클라이언트 세션을 Redis에 저장
                     redisService.saveClient(clientSession);
+                    redisService.saveUserId(clientUserId);
                 }
 
                 redisService.saveData(userId, String.valueOf(UserStatus.WAITING));
@@ -90,10 +93,11 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
                     String gameOver = gameRoomService.gameLogic(beforeGameRoom);
 
                     // gameOver가 아닌 경우
-                    if (gameOver.equals("live")) {
+                    if (gameOver.equals("alive")) {
 
                         if (gameRoomService.checkEndGame(beforeGameRoom)) {
                             gameVictoryProcess(beforeGameRoom);
+                            return;
                         }
 
                         GameRoom morningRoom = gameRoomRedisService.getGameRoom(gameRoomId);
@@ -134,12 +138,40 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
         if (evt instanceof IdleStateEvent) {
             IdleStateEvent e = (IdleStateEvent) evt;
             if (e.state() == IdleState.READER_IDLE) {
+                log.info(ctx.channel().id().toString() + " channel response None");
+                String userId = redisService.getUserId(ctx.channel().id().toString());
+                //상태 변경, 채널 삭제
+                if(userId == null) return;
+                if(redisService.getData(userId).equals("WAITING")) {
+                    redisService.removeMatching(userId); // 유저 상태 변경 --> LOBBY로
+                    redisService.removeClientSession(userId); // clientSession 삭제
+                    redisService.removeUserId(ctx.channel().id().toString()); // clientId : userId 삭제
+                    channelManager.removeChannel(ctx.channel().id().toString());
+                }
                 ctx.close();
             } else if (e.state() == IdleState.WRITER_IDLE) {
+                log.info("send request notice alive");
                 ctx.writeAndFlush(new PingMessage());
             }
         }
     }
+
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) {
+        System.out.println("channelInactive");
+        String userId = redisService.getUserId(ctx.channel().id().toString());
+        //상태 변경, 채널 삭제
+        if(userId == null) return;
+        if(redisService.getData(userId).equals("WAITING")) {
+            redisService.removeMatching(userId); // 유저 상태 변경 --> LOBBY로
+            redisService.removeClientSession(userId); // clientSession 삭제
+            redisService.removeUserId(ctx.channel().id().toString()); // clientId : userId 삭제
+            channelManager.removeChannel(ctx.channel().id().toString());
+        }
+        ctx.close();
+    }
+
+
 
     private String[] getMorningRoom(boolean asteroidConflict, GameRoom morningRoom) {
         String[] rooms = new String[3];
@@ -217,6 +249,8 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
 
             for (String client : clients) sendDataToClient(client, data);
 
+            redisService.removeCheckGameRoom(gameRoomId);
+
             gameRoomService.endGame(gameRoomId);
 
             //채널 닫기
@@ -267,6 +301,8 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
         //clientSession 삭제
         redisService.removeClientListSession(users);
 
+        redisService.removeCheckGameRoom(gameRoom.getGameRoomId());
+
         gameRoomService.endGame(gameRoom.getGameRoomId());
 
         redisService.backToLooby(users);
@@ -294,6 +330,8 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
 
         //clientSession 삭제
         redisService.removeClientListSession(users);
+
+        redisService.removeCheckGameRoom(gameRoom.getGameRoomId());
 
         gameRoomService.endGame(gameRoom.getGameRoomId());
 

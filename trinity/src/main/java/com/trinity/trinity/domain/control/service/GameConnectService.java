@@ -9,5 +9,9 @@ public interface GameConnectService {
 
     void matchMaking(String userId);
 
+    boolean checkUserStatus(List<PlayerDto> players);
+
+//    void checkEnteringQ(String userId, String response)
+;
     void createGameRoom(List<PlayerDto> players);
 }

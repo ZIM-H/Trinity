@@ -31,7 +31,11 @@ public class GameConnectController {
 
     @PostMapping("/players")
     public ResponseEntity<?> takePlayer(@Validated @RequestBody List<PlayerDto> players) {
-        gameConnectService.createGameRoom(players);
-        return ResponseEntity.ok().build();
+        if(gameConnectService.checkUserStatus(players)) {
+            gameConnectService.createGameRoom(players);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.badRequest().body("Do not ready to game");
+        }
     }
 }
