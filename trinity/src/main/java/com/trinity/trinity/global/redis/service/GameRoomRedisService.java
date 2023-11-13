@@ -87,6 +87,7 @@ public class GameRoomRedisService {
     @Synchronized
     public void deleteGameRoom(String gameRoomId) {
         hashOperations.delete("gameRoom", gameRoomId);
+        hashOperations.delete("temp", gameRoomId);
     }
 
     @Synchronized

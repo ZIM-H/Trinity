@@ -14,9 +14,6 @@ public class ChannelManager {
 
     public void addChannel(String id, Channel channel) {
         channels.put(id, channel);
-        for (String clientId : channels.keySet()) {
-            Channel eachChannel = channels.get(clientId);
-        }
     }
 
     public void removeChannel(String id) {
