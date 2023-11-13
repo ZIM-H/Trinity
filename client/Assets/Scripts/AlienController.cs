@@ -11,7 +11,7 @@ public class AlienController : MonoBehaviour
     {
         Debug.Log("기생충 방번호 디버그: " + VariableManager.Instance.roomNo);
         player = GameObject.Find("Player");
-        if(VariableManager.Instance.monsterDate == VariableManager.Instance.date){
+        if(VariableManager.Instance.monsterDate <= VariableManager.Instance.date){
             if(VariableManager.Instance.roomNo == 1){
                 firstRoomMover();
             }else if(VariableManager.Instance.roomNo == 2){

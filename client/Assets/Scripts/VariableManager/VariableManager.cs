@@ -194,7 +194,6 @@ public class VariableManager : MonoBehaviour
     }
 
     public void GameOver(bool win, string reason) {
-        Instance.monsterDate = 0;
         gameOver = true;
         if (win) {
             victory = true;

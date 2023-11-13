@@ -7,7 +7,7 @@ public class LanternController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if(VariableManager.Instance.monsterDate == VariableManager.Instance.date){
+        if(VariableManager.Instance.monsterDate <= VariableManager.Instance.date){
             StartCoroutine(LanternFlashing());
         }else{
             gameObject.SetActive(false);
