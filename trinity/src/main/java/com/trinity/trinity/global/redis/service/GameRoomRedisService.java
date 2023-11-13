@@ -63,7 +63,7 @@ public class GameRoomRedisService {
                     .thirdRoom(last.getThirdRoom())
                     .build();
 
-            gameRoom.setGameRoomId(gameRoomId);
+            gameRoom.modifyGameRoomId(gameRoomId);
 
             hashOperations.put("temp", gameRoomId, gameRoom);
             return gameRoom;
