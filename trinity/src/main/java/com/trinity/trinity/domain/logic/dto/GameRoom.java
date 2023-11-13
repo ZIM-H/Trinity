@@ -3,10 +3,8 @@ package com.trinity.trinity.domain.logic.dto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
-@Setter
 @NoArgsConstructor
 public class GameRoom {
     private String gameRoomId;
@@ -50,5 +48,33 @@ public class GameRoom {
 
     public void modifyThirdRoom(ThirdRoom thirdRoom) {
         this.thirdRoom = thirdRoom;
+    }
+
+    public void modifyGameRound(int roundNo) {
+        this.roundNo = roundNo;
+    }
+
+    public void modifyFoodAmount(int foodAmount) {
+        this.foodAmount = foodAmount;
+    }
+
+    public void modifyCarbonCaptureNotice(boolean status) {
+        this.carbonCaptureNotice = status;
+    }
+
+    public void modifyFertilizerAmount(int fertilizerAmount) {
+        this.fertilizerAmount = fertilizerAmount;
+    }
+
+    public void modifyEvent(int event) {
+        this.event = event;
+    }
+
+    public void modifyBirthday(boolean birthday) {
+        this.birthday = birthday;
+    }
+
+    public void modifyPlayerStatus(boolean playerStatus) {
+        this.playerStatus = playerStatus;
     }
 }
