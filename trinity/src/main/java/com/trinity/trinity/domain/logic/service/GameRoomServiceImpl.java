@@ -6,8 +6,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -193,7 +191,7 @@ public class GameRoomServiceImpl implements GameRoomService {
 
     @Override
     public boolean checkEndGame(GameRoom gameRoom) {
-        if (gameRoom.getRoundNo() == 12) {
+        if (gameRoom.getRoundNo() == 13) {
             gameRoomRedisService.deleteGameRoom(gameRoom.getGameRoomId());
             return true;
         }
