@@ -17,13 +17,13 @@ public class GameRoomServiceImpl implements GameRoomService {
 
     @Override
     public String gameLogic(GameRoom gameRoom) {
-        gameRoom.setRoundNo(gameRoom.getRoundNo() + 1);
+        gameRoom.modifyGameRound(gameRoom.getRoundNo() + 1);
         FirstRoom firstRoom = gameRoom.getFirstRoom();
         SecondRoom secondRoom = gameRoom.getSecondRoom();
         ThirdRoom thirdRoom = gameRoom.getThirdRoom();
 
-        gameRoom.setFoodAmount(gameRoom.getFoodAmount() - 1);
-        if (gameRoom.isCarbonCaptureNotice()) gameRoom.setCarbonCaptureNotice(false);
+        gameRoom.modifyFoodAmount(gameRoom.getFoodAmount() - 1);
+        if (gameRoom.isCarbonCaptureNotice()) gameRoom.modifyCarbonCaptureNotice(false);
 
         // 자동 보호막
         if (thirdRoom.isBarrierDevTry()) {
@@ -46,7 +46,7 @@ public class GameRoomServiceImpl implements GameRoomService {
                 if (thirdRoom.getBarrierStatus() < 2) {
                     if (secondRoom.isFarmTry()) checkFarm(gameRoom, firstRoom, secondRoom, thirdRoom);
                     secondRoom.modifyFarmStatus(false);
-                    gameRoom.setFertilizerAmount(0);
+                    gameRoom.modifyFertilizerAmount(0);
                 } else {
                     checkFarm(gameRoom, firstRoom, secondRoom, thirdRoom);
                 }
@@ -93,7 +93,7 @@ public class GameRoomServiceImpl implements GameRoomService {
                 secondRoom.modifyCarbonCaptureStatus(0);
                 secondRoom.modifyCarbonCaptureTryCount(0);
             }
-            if (secondRoom.getCarbonCaptureStatus() == 3) {
+            if (secondRoom.getCarbonCaptureStatus() == 4) {
                 log.info("이산화탄소 포집기 고장나서 뒤짐");
                 return "suffocation";
             }
@@ -141,7 +141,7 @@ public class GameRoomServiceImpl implements GameRoomService {
         gameRoom = checkEvent(gameRoom);
 
         // 이산화탄소 고장 일수 2일차인지 판단
-        if (secondRoom.getCarbonCaptureStatus() == 2) gameRoom.setCarbonCaptureNotice(true);
+        if (secondRoom.getCarbonCaptureStatus() == 2) gameRoom.modifyCarbonCaptureNotice(true);
 
         // 로직 끝
         gameRoomRedisService.saveGameRoomToTemp(gameRoom);
@@ -186,7 +186,7 @@ public class GameRoomServiceImpl implements GameRoomService {
             validateEvent(6, gameRoom);
         }
 
-        gameRoom.setEvent(eventIdx);
+        gameRoom.modifyEvent(eventIdx);
 
         return gameRoom;
     }
@@ -240,10 +240,10 @@ public class GameRoomServiceImpl implements GameRoomService {
                 thirdRoom.modifyBlackholeStatus(true);
                 break;
             case 2:
-                gameRoom.setBirthday(true);
+                gameRoom.modifyBirthday(true);
                 break;
             case 3:
-                gameRoom.setPlayerStatus(true);
+                gameRoom.modifyPlayerStatus(true);
                 break;
             case 4:
                 firstRoom.modifyPurifierStatus(1);
@@ -252,7 +252,7 @@ public class GameRoomServiceImpl implements GameRoomService {
                 if (secondRoom.getCarbonCaptureStatus() == 0) secondRoom.modifyCarbonCaptureStatus(1);
                 break;
             case 6:
-                gameRoom.setFoodAmount(gameRoom.getFoodAmount() + 1);
+                gameRoom.modifyFoodAmount(gameRoom.getFoodAmount() + 1);
                 break;
         }
     }
@@ -306,10 +306,10 @@ public class GameRoomServiceImpl implements GameRoomService {
 
         int fertilizer = gameRoom.getFertilizerAmount() + count;
         if (fertilizer >= 4) {
-            gameRoom.setFertilizerAmount(0);
-            gameRoom.setFoodAmount(gameRoom.getFoodAmount() + 2);
+            gameRoom.modifyFertilizerAmount(0);
+            gameRoom.modifyFoodAmount(gameRoom.getFoodAmount() + 2);
         } else {
-            gameRoom.setFertilizerAmount(fertilizer);
+            gameRoom.modifyFertilizerAmount(fertilizer);
         }
     }
 }
