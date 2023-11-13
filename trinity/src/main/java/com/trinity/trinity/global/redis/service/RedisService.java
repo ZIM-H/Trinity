@@ -6,13 +6,14 @@ import com.trinity.trinity.domain.logic.dto.GameRoomCheck;
 import com.trinity.trinity.global.dto.ClientUserId;
 import lombok.RequiredArgsConstructor;
 import lombok.Synchronized;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 
-
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class RedisService {
@@ -69,6 +70,11 @@ public class RedisService {
         for (String userId : userIds) hashOperations.delete("ClientSession", userId);
     }
 
+    @Synchronized
+    public void removeClientSession(String userId) {
+        System.out.println("removeClientSession");
+        hashOperations.delete("ClientSession", userId);
+    }
 
     public String getClientId(String userId) {
         ClientSession channelInfo = (ClientSession) hashOperations.get("ClientSession", userId);
@@ -106,6 +112,11 @@ public class RedisService {
             hashOperations.put("gameRoomCheck", gameRoomId, checkList);
             return false;
         }
+    }
+
+    @Synchronized
+    public void removeCheckGameRoom(String gameRoomId) {
+        hashOperations.delete("gameRoomCheck", gameRoomId);
     }
 
     //clientId - userId 부분

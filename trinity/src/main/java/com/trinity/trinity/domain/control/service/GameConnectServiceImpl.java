@@ -10,11 +10,13 @@ import com.trinity.trinity.global.redis.service.RedisService;
 import com.trinity.trinity.global.webClient.service.WebClientService;
 import com.trinity.trinity.global.webSocket.WebSocketFrameHandler;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class GameConnectServiceImpl implements GameConnectService {
@@ -38,6 +40,7 @@ public class GameConnectServiceImpl implements GameConnectService {
     public void matchMaking(String userId) {
         webClientService.get(userId);
     }
+    
 
     @Override
     public boolean checkUserStatus(List<PlayerDto> players) {
