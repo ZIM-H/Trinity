@@ -34,12 +34,14 @@ public class MatchQServiceImpl implements MatchQService {
     private static final String LOCK_NAME = "matchQueueLock";
 
     @Override
-    public void joinQueue(String userId) {
+    public boolean joinQueue(String userId) {
         RLock lock = matchRedissonClient.getLock(LOCK_NAME);
         lock.lock();
         try {
             double time = System.currentTimeMillis();
-            matchRedisTemplate.opsForZSet().add(MATCH_QUEUE, userId, time);
+            return matchRedisTemplate.opsForZSet().add(MATCH_QUEUE, userId, time);
+        } catch (Exception e) {
+            return false;
         } finally {
             lock.unlock();
         }
@@ -182,7 +184,6 @@ public class MatchQServiceImpl implements MatchQService {
 //        }
 //    }
 
-    @Synchronized
     @Scheduled(fixedRate = 2000)
     private void checkQueueSize() {
         RLock lock = matchRedissonClient.getLock(LOCK_NAME);
@@ -225,13 +226,7 @@ public class MatchQServiceImpl implements MatchQService {
                         .userId(userAndScore.getFirst())
                         .build());
 
-            try {
-                webClientService.post(playerList);
-            } catch (Exception e) {
-                // WebClient 호출 실패시 대기 큐에 다시 추가
-                recoverList(waitingList);
-                throw e;
-            }
+            webClientService.post(playerList, waitingList);
 
         } catch (Exception e) {
             // 에러 발생하면 에러 메시지 찍고 대기 큐에 다시 넣기
@@ -242,8 +237,9 @@ public class MatchQServiceImpl implements MatchQService {
         }
     }
 
+    @Override
     @Synchronized
-    private void recoverList(List<Pair<String, Double>> waitingList) {
+    public void recoverList(List<Pair<String, Double>> waitingList) {
         for (Pair<String, Double> userAndScore : waitingList) {
             matchRedisTemplate.opsForZSet().add("matchQueue", userAndScore.getFirst(), userAndScore.getSecond());
         }
