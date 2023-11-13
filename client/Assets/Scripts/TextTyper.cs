@@ -12,11 +12,16 @@ public class TextTyper : MonoBehaviour
     public string inputContext1;
     public string inputTitle2;
     public string inputContext2;
+    public string inputFoodContext;
+    public string inputMonsterContext;
     string inputString;
     TextMeshProUGUI titleText;
     TextMeshProUGUI contextText;
 
     char[] charArray;
+    char[] charArrayWithColor;
+    // char[] foodAmountTextArray;
+    // char[] monsterTextArray;
     
     // Start is called before the first frame update
     void Start()
@@ -37,6 +42,8 @@ public class TextTyper : MonoBehaviour
         if (!VariableManager.Instance.gameOver) {
             inputTitle2 = VariableManager.Instance.morningTitleText;
             inputContext2 = VariableManager.Instance.morningContextText;
+            inputFoodContext = VariableManager.Instance.morningFoodAmountText;
+            inputMonsterContext = VariableManager.Instance.morningMonsterText;
         } else {
             if (VariableManager.Instance.victory) {
                 inputTitle2 = "승리했습니다!";
@@ -45,7 +52,7 @@ public class TextTyper : MonoBehaviour
             }
             inputContext2 = VariableManager.Instance.gameOverText;
         }
-        Type(inputTitle2, inputContext2);
+        TypeWithColor(inputTitle2, inputContext2,inputFoodContext,inputMonsterContext);
     }
 
 
@@ -64,26 +71,56 @@ public class TextTyper : MonoBehaviour
         charArray = inputString.ToCharArray();
         
         StartCoroutine(Typing(1.0f/charArray.Length, titleText));
-        StartCoroutine(ExecuteAfterTitleType(1.5f, contextInput));
+        StartCoroutine(ExecuteAfterTitleType(1.5f, contextInput, 2.0f));
         
 
     }
-    public void TypeContext(string stringInput){
+
+    public void TypeWithColor(string stringInput, string contextInput, string foodAmountText, string monsterText){
+        inputString = stringInput;
+        charArray = inputString.ToCharArray();
+        // foodAmountTextArray = foodAmountText.ToCharArray();
+        // monsterTextArray = monsterText.ToCharArray();
+        
+        StartCoroutine(Typing(1.0f/charArray.Length, titleText));
+        StartCoroutine(ExecuteAfterTitleType(1.5f, contextInput, 2.0f));
+        StartCoroutine(ExecuteAfterTitleTypeWithColor(3.75f, foodAmountText, 0.5f, "green"));
+        if (monsterText.Length > 0) {
+            StartCoroutine(ExecuteAfterTitleTypeWithColor(4.5f, monsterText, 0.5f, "red"));
+        }
+
+    }
+    public void TypeContext(string stringInput, float typingTime){
         inputString = stringInput;
         charArray = inputString.ToCharArray();
         
-        StartCoroutine(Typing(1.5f/charArray.Length, contextText));
+        StartCoroutine(Typing(typingTime/charArray.Length, contextText));
+
+    }
+     public void TypeContextWithColor(string stringInput, float typingTime, string color){
+        
+        StartCoroutine(TypingWithColor(typingTime/charArray.Length, contextText, color, stringInput));
 
     }
     IEnumerator Typing(float time, TextMeshProUGUI targetText){
-            foreach(char c in charArray){
-
+        foreach(char c in charArray){
             yield return new WaitForSeconds(time);
             targetText.text += c;
-            }
+        }
     }
-    IEnumerator ExecuteAfterTitleType(float time, string text){
+    IEnumerator TypingWithColor(float time, TextMeshProUGUI targetText, string color, string stringInput){
+        targetText.text += "\n<color=" + color + "></color>";
+        foreach(char c in stringInput.ToCharArray()){
+            yield return new WaitForSeconds(time);
+            targetText.text = targetText.text[..^8] + c + "</color>";
+        }
+    }
+    IEnumerator ExecuteAfterTitleType(float time, string text, float typingTime){
         yield return new WaitForSeconds(time);
-        TypeContext(text);
+        TypeContext(text, typingTime);
+    }
+    IEnumerator ExecuteAfterTitleTypeWithColor(float time, string text, float typingTime, string color){
+        yield return new WaitForSeconds(time);
+        TypeContextWithColor(text, typingTime, color);
     }
 }
