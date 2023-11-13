@@ -129,7 +129,6 @@ public class GameRoomServiceImpl implements GameRoomService {
     public void morningGameLogic(GameRoom gameRoom) {
         SecondRoom secondRoom = gameRoom.getSecondRoom();
         ThirdRoom thirdRoom = gameRoom.getThirdRoom();
-        Events events = gameRoom.getEvents();
 
         // 블랙홀 영향권인지 판단
         if (gameRoom.getBlackholeStatus()[gameRoom.getRoundNo()]) {
@@ -184,6 +183,7 @@ public class GameRoomServiceImpl implements GameRoomService {
         // 식사는 10일에 고정
         if (gameRoom.getRoundNo() == 10) {
             eventIdx += 64;
+            validateEvent(6, gameRoom);
         }
 
         gameRoom.setEvent(eventIdx);
@@ -240,16 +240,16 @@ public class GameRoomServiceImpl implements GameRoomService {
                 thirdRoom.modifyBlackholeStatus(true);
                 break;
             case 2:
-                if (secondRoom.getCarbonCaptureStatus() == 0) secondRoom.modifyCarbonCaptureStatus(1);
+                gameRoom.setBirthday(true);
                 break;
             case 3:
-                firstRoom.modifyPurifierStatus(1);
-                break;
-            case 4:
                 gameRoom.setPlayerStatus(true);
                 break;
+            case 4:
+                firstRoom.modifyPurifierStatus(1);
+                break;
             case 5:
-                gameRoom.setBirthday(true);
+                if (secondRoom.getCarbonCaptureStatus() == 0) secondRoom.modifyCarbonCaptureStatus(1);
                 break;
             case 6:
                 gameRoom.setFoodAmount(gameRoom.getFoodAmount() + 1);
