@@ -16,28 +16,13 @@ public class RedissonConfig {
     private int matchPort;
     @Value("${spring.redis.matchServer.password}")
     private String matchPassword;
-    @Value("${spring.redis.gameServer.host}")
-    private String gameHost;
-    @Value("${spring.redis.gameServer.port}")
-    private int gamePort;
-    @Value("${spring.redis.gameServer.password}")
-    private String gamePassword;
 
     @Bean(destroyMethod = "shutdown")
-    public RedissonClient matchRedissonClient() {
+    public RedissonClient redissonClient() {
         Config config = new Config();
         config.useSingleServer()
                 .setAddress("redis://" + matchHost + ":" + matchPort)
                 .setPassword(matchPassword);
-        return Redisson.create(config);
-    }
-
-    @Bean(destroyMethod = "shutdown")
-    public RedissonClient gameRedissonClient() {
-        Config config = new Config();
-        config.useSingleServer()
-                .setAddress("redis://" + gameHost + ":" + gamePort)
-                .setPassword(gamePassword);
         return Redisson.create(config);
     }
 }
