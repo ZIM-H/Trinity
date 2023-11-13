@@ -4,6 +4,7 @@ using UnityEngine;
 using DG.Tweening;
 public class AlienController : MonoBehaviour
 {
+    public AudioClip[] alienSound;
     public Sequence movingAlien;
     public GameObject player;
     // Start is called before the first frame update
@@ -19,6 +20,8 @@ public class AlienController : MonoBehaviour
             }else{
                 thirdRoomMover();
             }
+            GetComponent<AudioSource>().clip = alienSound[0];
+            GetComponent<AudioSource>().Play();
         }else{
             gameObject.SetActive(false);
         }
@@ -94,8 +97,14 @@ public class AlienController : MonoBehaviour
         yield return new WaitForSeconds(1.5f);
         player.transform.DOMoveY(0,2.5f);
         player.transform.Find("Main Camera").transform.DOLocalRotate(new Vector3(0,0,60),2.5f);
+        GetComponent<AudioSource>().clip = alienSound[1];
+        GetComponent<AudioSource>().loop = false;
+        GetComponent<AudioSource>().Play();
         yield return new WaitForSeconds(1.5f);
         player.transform.Find("Main Camera").Find("Canvas").Find("Fade").GetComponent<Fade>().FadeOut();
+        GetComponent<AudioSource>().clip = alienSound[2];
+        GetComponent<AudioSource>().loop = true;
+        GetComponent<AudioSource>().Play();
         yield return new WaitForSeconds(1.5f);
         player.transform.Find("Main Camera").Find("Canvas").Find("Fade").GetChild(0).gameObject.SetActive(true);
         

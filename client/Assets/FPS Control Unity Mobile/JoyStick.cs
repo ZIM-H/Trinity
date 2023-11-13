@@ -8,12 +8,24 @@ public class JoyStick : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointer
 
     public Vector3 InputDirection;
 
+    private AudioSource audioSource; // 오디오 소스 추가
+
+    public AudioClip footstepSound; // 발소리 오디오 클립 할당
+
     void Start()
     {
 
         jsContainer = GetComponent<Image>();
         joystick = transform.GetChild(0).GetComponent<Image>(); 
         InputDirection = Vector3.zero;
+
+        // 오디오 소스 컴포넌트 가져오기
+        audioSource = GetComponent<AudioSource>();
+
+        // 발소리 오디오 클립 할당
+        audioSource.clip = footstepSound;
+
+
     }
 
     public void OnDrag(PointerEventData ped)
@@ -38,6 +50,16 @@ public class JoyStick : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointer
 
         
         joystick.rectTransform.anchoredPosition = new Vector3(InputDirection.x * (jsContainer.rectTransform.sizeDelta.x / 3) , InputDirection.y * (jsContainer.rectTransform.sizeDelta.y) / 3);
+
+        // x, y 좌표값이 변경되면 발소리 재생
+        if (InputDirection.x != 0 || InputDirection.y != 0)
+        {
+            // 발소리 재생
+            if (!audioSource.isPlaying)
+            {
+                audioSource.Play();
+            }
+        }
 
     }
 
