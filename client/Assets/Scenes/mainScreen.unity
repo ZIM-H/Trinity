@@ -609,7 +609,8 @@ MonoBehaviour:
   m_text: Tutorial
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c625cf755cae05a4994cc07914717996, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: -8362957051966488609, guid: c625cf755cae05a4994cc07914717996,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1290,7 +1291,8 @@ MonoBehaviour:
   m_text: Finding a Game...
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c625cf755cae05a4994cc07914717996, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: -8362957051966488609, guid: c625cf755cae05a4994cc07914717996,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1443,7 +1445,8 @@ MonoBehaviour:
   m_text: Game Start
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c625cf755cae05a4994cc07914717996, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: -8362957051966488609, guid: c625cf755cae05a4994cc07914717996,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1886,6 +1889,7 @@ MonoBehaviour:
   gameOver: 0
   victory: 0
   gameOverText: 
+  monsterDate: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

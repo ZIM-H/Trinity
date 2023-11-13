@@ -110,7 +110,7 @@ public class VariableManager : MonoBehaviour
         morningTitleText = date.ToString() + "일차 시작";
         bool overworked = false;
         if ( power < workLimit ) {
-            morningContextText += "전날 과로하여 오늘은 활동할 수 없습니다.\n휴식을 취하세요.\n";
+            morningContextText = "전날 과로하여 오늘은 활동할 수 없습니다.\n휴식을 취하세요.\n";
             overworked = true;
         } else {
             morningContextText = "";
@@ -126,7 +126,8 @@ public class VariableManager : MonoBehaviour
         if ( date == 10 ) {
             morningContextText += "우주선에 비축해둔 비상식량을 발견했습니다.\n보유 식량 수가 1 증가합니다.\n";
         }
-        morningContextText += "트리니티 호의 하루가 시작됩니다.\n생존을 위한 활동을 이어나가세요.";
+        morningContextText += "트리니티 호의 하루가 시작됩니다.\n생존을 위한 활동을 이어나가세요.\n";
+        morningContextText += "현재 중앙 정원에 투입된 비료 수 : " + fertilizerAmount.ToString();
     }
 
     public void SetFirstDayData(string receivedMessage)
