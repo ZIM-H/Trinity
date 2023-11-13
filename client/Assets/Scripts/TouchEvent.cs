@@ -75,7 +75,9 @@ public class TouchEvent : MonoBehaviour, IPointerClickHandler
         if (condition == true){
             int numOfChild = transform.childCount;
             for (int i = 0; i < numOfChild; i++){
+                if(transform.GetChild(i).gameObject.name != "Smoke" && transform.GetChild(i).gameObject.name != "Smoke2"){
                 transform.GetChild(i).gameObject.GetComponent<cakeslice.Outline>().enabled = false;
+            }
             }
         }
     }
