@@ -11,7 +11,8 @@ using TMPro;
 
 public class YesButton : MonoBehaviour, IPointerClickHandler
 {
-
+    public AudioClip[] effectSounds;
+    AudioSource audioSource;
     GameObject fertilizerRoomCount;
     // Start is called before the first frame update
     GameObject powerBar;
@@ -24,8 +25,11 @@ public class YesButton : MonoBehaviour, IPointerClickHandler
     GameObject canvas;
     GameObject weapon;
     GameObject player;
+    GameObject jukebox;
     void Start()
     {   
+        jukebox = GameObject.Find("JukeBox");
+        audioSource = jukebox.GetComponent<AudioSource>();
         powerBar = GameObject.Find("Fill");
         mainCamera = GameObject.Find("Main Camera");
         weapon = GameObject.Find("Weapon");
@@ -46,36 +50,56 @@ public class YesButton : MonoBehaviour, IPointerClickHandler
             if(VariableManager.Instance.fertilizerAmountInRoom > 0){
                 VariableManager.Instance.inputFertilizerTry = true;
                 fertilizerRoomCount.GetComponent<FertilizerRoomCount>().UseFertilizerUI();
+                audioSource.clip = effectSounds[0];
+                audioSource.Play();
             }else{
                 VariableManager.Instance.power++;
                 player.GetComponent<CoroutineController>().FertilizerAlertCoroutine();
             }
         }else if(target == "FertilizerMaker"){
             VariableManager.Instance.makeFertilizerTry = true;
+            audioSource.clip = effectSounds[1];
+            audioSource.Play();
         }else if(target == "Water"){
             VariableManager.Instance.purifierTry = true;
             Target.transform.Find("Smoke").gameObject.SetActive(false);
+            audioSource.clip = effectSounds[2];
+            audioSource.Play();
         }else if(target == "FertilizerResearch"){
             VariableManager.Instance.fertilizerUpgradeTry = true;
+            audioSource.clip = effectSounds[3];
+            audioSource.Play();
         }else if(target == "CO2Fix"){
             VariableManager.Instance.carbonCaptureTry = true;
+            audioSource.clip = effectSounds[4];
+            audioSource.Play();
             if(VariableManager.Instance.carbonCaptureStatus == 2){
                 Target.transform.Find("Smoke2").gameObject.SetActive(false);
             }else{
                 Target.transform.Find("Smoke").gameObject.SetActive(false);
             }
         }else if(target == "Taurine"){
+            audioSource.clip = effectSounds[3];
+            audioSource.Play();
             VariableManager.Instance.taurineFilterTry = true;
             VariableManager.Instance.hasTaurine = 1;
         }else if(target == "CentralPark"){
             VariableManager.Instance.farmTry = true;
+            audioSource.clip = effectSounds[5];
+            audioSource.Play();
             Target.transform.Find("Smoke").gameObject.SetActive(false);
         }else if(target == "Weapon"){
             VariableManager.Instance.asteroidDestroyTry = true;
+            audioSource.clip = effectSounds[6];
+            audioSource.Play();
         }else if(target == "Barrier"){
             VariableManager.Instance.barrierDevTry = true;
+            audioSource.clip = effectSounds[7];
+            audioSource.Play();
         }else if(target == "Observer"){
             VariableManager.Instance.observerTry = true;
+            audioSource.clip = effectSounds[8];
+            audioSource.Play();
             if(VariableManager.Instance.asteroidStatus){
                 weapon.GetComponent<TouchEvent>().condition = false;
                 int weaponNumOfChild = weapon.transform.childCount;
@@ -84,9 +108,6 @@ public class YesButton : MonoBehaviour, IPointerClickHandler
                     Debug.Log(weapon.transform.GetChild(i).name);
                     weapon.transform.GetChild(i).gameObject.GetComponent<cakeslice.Outline>().enabled = true;
                     }
-                
-
-
                 }
             }
         VariableManager.Instance.power--;
