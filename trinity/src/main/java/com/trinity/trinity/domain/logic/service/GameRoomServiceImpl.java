@@ -122,7 +122,7 @@ public class GameRoomServiceImpl implements GameRoomService {
 
         gameRoomRedisService.saveGameRoomToTemp(gameRoom);
 
-        return "live";
+        return "alive";
     }
 
     @Override
@@ -193,7 +193,7 @@ public class GameRoomServiceImpl implements GameRoomService {
 
     @Override
     public boolean checkEndGame(GameRoom gameRoom) {
-        if (gameRoom.getRoundNo() == 13) {
+        if (gameRoom.getRoundNo() == 12) {
             gameRoomRedisService.deleteGameRoom(gameRoom.getGameRoomId());
             return true;
         }

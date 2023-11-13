@@ -3,6 +3,7 @@ package com.trinity.trinity.global.redis.service;
 import com.trinity.trinity.domain.control.enums.UserStatus;
 import com.trinity.trinity.global.dto.ClientSession;
 import com.trinity.trinity.domain.logic.dto.GameRoomCheck;
+import com.trinity.trinity.global.dto.ClientUserId;
 import lombok.RequiredArgsConstructor;
 import lombok.Synchronized;
 import org.springframework.data.redis.core.HashOperations;
@@ -37,9 +38,19 @@ public class RedisService {
     }
 
     @Synchronized
+    public  String getData(String key) {
+        return loginHashOperations.get("connectingMember", key);
+    }
+
+    @Synchronized
     public void backToLooby(String[] userIds) {
         for (String userId : userIds)
             loginHashOperations.put("connectingMember", userId, String.valueOf(UserStatus.LOBBY));
+    }
+
+    @Synchronized
+    public void removeMatching(String userId) {
+        loginHashOperations.put("connectingMember", userId, String.valueOf(UserStatus.LOBBY));
     }
 
     @Synchronized
@@ -95,5 +106,20 @@ public class RedisService {
             hashOperations.put("gameRoomCheck", gameRoomId, checkList);
             return false;
         }
+    }
+
+    //clientId - userId 부분
+
+    @Synchronized
+    public void saveUserId(ClientUserId client) {
+        hashOperations.put("ClientUserId", client.getClientId(), client.getUserId());
+    }
+
+    public String getUserId(String clientId) {
+        return (String) hashOperations.get("ClientUserId", clientId);
+    }
+
+    public void removeUserId(String clientId) {
+        hashOperations.delete("ClientUserId", clientId);
     }
 }
