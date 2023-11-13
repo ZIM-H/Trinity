@@ -28,6 +28,12 @@ public class WebSocketClientManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
+    void OnApplicationQuit() {
+        if(isConnected){
+        ToggleWebSocketConnection();    
+        }
+    }
+
     public void ToggleWebSocketConnection()
     {
         if (isConnected)
