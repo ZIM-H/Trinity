@@ -62,9 +62,9 @@ const ModelViewer: React.FC<ModelViewerProps> = ({ modelPath, fileType }) => {
 
       // 모델이 로드된 후에만 회전 조절
       if (model) {
-        model.rotation.y += 0.00008;
-        model.rotation.z += 0.00008;
-        model.rotation.x += 0.00008;
+        model.rotation.y += 0.0009;
+        model.rotation.z += 0.0009;
+        model.rotation.x += 0.0009;
       }
 
       renderer.render(scene, camera);
