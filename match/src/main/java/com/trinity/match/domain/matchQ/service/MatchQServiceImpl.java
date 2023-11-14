@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.PriorityQueue;
 import java.util.Set;
 
 @Slf4j
@@ -28,7 +27,6 @@ public class MatchQServiceImpl implements MatchQService {
 
     private static final String LOCK_NAME = "matchQueueLock";
 
-    // ===============================================
     @Override
     public boolean joinQueue(String userId) {
         RLock lock = matchRedissonClient.getLock(LOCK_NAME);
@@ -98,94 +96,4 @@ public class MatchQServiceImpl implements MatchQService {
             lock.unlock();
         }
     }
-
-
-
-    // ====================================================================
-//    static PriorityQueue<Player> pq = new PriorityQueue<Player>((o1, o2) -> Double.compare(o1.time, o2.time));
-//
-//    public static class Player{
-//        String userId;
-//        double time;
-//
-//        public Player(String userId, double time) {
-//            this.userId = userId;
-//            this.time = time;
-//        }
-//    }
-//
-//    @Override
-//    public boolean joinQueue(String userId) {
-//        double time = System.currentTimeMillis();
-//        Player player = new Player(userId, time);
-//        pq.offer(player);
-//
-//        try {
-//            log.info("pq.size() : " + pq.size());
-//            if (pq.size() >= 3) {
-//                log.info("pq.size()가 3 이상인 경우만");
-//                checkQueueSize();
-//            }
-//        } catch (Exception e) {
-//            log.info(e.getMessage());
-//            return false;
-//        }
-//
-//        return true;
-//    }
-//
-//    private void checkQueueSize() {
-//        RLock lock = matchRedissonClient.getLock(LOCK_NAME);
-//        lock.lock();
-//
-//        List<Player> waitingList = new ArrayList<>();
-//        try {
-//            Thread.sleep(2000);
-//
-//            while (waitingList.size() != 3) {
-//                if (pq.size() == 0) break;
-//
-//                // 1순위 사람 뽑기
-//                Player findPlayer = pq.poll();
-//
-//                Object state = redisService.validate(findPlayer.userId);
-//
-//                log.info("userId : " + findPlayer.userId + " " + state.toString());
-//
-//                if (state != null && state.toString().equals("WAITING")) {
-//                    log.info("waitingList에 삽입");
-//                    waitingList.add(findPlayer);
-//                }
-//            }
-//
-//            log.info("waitingList.size() : " + waitingList.size());
-//
-//            // 게임 서버에 보낼 리스트의 크기가 3보다 작으면 다시 대기큐에 넣고 돌아가기
-//            if (waitingList.size() < 3) {
-//                log.info("복구 전 pq.size() : " + pq.size());
-//
-//                for (Player player : waitingList) pq.offer(player);
-//
-//                log.info("복구 후 pq.size() : " + pq.size());
-//
-//                return;
-//            }
-//
-//            List<GameServerPlayerListRequestDto> playerList = new ArrayList<>();
-//            for (Player player : waitingList)
-//                playerList.add(GameServerPlayerListRequestDto.builder()
-//                        .userId(player.userId)
-//                        .build());
-//
-//            webClientService.post(playerList, waitingList);
-//
-//        } catch (Exception e) {
-//            // 에러 발생하면 에러 메시지 찍고 대기 큐에 다시 넣기
-//            log.error(e.getMessage());
-////            recoverList(waitingList);
-//            for (Player player : waitingList) pq.offer(player);
-//        } finally {
-//            lock.unlock();
-//        }
-//    }
 }

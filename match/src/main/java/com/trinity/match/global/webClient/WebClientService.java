@@ -18,22 +18,6 @@ public class WebClientService {
     private final WebClientConfig webClientConfig;
     private final RedisServiceImpl redisService;
 
-//    public void post(List<GameServerPlayerListRequestDto> playerList, List<MatchQServiceImpl.Player> waitingList) {
-//        webClientConfig.webClient()
-//            .post()
-//            .uri("/players")
-//            .body(BodyInserters.fromValue(playerList))
-//            .retrieve()
-//            .bodyToMono(String.class) // 반환되는 응답의 타입. 필요에 따라 변경
-//            .subscribe(
-//                    response -> log.info(response),
-//                    error -> {
-////                        redisService.recoverList(waitingList);
-//                        log.error(error.getMessage());
-//                    }
-//            ); // 비동기 처리를 위해 subscribe() 호출;
-//    }
-
     public void post(List<GameServerPlayerListRequestDto> playerList, List<Pair<String, Double>> waitingList) {
         webClientConfig.webClient()
                 .post()
