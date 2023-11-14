@@ -1,10 +1,10 @@
 package com.trinity.match.global.webClient;
 
 import com.trinity.match.domain.matchQ.dto.request.GameServerPlayerListRequestDto;
+import com.trinity.match.domain.matchQ.service.MatchQServiceImpl;
 import com.trinity.match.global.redis.service.RedisServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
 
@@ -18,7 +18,7 @@ public class WebClientService {
     private final WebClientConfig webClientConfig;
     private final RedisServiceImpl redisService;
 
-    public void post(List<GameServerPlayerListRequestDto> playerList, List<Pair<String, Double>> waitingList) {
+    public void post(List<GameServerPlayerListRequestDto> playerList, List<MatchQServiceImpl.Player> waitingList) {
         webClientConfig.webClient()
             .post()
             .uri("/players")
@@ -28,7 +28,7 @@ public class WebClientService {
             .subscribe(
                     response -> log.info(response),
                     error -> {
-                        redisService.recoverList(waitingList);
+//                        redisService.recoverList(waitingList);
                         log.error(error.getMessage());
                     }
             ); // 비동기 처리를 위해 subscribe() 호출;
