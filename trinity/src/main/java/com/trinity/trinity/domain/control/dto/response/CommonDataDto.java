@@ -9,12 +9,14 @@ public class CommonDataDto {
     private boolean fertilizerUpgrade;
     private boolean barrierUpgrade;
     private boolean conflictAsteroid;
+    private boolean carbonCaptureNotice;
 
     @Builder
-    public CommonDataDto(boolean fertilizerUpgrade, boolean barrierUpgrade, boolean conflictAsteroid) {
+    public CommonDataDto(boolean fertilizerUpgrade, boolean barrierUpgrade, boolean conflictAsteroid, boolean carbonCaptureNotice) {
         this.fertilizerUpgrade = fertilizerUpgrade;
         this.barrierUpgrade = barrierUpgrade;
         this.conflictAsteroid = conflictAsteroid;
+        this.carbonCaptureNotice = carbonCaptureNotice;
     }
 
     public void setCommonDto(GameRoom gameroom) {
