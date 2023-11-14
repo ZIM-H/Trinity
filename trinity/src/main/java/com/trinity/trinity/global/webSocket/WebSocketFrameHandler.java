@@ -180,6 +180,7 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
 
         CommonDataDto commonDataDto = CommonDataDto.builder()
                 .conflictAsteroid(asteroidConflict)
+                .carbonCaptureNotice(morningRoom.isCarbonCaptureNotice())
                 .build();
 
         commonDataDto.setCommonDto(morningRoom);
