@@ -114,7 +114,11 @@ public class MatchQServiceImpl implements MatchQService {
         pq.offer(player);
 
         try {
-            if (pq.size() >= 3) checkQueueSize();
+            log.info("pq.size() : " + pq.size());
+            if (pq.size() >= 3) {
+                log.info("pq.size()가 3 이상인 경우만");
+                checkQueueSize();
+            }
         } catch (Exception e) {
             log.info(e.getMessage());
             return false;
@@ -129,7 +133,6 @@ public class MatchQServiceImpl implements MatchQService {
 
         List<Player> waitingList = new ArrayList<>();
         try {
-            // 대기 큐의 크기가 3 보다 작으면 그만
             while (waitingList.size() != 3) {
                 if (pq.size() == 0) break;
 
@@ -141,6 +144,8 @@ public class MatchQServiceImpl implements MatchQService {
                     waitingList.add(findPlayer);
                 }
             }
+
+            log.info("waitingList.size() : " + waitingList.size());
 
             // 게임 서버에 보낼 리스트의 크기가 3보다 작으면 다시 대기큐에 넣고 돌아가기
             if (waitingList.size() < 3) {
