@@ -4990,7 +4990,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -93.00006, y: 121}
+  m_AnchoredPosition: {x: -155, y: 121}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &503364842 stripped
@@ -9074,7 +9074,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 93, y: 121}
+  m_AnchoredPosition: {x: 155, y: 121}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &905284615
@@ -11080,7 +11080,7 @@ MonoBehaviour:
   runningSpeed: 11.5
   gravity: 20
   playerCamera: {fileID: 1484603979}
-  lookSpeed: 2
+  lookSpeed: 3
   lookXLimit: 45
   jumpHeight: 3
   RunAxis: {x: 0, y: 0}

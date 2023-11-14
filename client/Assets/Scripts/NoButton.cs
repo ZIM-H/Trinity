@@ -17,11 +17,13 @@ public class NoButton : MonoBehaviour, IPointerClickHandler
         canvas = GameObject.Find("Canvas");
         joystick = canvas.transform.Find("Analog").gameObject;
         joystickVision = canvas.transform.Find("AnalogVision").gameObject;
-
+        interactiveUIPanel = canvas.transform.Find("InteractiveUIPanel").gameObject;
     }
     public void OnPointerClick(PointerEventData eventData){
-        Debug.Log("No");
-        interactiveUIPanel = GameObject.Find("InteractiveUIPanel");
+       NoWay();
+    }
+    public void NoWay(){
+         Debug.Log("No");
         if(VariableManager.Instance.asteroidStatus && VariableManager.Instance.blackHoleObserved &&
          canvas.transform.Find("InteractiveUIPanel").transform.Find("InteractiveCameraImage").transform.Find("InteractiveUI").GetComponent<RawImage>().texture.name == "Asteroids")
          {
