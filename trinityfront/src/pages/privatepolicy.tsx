@@ -1,6 +1,11 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const PrivacyPolicy: React.FC = () => {
+  const navigate = useNavigate();
+    const home = () => {
+        navigate("/");
+    };
   return (
     <div style={{display:'flex', flexDirection: 'column', alignItems:'center', justifyContent:'center'}}>
       <p style={{fontSize:'25px'}}>{'<'}트리니티{'>'}(&apos;http://develop.trinity.com&apos;이하 &apos;트리니티&apos;)은(는)</p>
@@ -37,6 +42,9 @@ const PrivacyPolicy: React.FC = () => {
         <p style={{fontSize:'18px'}}>직책 : 팀장</p>
         <p style={{fontSize:'18px'}}>직급 : 팀장</p>
         <p style={{fontSize:'18px'}}>연락처 : welcometoaskworld@gmail.com</p>
+
+        <button onClick={home}>Trinity</button>
+        <br />
     </div>
   );
 };

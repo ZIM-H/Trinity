@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import * as THREE from 'three';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+// import styled from 'styled-components';
 
 interface ModelViewerProps {
   modelPath: string;
@@ -18,6 +19,7 @@ const ModelViewer: React.FC<ModelViewerProps> = ({ modelPath, fileType }) => {
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer({ alpha: true });
 
+    // 
     renderer.setSize(window.innerWidth, window.innerHeight);
     containerRef.current.appendChild(renderer.domElement);
 
@@ -60,9 +62,9 @@ const ModelViewer: React.FC<ModelViewerProps> = ({ modelPath, fileType }) => {
 
       // 모델이 로드된 후에만 회전 조절
       if (model) {
-        model.rotation.y += 0.001;
-        model.rotation.z += 0.001;
-        model.rotation.x += 0.001;
+        model.rotation.y += 0.00008;
+        model.rotation.z += 0.00008;
+        model.rotation.x += 0.00008;
       }
 
       renderer.render(scene, camera);

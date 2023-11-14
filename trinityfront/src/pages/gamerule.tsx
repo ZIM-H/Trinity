@@ -1,7 +1,24 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const GameRule: React.FC = () => {
+  const navigate = useNavigate();
+  const biryo = () => {
+      window.scrollTo(0, 0);
+      navigate("/biryoroom");
+  };
+  const medi = () => {
+    window.scrollTo(0, 0);
+    navigate("/mediroom");
+  }
+  const ctrl = () => {
+    window.scrollTo(0, 0);
+    navigate("/ctrlroom");
+  }
+  const Home = () => {
+    window.scrollTo(0, 0);
+    navigate("/");
+  }
     
     return (
     <div style={{display:'flex', flexDirection: 'column', alignItems:'center', justifyContent:'center'}}>
@@ -22,25 +39,21 @@ const GameRule: React.FC = () => {
         <p style={{fontSize:'55px'}}>생존하지 못한다!</p>
         <p style={{fontSize:'55px'}}>이제 각 방에서 할 수 있는 일을 확인하여 협동하라!</p>
         <div style={{display:'flex', flexDirection: 'row', alignItems:'center', justifyContent:'center'}}>
-            <div style={{display:'flex', flexDirection: 'column', alignItems:'center', justifyContent:'center'}}>
-              <Link to="/biryoroom">
-                <img src="assets/Biryo.png" alt="" style={{ width: '300px', height:'300px'}} />
-              </Link>
+            <div style={{display:'flex', flexDirection: 'column', alignItems:'center', justifyContent:'center', cursor: 'pointer'}} onClick={biryo}>
+              <img src="assets/Biryo.png" alt="" style={{ width: '300px', height:'300px'}} />
               <p style={{fontSize:'25px'}}>비료방</p>
             </div>
-            <div style={{display:'flex', flexDirection: 'column', alignItems:'center', justifyContent:'center', padding:'50px'}}>
-              <Link to="/mediroom">
-                <img src="assets/medi.png" alt="" style={{ width: '300px', height:'300px'}} />
-              </Link>
+            <div style={{display:'flex', flexDirection: 'column', alignItems:'center', justifyContent:'center', padding:'50px', cursor: 'pointer'}} onClick={medi}>
+              <img src="assets/medi.png" alt="" style={{ width: '300px', height:'300px'}} />
               <p style={{fontSize:'25px'}}>약제실</p>
             </div>
-            <div style={{display:'flex', flexDirection: 'column', alignItems:'center', justifyContent:'center'}}>
-              <Link to="/ctrlroom">
-                <img src="assets/ctrl.png" alt="" style={{ width: '300px', height:'300px'}} />
-              </Link>
+            <div style={{display:'flex', flexDirection: 'column', alignItems:'center', justifyContent:'center', cursor: 'pointer'}} onClick={ctrl}>
+              <img src="assets/ctrl.png" alt="" style={{ width: '300px', height:'300px'}} />
               <p style={{fontSize:'25px'}}>조타실</p>
             </div>
         </div>
+        <button onClick={Home}>HOME</button>
+        <br />
     </div>
     );
 }
