@@ -136,7 +136,7 @@ public class VariableManager : MonoBehaviour
         if ( date == 10 ) {
             morningContextText += "우주선에 비축해둔 비상식량을 발견했습니다.\n보유 식량 수가 1 증가합니다.\n";
         }
-        morningContextText += "트리니티 호의 하루가 시작됩니다.\n생존을 위한 활동을 이어나가세요.";
+        morningContextText += "트리니티 호의 하루가 시작됩니다.\n생존을 위한 활동을 이어나가세요.\n";
         morningFoodAmountText = "현재 식량 비축분 : " + foodAmount.ToString();
         if (monsterDate <= date) {
             morningMonsterText = monsterWarningText[Random.Range(0, 5)];

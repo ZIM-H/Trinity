@@ -6,16 +6,19 @@ using UnityEngine.SceneManagement;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System;
+using TMPro;
 public class WebSocketClientManager : MonoBehaviour
 {
     private WebSocket webSocket;
     private bool isConnected;
-    private string serverURL = "wss://k9b308.p.ssafy.io/websocket"; // 웹소켓 서버 주소로 바꾸세요
+    private readonly string serverURL = "wss://k9b308.p.ssafy.io/websocket"; // 웹소켓 서버 주소로 바꾸세요
     private string userId; // userId를 저장하는 멤버 변수
     public GameObject ship;
-    private string apiUrl = "https://k9b308.p.ssafy.io/api/game/match/"; // 대상 URL로 바꾸세요.
-
-
+    public GameObject quitPanel;
+    public GameObject scorePanel;
+    public GameObject Panel;
+    public GameObject scoreIcon;
+    private readonly string apiUrl = "https://k9b308.p.ssafy.io/api/game/match/"; // 대상 URL로 바꾸세요.
 
     void Awake(){
         ship = GameObject.Find("spaceship_revert");
@@ -27,12 +30,94 @@ public class WebSocketClientManager : MonoBehaviour
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
         isConnected = false;
         DontDestroyOnLoad(gameObject);
+        DontDestroyOnLoad(quitPanel);
     }
+
+    void Update()
+    {
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            if (Input.GetKeyDown(KeyCode.Home))
+            {
+                // Home button
+                QuitYes();
+            }
+            else if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                // Back button
+                ToggleQuitPanel();
+            }
+            else if (Input.GetKeyDown(KeyCode.Menu))
+            {
+                // Menu button
+                QuitYes();
+            }
+        }
+    }
+
 
     void OnApplicationQuit() {
         if(isConnected){
-        ToggleWebSocketConnection();    
+            ToggleWebSocketConnection();    
         }
+    }
+
+    public void ToggleQuitPanel()
+    {
+        // 종료 창을 활성화 또는 비활성화합니다.
+        bool isActive = Panel.activeSelf;
+        Panel.SetActive(!isActive);
+        quitPanel.SetActive(!isActive);
+    }
+    
+    public void QuitYes()
+    {
+        if (isConnected) {
+            ToggleWebSocketConnection();
+        }
+        Application.Quit();
+    }
+    public void QuitNo()
+    {
+        quitPanel.SetActive(false);
+        Panel.SetActive(false);
+    }
+
+    public void ToggleScorePanel() {
+        bool isActive = Panel.activeSelf;
+        if (!isActive) {
+            Transform aTransform = scorePanel.transform.Find("Text_Info");
+            if (aTransform != null)
+            {
+                TextMeshProUGUI textComponent = aTransform.GetComponent<TextMeshProUGUI>();
+
+                // Text 설정
+                if (textComponent != null)
+                {
+                    if (PlayerPrefs.HasKey("playCount")) {
+                        textComponent.text = "트리니티 호를 타고 " + PlayerPrefs.GetInt("playCount").ToString() + "번 여행했습니다.\n";
+                        textComponent.text += "트리니티 호를 타고 " + PlayerPrefs.GetInt("winCount").ToString() + "번 생환했습니다.\n";
+                        textComponent.text += "굶어 죽은 횟수 : " + PlayerPrefs.GetInt("starve").ToString() + "회\n";
+                        textComponent.text += "오염된 식수로 죽은 횟수 : " + PlayerPrefs.GetInt("contaminated").ToString() + "회\n";
+                        textComponent.text += "산소 부족으로 죽은 횟수 : " + PlayerPrefs.GetInt("suffocation").ToString() + "회\n";
+                        textComponent.text += "중도 탈주자로 인해 죽은 횟수 : " + PlayerPrefs.GetInt("userLeave").ToString() + "회";
+                    }
+                    else {
+                        textComponent.text = "아직 게임을 플레이하지 않았습니다.";
+                    }
+                }
+                else
+                {
+                    Debug.LogError("TextMeshProUGUI 컴포넌트를 찾을 수 없습니다.");
+                }
+            }
+            else
+            {
+                Debug.LogError("ScorePanel 오브젝트 하위의 Text_Info 오브젝트를 찾을 수 없습니다.");
+            }
+        }
+        Panel.SetActive(!isActive);
+        scorePanel.SetActive(!isActive);
     }
 
     public void ToggleWebSocketConnection()
@@ -90,6 +175,25 @@ public class WebSocketClientManager : MonoBehaviour
                         {
                             // 이 부분에서 메인 스레드에서 실행하고자 하는 작업을 수행
                             StartCoroutine(SetFirstDayAndLoadScene(receivedMessage));
+                            if (PlayerPrefs.HasKey("playCount")) {
+                                int value = PlayerPrefs.GetInt("playCount");
+                                value += 1;
+                                PlayerPrefs.SetInt("playCount", value);
+                                PlayerPrefs.Save(); // 변경된 값을 저장
+                                Debug.Log("현재까지 플레이 수 : " + value);
+                            }
+                            else
+                            {
+                                // 값이 없다면 생성하고 1로 초기화
+                                PlayerPrefs.SetInt("playCount", 1);
+                                PlayerPrefs.SetInt("winCount", 0);
+                                PlayerPrefs.SetInt("starve", 0);
+                                PlayerPrefs.SetInt("contaminated", 0);
+                                PlayerPrefs.SetInt("suffocation", 0);
+                                PlayerPrefs.SetInt("userLeave", 0);
+                                PlayerPrefs.Save(); // 새로운 값을 저장
+                                Debug.Log("최초로 플레이한 유저 : 1판, 승리 수 0회");
+                            }
                         });
                     } else if (type == "nextRound") {
                         Debug.Log("nextRound 메시지 수신");
@@ -106,6 +210,9 @@ public class WebSocketClientManager : MonoBehaviour
                             string status = (string)jsonObject["status"];
                             if (status == "VICTORY") {
                                 VariableManager.Instance.GameOver(true,"");
+                                int value = PlayerPrefs.GetInt("winCount");
+                                PlayerPrefs.SetInt("winCount", value + 1);
+                                PlayerPrefs.Save();
                             } else {
                                 string reason;
                                 if (status == "userLeave") {
@@ -113,6 +220,9 @@ public class WebSocketClientManager : MonoBehaviour
                                 } else {
                                     reason = (string)jsonObject["reason"];
                                 }
+                                int value = PlayerPrefs.GetInt(reason);
+                                PlayerPrefs.SetInt(reason, value + 1);
+                                PlayerPrefs.Save();
                                 VariableManager.Instance.GameOver(false,reason);
                             }
                         });
