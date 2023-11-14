@@ -4,6 +4,7 @@ using System.ComponentModel;
 using UnityEngine;
 using TMPro;
 using System;
+using System.Text;
 
 
 public class TextTyper : MonoBehaviour
@@ -114,11 +115,18 @@ public class TextTyper : MonoBehaviour
             targetText.text += c;
         }
     }
-    IEnumerator TypingWithColor(float time, TextMeshProUGUI targetText, string color, string stringInput){
-        targetText.text += "\n<color=" + color + "></color>";
-        foreach(char c in stringInput.ToCharArray()){
+    IEnumerator TypingWithColor(float time, TextMeshProUGUI targetText, string color, string stringInput)
+    {
+        StringBuilder stringBuilder = new StringBuilder(targetText.text);
+        stringBuilder.AppendLine("<color=" + color + "></color>");
+
+        foreach (char c in stringInput.ToCharArray())
+        {
             yield return new WaitForSeconds(time);
-            targetText.text = targetText.text[..^8] + c + "</color>";
+            stringBuilder.Remove(stringBuilder.Length - 8, 8);  // 마지막 8글자 삭제
+            stringBuilder.Append(c);
+            stringBuilder.Append("</color>");
+            targetText.text = stringBuilder.ToString();
         }
     }
     IEnumerator ExecuteAfterTitleType(float time, string text, float typingTime){
