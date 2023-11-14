@@ -86,11 +86,11 @@ public class TextTyper : MonoBehaviour
         
         StartCoroutine(TypingSound(0,1.0f));
         StartCoroutine(Typing(1.0f/charArray.Length, titleText));
-        StartCoroutine(TypingSound(1.5f,2.0f));
-        StartCoroutine(ExecuteAfterTitleType(1.5f, contextInput, 2.0f));
+        StartCoroutine(TypingSound(1.5f,1.5f));
+        StartCoroutine(ExecuteAfterTitleType(1.5f, contextInput, 1.5f));
         
-        StartCoroutine(TypingSound(3.75f,0.5f));
-        StartCoroutine(ExecuteAfterTitleTypeWithColor(3.75f, foodAmountText, 0.5f, "green"));
+        StartCoroutine(TypingSound(3.5f,0.5f));
+        StartCoroutine(ExecuteAfterTitleTypeWithColor(3.5f, foodAmountText, 0.5f, "green"));
         if (monsterText.Length > 0) {
             StartCoroutine(TypingSound(4.5f,0.5f));
             StartCoroutine(ExecuteAfterTitleTypeWithColor(4.5f, monsterText, 0.5f, "red"));
@@ -117,18 +117,14 @@ public class TextTyper : MonoBehaviour
     }
     IEnumerator TypingWithColor(float time, TextMeshProUGUI targetText, string color, string stringInput)
     {
-        StringBuilder stringBuilder = new StringBuilder(targetText.text);
-        stringBuilder.AppendLine("<color=" + color + "></color>");
-
         foreach (char c in stringInput.ToCharArray())
         {
             yield return new WaitForSeconds(time);
-            stringBuilder.Remove(stringBuilder.Length - 8, 8);  // 마지막 8글자 삭제
-            stringBuilder.Append(c);
-            stringBuilder.Append("</color>");
-            targetText.text = stringBuilder.ToString();
+            targetText.text += "<color=" + color + ">" + c + "</color>";
         }
+        targetText.text += "\n";
     }
+
     IEnumerator ExecuteAfterTitleType(float time, string text, float typingTime){
         yield return new WaitForSeconds(time);
         TypeContext(text, typingTime);
