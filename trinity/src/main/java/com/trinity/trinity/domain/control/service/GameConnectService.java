@@ -7,7 +7,7 @@ import java.util.List;
 public interface GameConnectService {
     PlayerDto connectToGameServer();
 
-    void matchMaking(String userId);
+    boolean matchMaking(String userId);
 
     boolean checkUserStatus(List<PlayerDto> players);
 

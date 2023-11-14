@@ -37,10 +37,11 @@ public class GameConnectServiceImpl implements GameConnectService {
     }
 
     @Override
-    public void matchMaking(String userId) {
+    public boolean matchMaking(String userId) {
+        if(redisService.getData(userId) == null) return false;
         webClientService.get(userId);
+        return true;
     }
-    
 
     @Override
     public boolean checkUserStatus(List<PlayerDto> players) {
@@ -54,6 +55,9 @@ public class GameConnectServiceImpl implements GameConnectService {
     public void createGameRoom(List<PlayerDto> players) {
 
         GameRoom gameRoom = createService.createGameRoom(players);
+
+        log.info("round No : " + gameRoom.getRoundNo());
+
         redisService.saveGameRoomUserStatus(gameRoom.getGameRoomId());
 
         Gson gson = new Gson();

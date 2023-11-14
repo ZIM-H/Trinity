@@ -113,6 +113,8 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
 
                         String[] rooms = getMorningRoom(asteroidConflict, morningRoom);
 
+                        log.info("Next day : " + morningRoom.getRoundNo());
+
                         for (int i = 0; i < 3; i++) sendDataToClient(clients[i], rooms[i]);
 
                     } else {
@@ -158,8 +160,8 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
-        System.out.println("channelInactive");
         String userId = redisService.getUserId(ctx.channel().id().toString());
+        System.out.println(userId + " channelInactive");
         //상태 변경, 채널 삭제
         if(userId == null) return;
         if(redisService.getData(userId).equals("WAITING")) {

@@ -15,12 +15,13 @@ public class GameRoomServiceImpl implements GameRoomService {
 
     @Override
     public String gameLogic(GameRoom gameRoom) {
-        gameRoom.modifyGameRound(gameRoom.getRoundNo() + 1);
         FirstRoom firstRoom = gameRoom.getFirstRoom();
         SecondRoom secondRoom = gameRoom.getSecondRoom();
         ThirdRoom thirdRoom = gameRoom.getThirdRoom();
 
+        gameRoom.modifyGameRound(gameRoom.getRoundNo() + 1);
         gameRoom.modifyFoodAmount(gameRoom.getFoodAmount() - 1);
+
         if (gameRoom.isCarbonCaptureNotice()) gameRoom.modifyCarbonCaptureNotice(false);
 
         // 식량 점검
