@@ -47,26 +47,12 @@ public class GameRoomRedisService {
         if (findRoom == null) {
             List<GameRoom> before = (List<GameRoom>) hashOperations.get("gameRoom", gameRoomId);
 
-            GameRoom last = before.get(before.size() - 1);
+            GameRoom last = before.get(0);
 
-            GameRoom gameRoom = GameRoom.builder()
-                    .foodAmount(last.getFoodAmount())
-                    .fertilizerAmount(last.getFertilizerAmount())
-                    .playerStatus(last.isPlayerStatus())
-                    .birthday(last.isBirthday())
-                    .event(last.getEvent())
-                    .carbonCaptureNotice(last.isCarbonCaptureNotice())
-                    .blackholeStatus(last.getBlackholeStatus())
-                    .events(last.getEvents())
-                    .firstRoom(last.getFirstRoom())
-                    .secondRoom(last.getSecondRoom())
-                    .thirdRoom(last.getThirdRoom())
-                    .build();
+            last.modifyGameRoomId(gameRoomId);
 
-            gameRoom.modifyGameRoomId(gameRoomId);
-
-            hashOperations.put("temp", gameRoomId, gameRoom);
-            return gameRoom;
+            hashOperations.put("temp", gameRoomId, last);
+            return last;
         }
         return findRoom;
     }

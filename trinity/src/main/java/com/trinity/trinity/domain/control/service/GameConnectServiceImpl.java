@@ -55,6 +55,9 @@ public class GameConnectServiceImpl implements GameConnectService {
     public void createGameRoom(List<PlayerDto> players) {
 
         GameRoom gameRoom = createService.createGameRoom(players);
+
+        log.info("round No : " + gameRoom.getRoundNo());
+
         redisService.saveGameRoomUserStatus(gameRoom.getGameRoomId());
 
         Gson gson = new Gson();

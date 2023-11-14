@@ -113,6 +113,8 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
 
                         String[] rooms = getMorningRoom(asteroidConflict, morningRoom);
 
+                        log.info("Next day : " + morningRoom.getRoundNo());
+
                         for (int i = 0; i < 3; i++) sendDataToClient(clients[i], rooms[i]);
 
                     } else {
