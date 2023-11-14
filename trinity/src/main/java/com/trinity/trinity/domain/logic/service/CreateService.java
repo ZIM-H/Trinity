@@ -41,7 +41,7 @@ public class CreateService {
                 .thirdRoom(thirdRoom)
                 .build();
 
-        gameRoomService.checkEvent(gameRoom);
+        gameRoom = gameRoomService.checkEvent(gameRoom);
         gameRoomRedisService.createGameRoom(gameRoom);
 
         return gameRoom;
