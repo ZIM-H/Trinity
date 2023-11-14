@@ -23,7 +23,8 @@ public class WebSocketClientManager : MonoBehaviour
         
     }
     void Start()
-    {
+    {       
+        Screen.sleepTimeout = SleepTimeout.NeverSleep;
         isConnected = false;
         DontDestroyOnLoad(gameObject);
     }

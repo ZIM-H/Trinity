@@ -11076,11 +11076,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01cd1adb9099a5d4e89421468a2ace2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkingSpeed: 13
+  walkingSpeed: 10
   runningSpeed: 11.5
   gravity: 20
   playerCamera: {fileID: 1484603979}
-  lookSpeed: 3
+  lookSpeed: 2.5
   lookXLimit: 45
   jumpHeight: 3
   RunAxis: {x: 0, y: 0}
