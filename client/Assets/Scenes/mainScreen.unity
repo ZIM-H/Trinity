@@ -135,7 +135,6 @@ GameObject:
   - component: {fileID: 286090437}
   - component: {fileID: 286090436}
   - component: {fileID: 286090435}
-  - component: {fileID: 286090439}
   - component: {fileID: 286090442}
   - component: {fileID: 286090441}
   - component: {fileID: 286090440}
@@ -234,18 +233,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &286090439
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 286090434}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: de3dc3c12734057469c861b966844099, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &286090440
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2303,6 +2290,9 @@ MonoBehaviour:
   nightContextText: 
   morningTitleText: 
   morningContextText: 
+  morningFoodAmountText: 
+  morningMonsterText: 
+  monsterWarningText: []
   gameOver: 0
   victory: 0
   gameOverText: 

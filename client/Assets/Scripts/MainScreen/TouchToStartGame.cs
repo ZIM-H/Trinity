@@ -26,20 +26,27 @@ public class TouchToStartGame : MonoBehaviour
         // 게임이 시작되지 않았고 터치 입력을 확인 (모바일 터치 또는 데스크톱 클릭)
         if (!hasStarted && (Input.GetMouseButtonDown(0) || (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)))
         {
-            hasStarted = true; // 게임 시작 플래그 설정
-
-            // 텍스트를 비활성화
-            textObject.gameObject.SetActive(false);
-
-            // 버튼 1을 비활성화
-            button1.gameObject.SetActive(true);
-
-            // 버튼 2를 활성화
-            button2.gameObject.SetActive(true);
-
-            // HTTP GET 요청 보내기
-            StartCoroutine(SendGetRequest());
+            StartCoroutine(Wait());
         }
+
+    IEnumerator Wait(){
+        
+        hasStarted = true; // 게임 시작 플래그 설정
+        StartCoroutine(SendGetRequest());
+
+        yield return new WaitForSeconds(0.4f);
+        // 텍스트를 비활성화
+        textObject.gameObject.SetActive(false);
+
+        // 버튼 1을 비활성화
+        button1.gameObject.SetActive(true);
+
+        // 버튼 2를 활성화
+        button2.gameObject.SetActive(true);
+
+        // HTTP GET 요청 보내기
+    }
+
     }
 
     IEnumerator SendGetRequest()
