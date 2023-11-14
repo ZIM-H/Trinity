@@ -141,7 +141,7 @@ public class MatchQServiceImpl implements MatchQService {
 
                 Object state = redisService.validate(findPlayer.userId);
 
-                log.info(state.toString());
+                log.info("userId : " + findPlayer.userId + " " + state.toString());
 
                 if (state != null && state.toString().equals("WAITING")) {
                     log.info("waitingList에 삽입");
