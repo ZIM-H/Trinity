@@ -9,9 +9,11 @@ import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.Map;
 
 @Slf4j
 @Component
@@ -132,5 +134,14 @@ public class RedisService {
 
     public void removeUserId(String clientId) {
         hashOperations.delete("ClientUserId", clientId);
+    }
+
+    @Scheduled(cron = "0 0 0 * * ?")  // 매일 자정에 실행
+    public void cleanup() {
+        String users = "connectingMember";
+        Map<String, String> entries = loginHashOperations.entries(users);
+        for(Map.Entry<String, String> entry : entries.entrySet()) {
+            loginHashOperations.delete(users, entry.getKey());
+        }
     }
 }
