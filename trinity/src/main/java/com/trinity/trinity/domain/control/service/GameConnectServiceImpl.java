@@ -66,6 +66,7 @@ public class GameConnectServiceImpl implements GameConnectService {
                 .conflictAsteroid(false)
                 .barrierUpgrade(false)
                 .fertilizerUpgrade(false)
+                .carbonCaptureNotice(gameRoom.isCarbonCaptureNotice())
                 .build();
 
         FirstRoomResponseDto firstRoomResponseDto = FirstRoomResponseDto.builder()
