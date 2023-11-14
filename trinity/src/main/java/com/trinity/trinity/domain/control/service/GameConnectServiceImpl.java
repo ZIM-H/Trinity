@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @Service
@@ -39,6 +40,7 @@ public class GameConnectServiceImpl implements GameConnectService {
     @Override
     public boolean matchMaking(String userId) {
         if(redisService.getData(userId) == null) return false;
+        redisService.saveData(userId, String.valueOf(UserStatus.WAITING));
         webClientService.get(userId);
         return true;
     }
