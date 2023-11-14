@@ -140,7 +140,11 @@ public class MatchQServiceImpl implements MatchQService {
                 Player findPlayer = pq.poll();
 
                 Object state = redisService.validate(findPlayer.userId);
+
+                log.info(state.toString());
+
                 if (state != null && state.toString().equals("WAITING")) {
+                    log.info("waitingList에 삽입");
                     waitingList.add(findPlayer);
                 }
             }
@@ -149,7 +153,12 @@ public class MatchQServiceImpl implements MatchQService {
 
             // 게임 서버에 보낼 리스트의 크기가 3보다 작으면 다시 대기큐에 넣고 돌아가기
             if (waitingList.size() < 3) {
+                log.info("복구 전 pq.size() : " + pq.size());
+
                 for (Player player : waitingList) pq.offer(player);
+
+                log.info("복구 후 pq.size() : " + pq.size());
+
                 return;
             }
 
