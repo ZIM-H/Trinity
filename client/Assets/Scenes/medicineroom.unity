@@ -63898,7 +63898,7 @@ MonoBehaviour:
   runningSpeed: 11.5
   gravity: 20
   playerCamera: {fileID: 1100688662}
-  lookSpeed: 2.5
+  lookSpeed: 2.2
   lookXLimit: 45
   jumpHeight: 3
   RunAxis: {x: 0, y: 0}
