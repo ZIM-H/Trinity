@@ -133,6 +133,8 @@ public class MatchQServiceImpl implements MatchQService {
 
         List<Player> waitingList = new ArrayList<>();
         try {
+            Thread.sleep(2000);
+            
             while (waitingList.size() != 3) {
                 if (pq.size() == 0) break;
 
