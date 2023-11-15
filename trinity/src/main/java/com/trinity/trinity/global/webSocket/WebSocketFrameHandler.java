@@ -5,7 +5,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.trinity.trinity.global.dto.ClientSession;
 import com.trinity.trinity.domain.control.dto.response.*;
-import com.trinity.trinity.domain.control.enums.UserStatus;
 import com.trinity.trinity.domain.logic.dto.GameRoom;
 import com.trinity.trinity.domain.logic.service.GameRoomService;
 import com.trinity.trinity.global.dto.ClientUserId;
@@ -159,10 +158,10 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
         String userId = redisService.getUserId(ctx.channel().id().toString());
-        System.out.println(userId + " channelInactive");
+        log.info(ctx.channel().id().toString() + " channelInactive");
         //상태 변경, 채널 삭제
         if(userId == null) return;
-        if(redisService.getData(userId).equals("WAITING")) {
+        if(!redisService.getData(userId).equals("LOBBY")) {
             redisService.removeMatching(userId); // 유저 상태 변경 --> LOBBY로
             redisService.removeClientSession(userId); // clientSession 삭제
             redisService.removeUserId(ctx.channel().id().toString()); // clientId : userId 삭제
@@ -234,7 +233,8 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
         String[] clients = redisService.getClientIdList(users);
 
         for (String client : clients) {
-            if (!ChannelAlive(client)) {
+            if (client == null)  checkActiveAll = false;
+            else if (!ChannelAlive(client)) {
                 checkActiveAll = false;
                 break;
             }
@@ -248,22 +248,25 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
 
             String data = gson.toJson(userLeaveGameOverDto);
 
-            for (String client : clients) sendDataToClient(client, data);
+            for (String client : clients) {
+                if(client == null) continue;
+                sendDataToClient(client, data);
+            }
 
             redisService.removeCheckGameRoom(gameRoomId);
 
             gameRoomService.endGame(gameRoomId);
 
-            //채널 닫기
-            channelClose(clients);
-
-            //채널 삭제
-            removeChannels(clients);
-
-            //clientSession 삭제
-            redisService.removeClientListSession(users);
-
-            redisService.backToLooby(users);
+//            //채널 닫기
+//            channelClose(clients);
+//
+//            //채널 삭제
+//            removeChannels(clients);
+//
+//            //clientSession 삭제
+//            redisService.removeClientListSession(users);
+//
+//            redisService.backToLooby(users);
 
             return true;
         } else {
@@ -291,22 +294,25 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
 
         String data = gson.toJson(gameVictoryOverDto);
 
-        for (String client : clients) sendDataToClient(client, data);
+        for (String client : clients) {
+            if(client == null) continue;
+            sendDataToClient(client, data);
+        }
 
         //채널 닫기
-        channelClose(clients);
-
-        //채널 삭제
-        removeChannels(clients);
-
-        //clientSession 삭제
-        redisService.removeClientListSession(users);
-
-        redisService.removeCheckGameRoom(gameRoom.getGameRoomId());
-
-        gameRoomService.endGame(gameRoom.getGameRoomId());
-
-        redisService.backToLooby(users);
+//        channelClose(clients);
+//
+//        //채널 삭제
+//        removeChannels(clients);
+//
+//        //clientSession 삭제
+//        redisService.removeClientListSession(users);
+//
+//        redisService.removeCheckGameRoom(gameRoom.getGameRoomId());
+//
+//        gameRoomService.endGame(gameRoom.getGameRoomId());
+//
+//        redisService.backToLooby(users);
     }
 
     private void gameDefeatedProcess(GameRoom gameRoom, String reason) {
@@ -321,22 +327,25 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
 
         String data = gson.toJson(gameDefeatedOverDto);
 
-        for (String client : clients) sendDataToClient(client, data);
-
-        //채널 닫기
-        channelClose(clients);
-
-        //채널 삭제
-        removeChannels(clients);
-
-        //clientSession 삭제
-        redisService.removeClientListSession(users);
-
-        redisService.removeCheckGameRoom(gameRoom.getGameRoomId());
+        for (String client : clients) {
+            if(client == null) continue;
+            sendDataToClient(client, data);
+        }
 
         gameRoomService.endGame(gameRoom.getGameRoomId());
-
-        redisService.backToLooby(users);
+        //채널 닫기
+//        channelClose(clients);
+//
+//        //채널 삭제
+//        removeChannels(clients);
+//
+//        //clientSession 삭제
+//        redisService.removeClientListSession(users);
+//
+//        redisService.removeCheckGameRoom(gameRoom.getGameRoomId());
+//
+//
+//        redisService.backToLooby(users);
 
     }
 
@@ -352,6 +361,4 @@ public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocket
             channelManager.removeChannel(clients[i]);
         }
     }
-
-
 }
