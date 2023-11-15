@@ -21,6 +21,7 @@ public class WebSocketClientManager : MonoBehaviour
     public GameObject scoreIcon;
     private readonly string apiUrl = "https://k9b308.p.ssafy.io/api/game/match/"; // 대상 URL로 바꾸세요.
 
+    GameObject canvas;
     void Awake(){
         ship = GameObject.Find("spaceship_revert");
         Debug.Log("ship : " + ship);
@@ -68,6 +69,7 @@ public class WebSocketClientManager : MonoBehaviour
         // 종료 창을 활성화 또는 비활성화합니다.
         bool isActive = Panel.activeSelf;
         Panel.SetActive(!isActive);
+        scorePanel.SetActive(isActive);
         quitPanel.SetActive(!isActive);
     }
     
