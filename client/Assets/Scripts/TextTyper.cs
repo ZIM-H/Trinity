@@ -18,6 +18,8 @@ public class TextTyper : MonoBehaviour
     string inputString;
     TextMeshProUGUI titleText;
     TextMeshProUGUI contextText;
+    TextMeshProUGUI contextFoodText;
+    TextMeshProUGUI contextAlienText;
 
     char[] charArray;
     char[] charArrayWithColor;
@@ -29,6 +31,8 @@ public class TextTyper : MonoBehaviour
     {
         titleText = transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>();
         contextText = transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>();
+        contextFoodText = contextText.transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>();
+        contextAlienText = contextFoodText.transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>();
         inputTitle1 = VariableManager.Instance.nightTitleText;
         inputContext1 = VariableManager.Instance.nightContextText;
         StartCoroutine(TypeTotal(6.0f));
@@ -105,7 +109,11 @@ public class TextTyper : MonoBehaviour
 
     }
      public void TypeContextWithColor(string stringInput, float typingTime, string color){
-        
+        if(color=="red")
+        StartCoroutine(TypingWithColor(typingTime/charArray.Length, contextAlienText, color, stringInput));
+        else if(color=="green")
+        StartCoroutine(TypingWithColor(typingTime/charArray.Length, contextFoodText, color, stringInput));
+        else
         StartCoroutine(TypingWithColor(typingTime/charArray.Length, contextText, color, stringInput));
 
     }
@@ -122,7 +130,7 @@ public class TextTyper : MonoBehaviour
         foreach (char c in stringInput.ToCharArray())
         {
             yield return new WaitForSeconds(time);
-            targetText.text += "<color=" + color + ">" + c + "</color>";
+            targetText.text += c;
         }
         targetText.text += "\n";
     }
