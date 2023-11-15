@@ -141,7 +141,7 @@ public class RedisService {
         String users = "connectingMember";
         Map<String, String> entries = loginHashOperations.entries(users);
         for(Map.Entry<String, String> entry : entries.entrySet()) {
-            loginHashOperations.delete(users, entry.getKey());
+            if(entry.getValue().equals("LOBBY")) loginHashOperations.delete(users, entry.getKey());
         }
     }
 }

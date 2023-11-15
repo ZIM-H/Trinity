@@ -27,8 +27,11 @@ public class GameConnectController {
 
     @GetMapping("/match/{userId}")
     public ResponseEntity<?> matchMaking(@Validated @PathVariable String userId) {
-        gameConnectService.matchMaking(userId);
-        return ResponseEntity.ok().build();
+        boolean result = gameConnectService.matchMaking(userId);
+        if(result) return ResponseEntity.ok().build();
+        else {
+            return ResponseEntity.badRequest().body("MatchingFail");
+        }
     }
 
     @PostMapping("/players")
