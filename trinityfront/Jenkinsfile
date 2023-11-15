@@ -80,8 +80,7 @@ pipeline {
                     echo 'Deploy'                    
 
                     echo '컨테이너 삭제'
-                    // docker stop react
-                    // docker rm react
+                    
 
                     docker run -d -p 3000:3000 --name react docker-react:0.0.1
                     '''
