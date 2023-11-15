@@ -7,7 +7,6 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System;
 using TMPro;
-using UnityEngine.Networking;
 public class WebSocketClientManager : MonoBehaviour
 {
     private WebSocket webSocket;
