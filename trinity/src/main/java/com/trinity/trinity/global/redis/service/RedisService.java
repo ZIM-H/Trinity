@@ -90,7 +90,11 @@ public class RedisService {
         String[] result = new String[3];
         for (int i = 0; i < 3; i++) {
             ClientSession channelInfo = (ClientSession) hashOperations.get("ClientSession", userIds[i]);
-            result[i] = channelInfo.getClientId();
+            if (channelInfo != null) {
+                result[i] = channelInfo.getClientId();
+            } else {
+                result[i] = null;
+            }
         }
 
         return result;
