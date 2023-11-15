@@ -8,12 +8,14 @@ public class Timer : MonoBehaviour
 {
 
     GameObject fade;
+    GameObject webSocketManager;
     string[] roomNames = new string[] { "", "BiRyoRoom", "medicineroom", "controlRoom" };
 
     // Start is called before the first frame update
     
     void Start()
     {
+        webSocketManager = GameObject.Find("WebSocketManager");
         VariableManager.Instance.monsterDate = Random.Range(1,13);
         fade = GameObject.Find("Fade");
         StartCoroutine(ExecuteAfterTime(15.0f));
@@ -49,7 +51,11 @@ public class Timer : MonoBehaviour
             Debug.Log("여기부터 : "+room);
             fade.GetComponent<Fade>().FadeOut();
             yield return new WaitForSeconds(1.0f);
+            if(VariableManager.Instance.gameOver == true){
+                webSocketManager.GetComponent<WebSocketClientManager>().ToggleWebSocketConnection();
+            }else{
             SceneManager.LoadScene(room);
+            }
         }
     }
 }
