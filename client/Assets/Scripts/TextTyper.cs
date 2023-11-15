@@ -114,6 +114,8 @@ public class TextTyper : MonoBehaviour
             yield return new WaitForSeconds(time);
             targetText.text += c;
         }
+        
+        targetText.text += "\n";
     }
     IEnumerator TypingWithColor(float time, TextMeshProUGUI targetText, string color, string stringInput)
     {
