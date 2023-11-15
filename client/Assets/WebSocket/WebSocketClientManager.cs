@@ -121,6 +121,7 @@ public class WebSocketClientManager : MonoBehaviour
         }
         Panel.SetActive(!isActive);
         scorePanel.SetActive(!isActive);
+        quitPanel.SetActive(isActive);
     }
 
     public void ToggleWebSocketConnection()
