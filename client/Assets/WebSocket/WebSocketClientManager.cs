@@ -7,6 +7,7 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System;
 using TMPro;
+using UnityEngine.Networking;
 public class WebSocketClientManager : MonoBehaviour
 {
     private WebSocket webSocket;
@@ -137,7 +138,7 @@ public class WebSocketClientManager : MonoBehaviour
             // userId 초기화
             userId = PlayerPrefs.GetString("UserId"); // PlayerPrefs에서 userId를 가져옴
             Debug.Log("매칭 큐 등록 요청 보내기");
-            StartCoroutine(SendGetRequest());
+
             Debug.Log("웹소켓 연결 시도");
             // 연결되어 있지 않은 경우 연결 시도
             webSocket = new WebSocket(serverURL);
@@ -163,6 +164,9 @@ public class WebSocketClientManager : MonoBehaviour
                 // e.Data에 수신된 메시지가 포함되어 있습니다.
                 string receivedMessage = e.Data;
                 Debug.Log("Received message: " + receivedMessage);
+                if(receivedMessage == "Connecting SUCCESS!!"){
+                    StartCoroutine(SendGetRequest());
+                }
                 try
                 {
                     JObject jsonObject = JObject.Parse(receivedMessage);
