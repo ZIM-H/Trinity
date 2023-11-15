@@ -19,6 +19,6 @@ COPY --from=builder /app/build /usr/share/nginx/html
 # RUN rm /etc/nginx/conf.d/default.conf
 
 # default config 파일 복사 명령어
-COPY default.conf /etc/nginx/conf.d
+# COPY default.conf /etc/nginx/conf.d
 
 CMD ["nginx", "-g", "daemon off;"]
