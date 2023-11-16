@@ -2,9 +2,13 @@
 
 <div align="center">
   <br />
+  <a href="https://drive.google.com/file/d/1Z1pye1fhJ54k1q9vDA83xoFwrNhy6eBO/view?usp=sharing"> 
     <img src="image/logo.png" width="200px"/>
+  </a>
   <br />
+    <a href="https://drive.google.com/file/d/1Z1pye1fhJ54k1q9vDA83xoFwrNhy6eBO/view?usp=sharing"> 
     <img src="image/trinity.png" width="200px"/>
+  </a>
 </div>
 <div align="center">
  <h3><b>Trinity</b></h3>
@@ -21,6 +25,13 @@
     <img src="image/youtube.png" width="100px"><br>
     UCC 보러가기
   </a>
+
+  <br>
+
+  <a href="https://drive.google.com/file/d/1Z1pye1fhJ54k1q9vDA83xoFwrNhy6eBO/view?usp=sharing"> 
+    <img src="image/download.png" width="100px"><br>
+    다운로드
+  </a>
 </div>
 
 # 👨‍👩‍👧‍👦 멤버
@@ -29,17 +40,17 @@
 <table>
     <tr>
         <td height="140px" align="center"> <a href="https://github.com/junyoung449">
-            <img src="image/hjy.png" width="140px" /> <br><br> 🤬 허준영 <br>(Front-End) </a> <br></td>
+            <img src="image/teamASK/hjy.png" width="140px" /> <br><br> 🤬 허준영 <br>(Client) </a> <br></td>
         <td height="140px" align="center"> <a href="https://github.com/pockypepe">
-            <img src="image/shj.png" width="140px" /> <br><br> 🩷 송혁준 <br>(Back-End) </a> <br></td>
+            <img src="image/teamASK/shj.png" width="140px" /> <br><br> 🩷 송혁준 <br>(Server) </a> <br></td>
         <td height="140px" align="center"> <a href="https://github.com/CodingOnionFarmer">
-            <img src="image/jnh.png" width="140px" /> <br><br> 🍁 정내혁 <br>(Front-End) </a> <br></td>
+            <img src="image/teamASK/jnh.png" width="140px" /> <br><br> 🍁 정내혁 <br>(Client) </a> <br></td>
         <td height="140px" align="center"> <a href="https://github.com/kingofthigh">
-            <img src="image/jum.png" width="140px" /> <br><br> 💪🏻 정의민 <br>(Back-End) </a> <br></td>
+            <img src="image/teamASK/jum.png" width="140px" /> <br><br> 💪🏻 정의민 <br>(Server) </a> <br></td>
         <td height="140px" align="center"> <a href="https://github.com/YEONGINJOO">
-            <img src="image/jyi.png" width="140px" /> <br><br> 🤖 주영인 <br>(Front-End) </a> <br></td>
+            <img src="image/teamASK/jyi.png" width="140px" /> <br><br> 🤖 주영인 <br>(Client) </a> <br></td>
         <td height="140px" align="center"> <a href="https://github.com/ZIM-H">
-            <img src="image/hjm.png" width="140px" /> <br><br> 🧚🏻 홍지민 <br>(Back-End) </a> <br></td>
+            <img src="image/teamASK/hjm.png" width="140px" /> <br><br> 🧚🏻 홍지민 <br>(Server) </a> <br></td>
     </tr>
 </table>
 </div>
@@ -50,7 +61,7 @@
 <div align=left>
 <table>
     <tr>
-        <td><b>Back-end</b></td>
+        <td><b>Server</b></td>
         <td>
             <img src="https://img.shields.io/badge/_-Java-red" />
             <img src="https://img.shields.io/badge/Spring Boot-6DB33F?logo=springboot&logoColor=white">
@@ -59,7 +70,7 @@
         </td>
     </tr>
     <tr>
-        <td><b>Front-end</b></td>
+        <td><b>Client</b></td>
         <td>
             <img src="https://img.shields.io/badge/unity-000000?logo=unity&logoColor=white">
             <img src="https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white">
