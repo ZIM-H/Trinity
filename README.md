@@ -489,11 +489,11 @@
 
 ## Game Server
 
-<img src = "image/gameServer.png" width="700px"><br>
+<img src = "image/gameServer.PNG" width="700px"><br>
 
 ### gameRoomCheck Hash
 
-<img src = "image/gameRoomCheck.png" width="700px"><br>
+<img src = "image/gameRoomCheck.PNG" width="700px"><br>
 <img src = "image/gameServer-gameRoomCheck.png" width="700px"><br>
 
 ### temp Hash
@@ -503,29 +503,29 @@
 
 ### ClientSession Hash
 
-<img src = "image/ClientSession.png" width="700px"><br>
+<img src = "image/ClientSession.PNG" width="700px"><br>
 <img src = "image/gameServer-ClientSession.png" width="700px"><br>
 
 ### ClientUserId Hash
 
-<img src = "image/ClientUserId.png" width="700px"><br>
+<img src = "image/ClientuserId.PNG" width="700px"><br>
 <img src = "image/gameServer-ClientUserId.png" width="700px"><br>
 
 ### gameRoom Hash
 
-<img src = "image/gameRoom.png" width="700px"><br>
+<img src = "image/gameRoom.PNG" width="700px"><br>
 <img src = "image/gameServer-gameRoom.png" width="700px"><br>
 
 ### connectingMember Hash
 
-<img src = "image/connectingMember.png" width="700px"><br>
+<img src = "image/connectingMember.PNG" width="700px"><br>
 <img src = "image/gameServer-connectingMember.png" width="700px"><br>
 
 ## Match Server
 
 ## matchQ ZSet
 
-<img src = "image/matchQ.png" width="700px"><br>
+<img src = "image/matchQ.PNG" width="700px"><br>
 <img src = "image/matchServer-matchingQ.png" width="700px"><br>
 
 # 🎮 게임 소개
