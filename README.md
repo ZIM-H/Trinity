@@ -17,7 +17,7 @@
   <br>
   2023.10.09 ~ 2023.11.17
   <br>
-  <a href="https://youtu.be/DxseVqu3nDE"> 
+  <a href="https://youtu.be/Ek6_Gn8dyKw"> 
     <img src="image/youtube.png" width="100px"><br>
     UCC 보러가기
   </a>
@@ -29,17 +29,17 @@
 <table>
     <tr>
         <td height="140px" align="center"> <a href="https://github.com/junyoung449">
-            <img src="Image/chy.png" width="140px" /> <br><br> 👑 허준영 <br>(Front-End) </a> <br></td>
+            <img src="image/hjy.png" width="140px" /> <br><br> 🤬 허준영 <br>(Front-End) </a> <br></td>
         <td height="140px" align="center"> <a href="https://github.com/pockypepe">
-            <img src="image/shj.png" width="140px" /> <br><br> 🌊 송혁준 <br>(Back-End) </a> <br></td>
+            <img src="image/shj.png" width="140px" /> <br><br> 🩷 송혁준 <br>(Back-End) </a> <br></td>
         <td height="140px" align="center"> <a href="https://github.com/CodingOnionFarmer">
-            <img src="Image/ldg.png" width="140px" /> <br><br> 🔥 정내혁 <br>(Front-End) </a> <br></td>
+            <img src="image/jnh.png" width="140px" /> <br><br> 🍁 정내혁 <br>(Front-End) </a> <br></td>
         <td height="140px" align="center"> <a href="https://github.com/kingofthigh">
-            <img src="Image/jhw.png" width="140px" /> <br><br> 🌞 정의민 <br>(Back-End) </a> <br></td>
+            <img src="image/jum.png" width="140px" /> <br><br> 💪🏻 정의민 <br>(Back-End) </a> <br></td>
         <td height="140px" align="center"> <a href="https://github.com/YEONGINJOO">
-            <img src="Image/lkw.jpg" width="140px" /> <br><br> 👻 주영인 <br>(Front-End) </a> <br></td>
+            <img src="image/jyi.png" width="140px" /> <br><br> 🤖 주영인 <br>(Front-End) </a> <br></td>
         <td height="140px" align="center"> <a href="https://github.com/ZIM-H">
-            <img src="Image/lju.png" width="140px" /> <br><br> 🌙 홍지민 <br>(Back-End) </a> <br></td>
+            <img src="image/hjm.png" width="140px" /> <br><br> 🧚🏻 홍지민 <br>(Back-End) </a> <br></td>
     </tr>
 </table>
 </div>
@@ -108,9 +108,156 @@
 
   <img src="image/architecture.png" width="700px">
 
-# 프로젝트 구조
+# 🆘 프로젝트 구조
 
 ### Client
+
+```
+─Adaptive Performance
+│  ├─Provider
+│  └─Settings
+├─Asteroids pack
+│  ├─Materials
+│  ├─Meshes
+│  ├─Prefabs
+│  ├─Scenes
+│  └─Textures
+│      ├─Texture 1
+│      ├─Texture 2
+│      ├─Texture 3
+│      ├─Texture 4
+│      └─Texture 5
+├─BlitzRig
+│  ├─Editor
+│  └─Script
+├─Editor
+│  └─com.unity.mobile.notifications
+├─FantasyHavenAssets
+│  └─AlienBug
+│      ├─AnimationClips
+│      ├─Modell
+│      ├─_Animator
+│      ├─_Material
+│      └─_Prefabs
+├─FPS Control Unity Mobile
+├─Furniture_FREE
+│  ├─Materials
+│  ├─Meshes
+│  ├─Prefabs
+│  ├─Scenes
+│  └─Textures
+├─Image Joystick _ Render Texture
+├─Images
+├─Layer Lab
+│  ├─GUI Kit - Mono Round
+│  │  ├─Prefabs
+│  │  │  └─Prefabs_DemoScene
+│  │  └─ResourceData
+│  │      ├─Fonts
+│  │      └─Sprites
+│  │          └─Components
+│  │              ├─Button
+│  │              └─Popup
+│  └─GUI PRO Kit - Simple Casual.PSD Sources
+│      ├─Prefabs
+│      │  ├─Prefabs_Component_Popups
+│      │  ├─Prefabs_Component_Sliders
+│      │  └─Prefabs_DemoScene_Panels
+│      │      └─Dark
+│      ├─ResourcesData
+│      │  ├─Fonts
+│      │  └─Sprites
+│      │      ├─Components
+│      │      │  ├─Button
+│      │      │  │  ├─Button_Custom
+│      │      │  │  ├─Button_Demo_Common
+│      │      │  │  ├─Button_Demo_Dark
+│      │      │  │  └─Button_Demo_Light
+│      │      │  ├─Frame
+│      │      │  │  ├─Frame_Demo_Common
+│      │      │  │  └─Frame_Demo_Dark
+│      │      │  ├─Popup
+│      │      │  │  ├─Popup_Custom
+│      │      │  │  ├─Popup_Demo_Common
+│      │      │  │  ├─Popup_Demo_Dark
+│      │      │  │  └─Popup_Demo_Light
+│      │      │  └─Slider
+│      │      │      ├─Slider_Demo_Common
+│      │      │      ├─Slider_Demo_Dark
+│      │      │      └─Slider_Demo_Light
+│      │      └─Demo
+│      │          ├─Demo_Character
+│      │          ├─Demo_Icon
+│      │          ├─Demo_Image
+│      │          └─Demo_Play
+│      └─Scripts
+├─Megapoly.Art
+│  └─Vintage Controls
+│      ├─Materials
+│      ├─Meshes
+│      ├─Prefabs
+│      ├─Scenes
+│      ├─Scripts
+│      └─Textures
+├─Music
+├─OutlineEffect
+│  ├─OutlineEffect
+│  │  └─Resources
+│  └─Samples
+│      └─Demo
+│          └─Content
+│              └─chair
+├─OutlineToolkit
+│  ├─Script
+│  └─Shader
+├─Plugins
+│  ├─Android
+│  └─Demigiant
+│      └─DOTween
+│          ├─Editor
+│          │  └─Imgs
+│          └─Modules
+├─Resources
+│  └─InteractiveUI
+│      └─RenderTexture
+├─Scenes
+│  └─New Folder
+├─Scripts
+│  ├─MainScreen
+│  ├─ResponseData
+│  └─VariableManager
+├─SimpleSpaceInteriors
+│  ├─Materials
+│  ├─Models
+│  ├─Prefabs
+│  │  ├─Environments
+│  │  ├─Items
+│  │  └─Props
+│  ├─Scenes
+│  └─Textures
+├─TextMesh Pro
+│  ├─Documentation
+│  ├─Examples & Extras
+│  │  ├─Prefabs
+│  │  └─Scripts
+│  ├─Fonts
+│  ├─Resources
+│  │  ├─Fonts & Materials
+│  │  ├─Sprite Assets
+│  │  └─Style Sheets
+│  ├─Shaders
+│  └─Sprites
+├─TrinityShip
+│  └─Materials
+├─TutorialInfo
+│  ├─Icons
+│  └─Scripts
+│      └─Editor
+├─WarZone Sci-Fi Turret pack
+│  └─Materials
+├─WebSocket
+└─Work
+```
 
 ### Client Web Site
 
@@ -327,7 +474,7 @@
         application.yml
 ```
 
-# 📚 ERD
+# 📚 Redis 데이터 저장 구조
 
 ## Game Server
 
@@ -370,49 +517,101 @@
 <img src = "image/matchQ.png" width="700px"><br>
 <img src = "image/matchServer-matchingQ.png" width="700px"><br>
 
-# 💻 기능 소개
+# 🎮 게임 소개
 
 ## 튜토리얼
 
-- Billage 프로젝트에서는 가상의 은행을 구축하였습니다.
-- Billage 서비스에서는 본인 인증을 통한 마이데이터 서비스를 통해 각 은행에 있는 계좌들을 확인 할 수 있습니다.
-- 등록 하고싶은 계좌를 복수 선택한 뒤 간편 비밀번호 확인을 통해 계좌 등록을 실시 할 수 있습니다.
+<p float="left">
+  <img src="image/tutorial.png" width="30%" />
+  <img src="image/tutorial2.png" width="30%" /> 
+  <img src="image/tutorial3.png" width="30%" />
+</p>
 
-### 메모 남기기
+<p float="left">
+  <img src="image/tutorial4.png" width="30%" />
+  <img src="image/tutorial5.png" width="30%" /> 
+  <img src="image/tutorial6.png" width="30%" />
+</p>
 
-<img src = "image/memo.jpg" width="700px"><br>
-
-- 한 글자만 남길 수 있다
-  <br>
+- 메인 화면에서 `tutorial` 버튼을 클릭하면 게임의 상세 정보를 확인할 수 있습니다.
 
 ## 게임 시작
 
 <img src = "image/gameStart.gif" width="700px"><br>
 
-- Billage는 본인 인증을 기반으로 한 서비스이기에 이름과 등록된 핸드폰 번호를 통한 본인 확인을 실시합니다.
-- 본인 인증이 된 후 앞으로의 편리한 서비스 사용을 위해 간편 비밀번호를 등록합니다.
-- 간편 비밀번호는 4자리 숫자와 1자리 문자(or 특수문자) 총 5글자로 구성되며, 앞으로의 서비스 사용에서 로그인,이체, 계좌에서 사용됩니다.
-  <br>
+<br>
 
 ### 로그인
 
-<img src = "image/login.gif" width="200px"><br> \*기존에 가입 한 휴대폰 번호와 간편 비밀번호를 통해 로그인을 할 수 있습니다.
+<img src = "image/login.jpg" width="700px"><br>
+
+- 랜덤 UUID를 발급해 로그인합니다.
+
 <br>
 
 ### 게임 찾기
 
-<img src = "image/account.gif" width="200px"><br>
+<img src = "image/main-page.jpg" width="700px"><br>
 
-## 1일차 - 관측실
+- `find a game` 버튼을 눌러 게임 접속 시도를 합니다.
+
+### 게임 시작
+
+<img src = "image/game-start.jpg" width="700px"><br>
+
+## 공통 작업
+
+- 모든 방에서 다음과 같은 일을 할 수 있습니다.
+
+### 비료 투입
+
+<img src = "image/input-fertilizer.jpg" width="700px"><br>
+
+- 방에 있는 비료의 개수가 1 이상일때만 비료를 중앙 정원에 넣을 수 있습니다.
+- 중앙 정원에 투입된 비료의 개수가 4개 이상일때 식량이 2개 생산됩니다.
+- 비료의 양이 4개를 초과해도 생산되는 식량의 개수는 2개로 동일합니다. <br>
+  (협동하여 비료를 낭비하지 마세요.)
+- 소행성과 충돌하면 저장된 비료가 0으로 초기화됩니다.
+
+### 비료 생산
+
+<img src = "image/make-fertillizer.jpg" width="700px"><br>
+
+- 비료를 2개 생산합니다.
+- 비료 개발 연구를 완료했다면 비료를 3개 생산합니다.
+
+### 메모 남기기
+
+<img src = "image/memo.jpg" width="700px"><br>
+
+- 메모를 남겨 다음 팀원에게 메시지를 전달할 수 있습니다.
+- 단, 한 글자만 남길 수 있다
+- 노동력을 소모하지 않습니다.
+- 최대한 많이 활용하여 팀원들과 소통하세요.
+  <br>
+
+## 1️⃣일차 - 관측실
 
 <img src = "image/day1_thirdRoom.gif" width="700px"><br>
 <img src = "image/observation.jpg" width="700px"><br>
 
-- 내 계좌 목록에 있는 계좌들 중 주 계좌로 등록하고 싶은 계좌를 클릭을 하게되면 ‘주 계좌로 등록하시겠습니까?’ 라는 모달창과 함께 ‘네’를 클릭할 시 계좌 테두리가 굵은 연두색으로 표시됩니다.
+- 관측실에서는 다음과 같은 일을 할 수 있습니다.
+
+1. 소행성 또는 블랙홀 관측
+   - 소행성 또는 블랙홀을 관측할 수 있습니다.
+   - 소행성 발견 시 소행성 파괴를 할 수 있습니다.
+2. 소행성 파괴
+   - 소행성 관측을 해야만 파괴할 수 있습니다.
+   - 소행성을 파괴하지 않으면 중앙 정원이 고장나 식량 생산에 불이익을 받습니다.
+   - 소행성과 출돌하면 현재까지 넣어둔 비료의 양이 0으로 변합니다.
+3. 보호막 연구
+   - 같은 사람이 연구를 2번해야 완성됩니다.
+   - 중간에 다른 사람이 연구를 하면 연구 횟수가 초기화됩니다.
+   - 보호막이 연구가 완료되면 소행성을 파괴하지 않아도 중앙 정원이 고장나지 않습니다.
 
 <br>
 
-## 2일차 - 재배 연구실
+## 2️⃣일차 - 재배 연구실
 
 <img src = "image/day2_firstRoom.gif" width="700px"><br>
 
@@ -423,10 +622,13 @@
    - 비료 개발 연구를 2회하면 연구가 완료됩니다.
    - 비료 개발 연구가 완료되면, 비료 생산 시 3개씩 생산됩니다.
 2. 정수 시스템 수리 (고장 시)
+   - 타우린 정제를 하거나 랜덤(이벤트)으로 고장납니다.
+   - 1일 수리하면 고칠 수 있습니다.
+   - 수리하지 않고 2일이 지나면 정수(깨끗한 물) 부족으로 패배합니다.
 
   <br>
 
-## 3일차 - 약제실
+## 3️⃣일차 - 약제실
 
 <img src = "image/day3_secondRoom.gif" width="700px"><br>
 
@@ -437,7 +639,14 @@
     - 타우린은 다음날부터 사용이 가능합니다.
     - 타우린을 사용하면 2일 동안 노동력을 추가로 1 얻습니다.
 2.  이산화탄소 포집기 수리 (고장 시)
+    - 랜덤(이벤트)으로 고장납니다.
+    - 고장 난 상태로 3일이 지나면 산소 부족으로 패배합니다.
+    - 2일 수리 시도를 하면 고칠 수 있습니다.
 3.  중앙 정원 수리 (고장 시)
+    - 소행성에 맞아야 고장납니다.
+    - 고장 상태는 약제실에서만 확인할 수 있습니다.
+    - 고장나면 식량 생산을 할 수 없습니다.
+    - 또, 고장난 상태로 비료를 넣는다면 비료가 저장되지 않고 낭비됩니다.
 
 <br>
 
@@ -455,11 +664,11 @@
 - 기생충과 접촉하면 노동을 할 수 없습니다.
 - 기생충과 접촉하면 검은 화면으로 전환됩니다.
 
-## 게임 승리
+## 🏆 게임 승리
 
 <img src = "image/victory.jpg" width="700px"><br>
 
-## 게임 패배
+## 😮‍💨 게임 패배
 
 - 게임 패배 유형과 조건은 다음과 같습니다.
 
@@ -483,3 +692,9 @@
 <img src = "image/contaminated.jpg" width="700px"><br>
 
 - 정수 시스템 고장 후 2일동안 수리하지 않아 패배
+
+### 연결 해제로 인한 게임 종료
+
+<img src = "image/connectless.jpg" width="700px"><br>
+
+- 팀원 중 한명이라도 연결이 해제되면 게임이 종료됩니다.
