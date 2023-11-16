@@ -61,7 +61,7 @@ public class MatchQServiceImpl implements MatchQService {
 
                 // 게임 서버 redis에 접근해 유효성 검사
                 Object state = redisService.validate(findUserId);
-                
+
                 if (state != null && state.toString().equals("WAITING")) {
                     waitingList.add(Pair.of(findUserId, score));
                 }
