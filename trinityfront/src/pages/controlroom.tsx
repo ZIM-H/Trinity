@@ -9,9 +9,10 @@ const ControlRoom: React.FC = () => {
         <Link to="/rule">
           <img src={logoImage} alt="logo" />
         </Link>
+        <img src="assets/ThirdRoom.png" alt="logo" />
+        <p style={{fontSize:'55px'}}>Trinity의 관제실입니다.</p>
         <img src="assets/Trinity_ctrlroom_UI.png" alt="logo" />
-        <p style={{fontSize:'55px'}}>Trinity의 조타실입니다.</p>
-        <p style={{fontSize:'55px'}}>이 곳에서 우주를 관측할 수 있습니다!</p>
+        <p style={{fontSize:'55px'}}>관제실에서 우주를 관측할 수 있습니다!</p>
         <p style={{fontSize:'55px'}}>관측기를 누르면 소행성과 블랙홀이 관측됩니다.</p>
         <p style={{fontSize:'55px'}}>소행성이 관측되고 파괴하지 않는다면</p>
         <p style={{fontSize:'55px'}}>중앙정원이 파괴되고 투입한 비료수가 0이 됩니다!</p>

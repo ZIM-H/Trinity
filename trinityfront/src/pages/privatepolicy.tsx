@@ -1,14 +1,15 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
+import AnimatedNeonButton from '../components/neonbtn';
 
 const PrivacyPolicy: React.FC = () => {
-  const navigate = useNavigate();
-    const home = () => {
-        navigate("/");
-    };
+  // const navigate = useNavigate();
+  //   const home = () => {
+  //       navigate("/");
+  //   };
   return (
     <div style={{display:'flex', flexDirection: 'column', alignItems:'center', justifyContent:'center'}}>
-      <p style={{fontSize:'25px'}}>{'<'}트리니티{'>'}(&apos;http://develop.trinity.com&apos;이하 &apos;트리니티&apos;)은(는)</p>
+      <p style={{fontSize:'25px'}}>{'<'}트리니티{'>'}(&apos;https://k9b308a.p.ssafy.io/privatepolicy&apos;이하 &apos;트리니티&apos;)은(는)</p>
       <p style={{fontSize:'25px'}}> 「개인정보 보호법」 제30조에 따라 정보주체의 개인정보를 보호하고</p>
       <p style={{fontSize:'25px'}}>이와 관련한 고충을 신속하고 원활하게 처리할 수 있도록 하기 위하여 다음과 같이 개인정보 처리방침을 수립·공개합니다.</p>
       <p style={{fontSize:'25px'}}>○ 이 개인정보처리방침은2023년 11월 15부터 적용됩니다.</p>
@@ -43,7 +44,13 @@ const PrivacyPolicy: React.FC = () => {
         <p style={{fontSize:'18px'}}>직급 : 팀장</p>
         <p style={{fontSize:'18px'}}>연락처 : welcometoaskworld@gmail.com</p>
 
-        <button onClick={home}>Trinity</button>
+        <AnimatedNeonButton href='/'>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          Trinity
+        </AnimatedNeonButton>
         <br />
     </div>
   );

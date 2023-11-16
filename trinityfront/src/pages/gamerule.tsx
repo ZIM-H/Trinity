@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import AnimatedNeonButton from '../components/neonbtn';
 
 const GameRule: React.FC = () => {
   const navigate = useNavigate();
@@ -14,10 +15,6 @@ const GameRule: React.FC = () => {
   const ctrl = () => {
     window.scrollTo(0, 0);
     navigate("/ctrlroom");
-  }
-  const Home = () => {
-    window.scrollTo(0, 0);
-    navigate("/");
   }
     
     return (
@@ -41,7 +38,7 @@ const GameRule: React.FC = () => {
         <div style={{display:'flex', flexDirection: 'row', alignItems:'center', justifyContent:'center'}}>
             <div style={{display:'flex', flexDirection: 'column', alignItems:'center', justifyContent:'center', cursor: 'pointer'}} onClick={biryo}>
               <img src="assets/Biryo.png" alt="" style={{ width: '300px', height:'300px'}} />
-              <p style={{fontSize:'25px'}}>비료방</p>
+              <p style={{fontSize:'25px'}}>식량생산실</p>
             </div>
             <div style={{display:'flex', flexDirection: 'column', alignItems:'center', justifyContent:'center', padding:'50px', cursor: 'pointer'}} onClick={medi}>
               <img src="assets/medi.png" alt="" style={{ width: '300px', height:'300px'}} />
@@ -49,10 +46,18 @@ const GameRule: React.FC = () => {
             </div>
             <div style={{display:'flex', flexDirection: 'column', alignItems:'center', justifyContent:'center', cursor: 'pointer'}} onClick={ctrl}>
               <img src="assets/ctrl.png" alt="" style={{ width: '300px', height:'300px'}} />
-              <p style={{fontSize:'25px'}}>조타실</p>
+              <p style={{fontSize:'25px'}}>관제실</p>
             </div>
         </div>
-        <button onClick={Home}>HOME</button>
+        <div style={{display:'flex', flexDirection: 'column', alignItems:'center', justifyContent:'center'}}>
+          <AnimatedNeonButton href='/'>
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+              Home
+          </AnimatedNeonButton>
+        </div>
         <br />
     </div>
     );

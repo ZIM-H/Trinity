@@ -9,9 +9,10 @@ const MedicineRoom: React.FC = () => {
         <Link to="/rule">
           <img src={logoImage} alt="logo" />
         </Link>
-        <img src="assets/Trinity_ctrlroom_UI.png" alt="logo" />
+        <img src="assets/SecondRoom.png" alt="logo" />
         <p style={{fontSize:'55px'}}>Trinity의 약제실입니다.</p>
-        <p style={{fontSize:'55px'}}>이 곳에서 타우린을 제조할 수 있습니다!</p>
+        <img src="assets/medi_ui.png" alt="logo" />
+        <p style={{fontSize:'55px'}}>약제실에서 타우린을 제조할 수 있습니다!</p>
         <p style={{fontSize:'55px'}}>이산화탄소 포집기가 고장나면 수리해야합니다.</p>
         <p style={{fontSize:'55px'}}>소행성으로인해 중앙정원이 파괴된다면 수리해야 합니다.</p>
       </div>
