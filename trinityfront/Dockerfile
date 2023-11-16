@@ -12,7 +12,9 @@ RUN yarn build
 #### nginx 
 
 FROM nginx
-EXPOSE 3000
+
+RUN echo "server { listen 3000; location / { root /usr/share/nginx/html; } }" > /etc/nginx/conf.d/default.conf
+
 COPY --from=builder /app/build /usr/share/nginx/html
 
 # nginx 의 default.conf 를 삭제
@@ -20,5 +22,7 @@ COPY --from=builder /app/build /usr/share/nginx/html
 
 # default config 파일 복사 명령어
 # COPY default.conf /etc/nginx/conf.d
+
+EXPOSE 3000
 
 CMD ["nginx", "-g", "daemon off;"]
