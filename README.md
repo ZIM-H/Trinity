@@ -42,7 +42,7 @@
         <td height="140px" align="center"> <a href="https://github.com/junyoung449">
             <img src="image/teamASK/hjy.png" width="140px" /> <br><br> 🤬 허준영 <br>(Client) </a> <br></td>
         <td height="140px" align="center"> <a href="https://github.com/pockypepe">
-            <img src="image/teamASK/shj.png" width="140px" /> <br><br> 🩷 송혁준 <br>(Server) </a> <br></td>
+            <img src="image/teamASK/shj.png" width="140px" /> <br><br> ❤ 송혁준 <br>(Server) </a> <br></td>
         <td height="140px" align="center"> <a href="https://github.com/CodingOnionFarmer">
             <img src="image/teamASK/jnh.png" width="140px" /> <br><br> 🍁 정내혁 <br>(Client) </a> <br></td>
         <td height="140px" align="center"> <a href="https://github.com/kingofthigh">
